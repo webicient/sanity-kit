@@ -14,8 +14,12 @@ This plugin provides curated list of pre-built features for the Sanity CMS. It w
 - [ ] General settings
 - [ ] Sitemap viewer
 - [ ] GTM ready
-- [ ] SEO ready (supports OpenGraph, canonical, etc)
-- [ ] SEO structured schema ready
+- [ ] Cookie Bot ready
+- [ ] SEO ready
+  - [ ] OpenGraph
+  - [ ] Canonical URLs
+  - [ ] Common tags such as title, description and etc.
+  - [ ] Structure schema
 
 ## API
 
