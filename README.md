@@ -4,18 +4,18 @@ This plugin provides curated list of pre-built features for the Sanity CMS. It w
 
 ## Features (WIP)
 
-- [] Organized structure of Sanity Structure Tool
-- [] Translation ready
-- [] Media library
-- [] Redirections
-- [] Forms
-- [] Modules content builder (section block)
-- [] Modules presets
-- [] General settings
-- [] Sitemap viewer
-- [] GTM ready
-- [] SEO ready (supports OpenGraph, canonical, etc)
-- [] SEO structured schema ready
+- [ ] Organized structure of Sanity Structure Tool
+- [ ] Translation ready
+- [ ] Media library
+- [ ] Redirections
+- [ ] Forms
+- [ ] Modules content builder (section block)
+- [ ] Modules presets
+- [ ] General settings
+- [ ] Sitemap viewer
+- [ ] GTM ready
+- [ ] SEO ready (supports OpenGraph, canonical, etc)
+- [ ] SEO structured schema ready
 
 ## API
 
