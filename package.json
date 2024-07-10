@@ -22,17 +22,22 @@
     ".": {
       "source": "./src/index.ts",
       "import": "./dist/index.js",
-      "default": "./dist/index.js"
+      "default": "./dist/index.mjs"
     },
     "./utils": {
       "source": "./src/utils/index.ts",
       "import": "./dist/utils/index.js",
-      "default": "./dist/utils/index.js"
+      "default": "./dist/utils/index.mjs"
     },
     "./query": {
       "source": "./src/query/index.ts",
       "import": "./dist/query/index.js",
-      "default": "./dist/query/index.js"
+      "default": "./dist/query/index.mjs"
+    },
+    "./config": {
+      "source": "./src/config/index.ts",
+      "import": "./dist/config/index.js",
+      "default": "./dist/config/index.mjs"
     },
     "./package.json": "./package.json"
   },

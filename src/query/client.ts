@@ -1,6 +1,6 @@
 import { createClient } from "@sanity/client";
-import { apiVersion, dataset, projectId, studioUrl, useCdn } from "./env";
-import { readToken } from "./token";
+import { apiVersion, dataset, projectId, studioUrl, useCdn } from "../config/env";
+import { readToken } from "../config/token";
 
 /**
  * The Sanity client that allows us to fetch data from the Sanity API. This client

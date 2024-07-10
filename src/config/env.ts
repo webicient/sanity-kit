@@ -24,23 +24,18 @@ export const projectId = assertValue(
 /**
  * The URL to use when previewing content in the Sanity Studio.
  */
-export const previewUrl = process.env.SANITY_STUDIO_PREVIEW_URL ?? "http://localhost:3000";
+export const previewUrl =
+  process.env.SANITY_STUDIO_PREVIEW_URL ?? "http://localhost:3000";
 
 /**
  * The URL to use when accessing the Sanity Studio.
  */
-export const studioUrl = assertValue(
-  process.env.SANITY_STUDIO_URL,
-  "Missing environment variable: SANITY_STUDIO_URL",
-);
+export const studioUrl = process.env.SANITY_STUDIO_URL ?? "/studio";
 
 /**
  * The secret to use when revalidating the cache.
  */
-export const revalidateSecret = assertValue(
-  process.env.SANITY_REVALIDATE_SECRET,
-  "Missing environment variable: SANITY_REVALIDATE_SECRET",
-);
+export const revalidateSecret = process.env.SANITY_REVALIDATE_SECRET;
 
 /**
  * Whether to use the CDN when querying the Sanity API.
