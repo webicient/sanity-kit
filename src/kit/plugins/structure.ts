@@ -1,7 +1,58 @@
-import { type StructureResolver } from "sanity/structure";
-import { getEntities } from "../../utils/config.js";
+import {
+  ListItemBuilder,
+  StructureBuilder,
+  type StructureResolver,
+} from "sanity/structure";
+import {
+  getContentTypes,
+  getEntities,
+  getTaxonomies,
+} from "../../utils/config";
+import { ContentType, Taxonomy } from "../../types/definition";
 
-const UNLISTED_DOCUMENTS = [{ name: "media.tag" }];
+function buildTaxonomy(
+  S: StructureBuilder,
+  { name, pluralTitle, icon }: Taxonomy,
+) {
+  return S.documentTypeListItem(name).title(pluralTitle).icon(icon);
+}
+
+/**
+ * Builds a content type for the Sanity Studio structure.
+ *
+ * @param S - The StructureBuilder instance.
+ * @param name - The name of the content type.
+ * @param pluralTitle - The plural title of the content type.
+ * @param icon - The icon of the content type.
+ * @param taxonomies - The taxonomies associated with the content type.
+ * @returns The ListItemBuilder representing the content type.
+ */
+function buildContentType(
+  S: StructureBuilder,
+  { name, pluralTitle, icon, taxonomies }: ContentType,
+): ListItemBuilder {
+  let child = null;
+
+  if (!taxonomies?.length) {
+    child = S.documentTypeList(name).title(pluralTitle);
+  } else {
+    // TODO: Improve for translations.
+    const groupTitle = `Manage ${pluralTitle}`;
+
+    child = S.list()
+      .title(groupTitle)
+      .items([
+        S.documentTypeListItem(name).title(pluralTitle),
+        ...getTaxonomies()
+          .filter(({ name: taxonomyName }) =>
+            taxonomies?.includes(taxonomyName),
+          )
+          .map((taxonomy) => buildTaxonomy(S, taxonomy)),
+      ]);
+  }
+
+  return S.listItem().title(pluralTitle).icon(icon).child(child);
+}
 
 export const structure = (): StructureResolver => {
   return (S) => {
@@ -12,16 +63,23 @@ export const structure = (): StructureResolver => {
         .child(S.editor().id(name).schemaType(name).documentId(name)),
     );
 
-    const allSchemaNames = [...getEntities(), ...UNLISTED_DOCUMENTS].map(
-      ({ name }) => name,
+    const contentTypes = getContentTypes().map((contentType) =>
+      buildContentType(S, contentType),
     );
 
+    const hiddenSchema = [
+      ...getEntities(),
+      ...getContentTypes(),
+      ...getTaxonomies(),
+      ...[{ name: "media.tag" }],
+    ].map(({ name }) => name);
+
     const defaultListItems = S.documentTypeListItems().filter(
-      (listItem) => !allSchemaNames.find((name) => name === listItem.getId()),
+      (listItem) => !hiddenSchema.find((name) => name === listItem.getId()),
     );
 
     return S.list()
       .title("Structure")
-      .items([...entities, S.divider(), ...defaultListItems]);
+      .items([...entities, S.divider(), ...contentTypes, ...defaultListItems]);
   };
 };

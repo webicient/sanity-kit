@@ -1,7 +1,13 @@
 import "server-only";
 
 import { createClient } from "@sanity/client";
-import { apiVersion, dataset, projectId, studioUrl, useCdn } from "../config/env";
+import {
+  apiVersion,
+  dataset,
+  projectId,
+  studioUrl,
+  useCdn,
+} from "../config/env";
 import { writeToken } from "../config/token";
 
 /**
