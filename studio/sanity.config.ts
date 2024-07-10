@@ -1,11 +1,10 @@
 import { defineConfig } from "sanity";
 import { sanityKit } from "@webicient/sanity-kit";
-import { studioUrl, projectId, dataset } from "@/sanity/env";
 import kitConfig from "./kit.config";
 
 export default defineConfig({
-  basePath: studioUrl,
-  projectId,
-  dataset,
+  basePath: process.env.SANITY_STUDIO_URL || "/studio",
+  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "",
+  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || "",
   plugins: [sanityKit(kitConfig)],
 });
