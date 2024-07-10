@@ -1,0 +1,107 @@
+{
+  "name": "@webicient/sanity-kit",
+  "version": "1.0.0",
+  "description": "This plugin provides curated list of pre-built features for the Sanity CMS. It was designed to cater +75% of all the needed tools in development and marketing to any of Webicient projects.",
+  "keywords": [
+    "sanity",
+    "sanity-plugin"
+  ],
+  "homepage": "https://github.com/webicient/sanity#readme",
+  "bugs": {
+    "url": "https://github.com/webicient/sanity/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/webicient/sanity.git"
+  },
+  "license": "MIT",
+  "author": "Webicient <dev@webicient.com>",
+  "sideEffects": false,
+  "type": "module",
+  "exports": {
+    ".": {
+      "source": "./src/index.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./utils": {
+      "source": "./src/utils/index.ts",
+      "import": "./dist/utils/index.js",
+      "default": "./dist/utils/index.js"
+    },
+    "./query": {
+      "source": "./src/query/index.ts",
+      "import": "./dist/query/index.js",
+      "default": "./dist/query/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "sanity.json",
+    "src",
+    "v2-incompatible.js"
+  ],
+  "scripts": {
+    "dev": "plugin-kit link-watch",
+    "build": "plugin-kit verify-package --silent && pkg-utils build --strict --check --clean",
+    "format": "prettier --write --cache --ignore-unknown .",
+    "lint": "eslint .",
+    "prepublishOnly": "npm run build",
+    "watch": "pkg-utils watch --strict"
+  },
+  "dependencies": {
+    "@sanity/client": "^6.20.1",
+    "@sanity/icons": "^3.0.0",
+    "@sanity/image-url": "^1.0.2",
+    "@sanity/incompatible-plugin": "^1.0.4",
+    "@sanity/vision": "^3.45.0",
+    "deepmerge": "^4.3.1",
+    "lodash": "^4.17.21",
+    "sanity-plugin-media": "^2.2.5",
+    "server-only": "^0.0.1"
+  },
+  "devDependencies": {
+    "@sanity/pkg-utils": "^6.8.19",
+    "@sanity/plugin-kit": "^4.0.16",
+    "@types/lodash": "^4.17.5",
+    "@types/react": "^18.3.3",
+    "@typescript-eslint/eslint-plugin": "^7.11.0",
+    "@typescript-eslint/parser": "^7.11.0",
+    "@vercel/style-guide": "^6.0.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-config-sanity": "^7.1.2",
+    "eslint-plugin-prettier": "^5.1.3",
+    "eslint-plugin-react": "^7.34.2",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "prettier": "^3.3.0",
+    "prettier-plugin-packagejson": "^2.5.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "sanity": "^3.45.0",
+    "styled-components": "^6.1",
+    "typescript": "^5.4.5"
+  },
+  "peerDependencies": {
+    "next": "14.2.3",
+    "next-sanity": "^9.3.10",
+    "react": "^18",
+    "sanity": "^3"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "sanityPlugin": {
+    "verifyPackage": {
+      "eslintImports": false,
+      "studioConfig": false,
+      "scripts": false
+    }
+  },
+  "browserslist": [
+    "extends @sanity/browserslist-config"
+  ]
+}
