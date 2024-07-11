@@ -37,15 +37,16 @@ function buildContentType(
     child = S.documentTypeList(name).title(pluralTitle);
   } else {
     // TODO: Improve for translations.
-    const groupTitle = `Manage ${pluralTitle}`;
+    const panelTitle = `Manage ${pluralTitle}`;
+    const taxonomyNames = taxonomies.map(({ name }) => name);
 
     child = S.list()
-      .title(groupTitle)
+      .title(panelTitle)
       .items([
         S.documentTypeListItem(name).title(pluralTitle),
         ...getTaxonomies()
           .filter(({ name: taxonomyName }) =>
-            taxonomies?.includes(taxonomyName),
+            taxonomyNames.includes(taxonomyName),
           )
           .map((taxonomy) => buildTaxonomy(S, taxonomy)),
       ]);

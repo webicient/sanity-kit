@@ -14,7 +14,7 @@ export const post = defineContentType({
   title: "Post",
   pluralTitle: "Posts",
   icon: EditIcon,
-  taxonomies: ["category"],
+  taxonomies: [{ name: "category", multiple: true, required: true }],
   supports: ["title", "slug", "excerpt", "body", "seo"],
   rewrite: "/post",
 });

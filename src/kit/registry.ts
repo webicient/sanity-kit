@@ -12,6 +12,7 @@ import {
   type Entity,
   type ContentType,
   type Taxonomy,
+  TaxonomySetting,
 } from "../types/definition";
 import { type CollectionSupports } from "../types/core";
 
@@ -32,26 +33,44 @@ export const getSupportFields = (
  * @param taxonomies - An array of strings representing the taxonomies.
  * @returns An array of FieldDefinition objects representing the relational fields.
  */
-export const getRelationalFields = (taxonomies: string[]): FieldDefinition[] =>
+export const getRelationalFields = (
+  taxonomies: TaxonomySetting[],
+): FieldDefinition[] =>
   taxonomies
     .map((_taxonomy) => {
-      const taxonomy = getTaxonomies().find(({ name }) => name === _taxonomy);
+      // Find the taxonomy object.
+      const taxonomy = getTaxonomies().find(
+        ({ name }) => name === _taxonomy.name,
+      );
+
       // Taxonomy not found, then return null.
       if (!taxonomy) {
         return null;
       }
 
+      if (_taxonomy.multiple) {
+        return defineField({
+          name: taxonomy.name,
+          title: taxonomy.pluralTitle || taxonomy.title,
+          type: "array",
+          group: "content",
+          of: [
+            {
+              type: "reference",
+              to: [{ type: taxonomy.name }],
+            },
+          ],
+          validation: (Rule) => (_taxonomy.required ? Rule.required() : Rule),
+        });
+      }
+
       return defineField({
         name: taxonomy.name,
         title: taxonomy.pluralTitle || taxonomy.title,
-        type: "array",
+        type: "reference",
+        to: [{ type: taxonomy.name }],
         group: "content",
-        of: [
-          {
-            type: "reference",
-            to: [{ type: taxonomy.name }],
-          },
-        ],
+        validation: (Rule) => (_taxonomy.required ? Rule.required() : Rule),
       });
     })
     .filter(Boolean) as FieldDefinition[];

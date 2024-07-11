@@ -19,8 +19,14 @@ export interface Collection extends Document {
   supports?: CollectionSupports[];
 }
 
+export type TaxonomySetting = {
+  name: string;
+  multiple?: boolean;
+  required?: boolean;
+};
+
 export interface ContentType extends Collection {
-  taxonomies?: string[];
+  taxonomies?: TaxonomySetting[];
   rewrite: string;
 }
 
