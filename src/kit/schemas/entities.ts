@@ -1,6 +1,6 @@
 import { HomeIcon } from "@sanity/icons";
 import { defineField } from "sanity";
-import { defineEntity } from "../define";
+import { defineEntity } from "../registry/define";
 import { coreGroups } from "../defaults/groups";
 
 export const home = defineEntity({

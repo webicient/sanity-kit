@@ -3,7 +3,7 @@ import {
   type Taxonomy,
   type ContentType,
   type Setting,
-} from "../types/definition";
+} from "../../types/definition";
 
 /**
  * Entities are used to define custom data structures that are not content types or taxonomies. It is

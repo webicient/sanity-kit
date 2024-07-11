@@ -34,7 +34,7 @@ const getContentTypeNameBySegment = (segment: string): string | undefined => {
   return getContentTypes()
     .filter(({ name }) => name !== "page")
     .find(({ rewrite }) => {
-      return rewrite.startsWith(segment);
+      return rewrite?.startsWith(segment);
     })?.name;
 };
 

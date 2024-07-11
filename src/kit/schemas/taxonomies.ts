@@ -1,5 +1,5 @@
 import { TagIcon } from "@sanity/icons";
-import { defineTaxonomy } from "../define";
+import { defineTaxonomy } from "../registry/define";
 
 export const category = defineTaxonomy({
   name: "category",

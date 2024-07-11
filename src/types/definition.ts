@@ -27,7 +27,7 @@ export type TaxonomySetting = {
 
 export interface ContentType extends Collection {
   taxonomies?: TaxonomySetting[];
-  rewrite: string;
+  rewrite?: string;
 }
 
 /* Non-interfaced types yet.  */

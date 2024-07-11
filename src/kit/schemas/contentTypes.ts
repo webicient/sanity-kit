@@ -1,11 +1,12 @@
 import { DocumentIcon, EditIcon } from "@sanity/icons";
-import { defineContentType } from "../define";
+import { defineContentType } from "../registry/define";
 
 export const page = defineContentType({
   name: "page",
   title: "Page",
   pluralTitle: "Pages",
   icon: DocumentIcon,
+  hierarchical: true,
   rewrite: "/",
 });
 

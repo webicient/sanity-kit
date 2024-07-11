@@ -1,6 +1,6 @@
 import { CogIcon } from "@sanity/icons";
 import { defineField } from "sanity";
-import { defineEntity } from "../define";
+import { defineEntity } from "../registry/define";
 
 export const general = defineEntity({
   name: "general",

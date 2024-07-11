@@ -3,7 +3,7 @@ import { definePlugin } from "sanity";
 import { structureTool } from "sanity/structure";
 import { media } from "sanity-plugin-media";
 import { type KitConfig } from "./kitConfig";
-import { normalizeCollections, normalizeSingletons } from "./registry";
+import { normalizeCollections, normalizeSingletons } from "./registry/document";
 import { singleton } from "./plugins/singleton";
 import { structure } from "./plugins/structure";
 import { presentationTool } from "sanity/presentation";
