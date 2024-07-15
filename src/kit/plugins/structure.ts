@@ -35,20 +35,18 @@ function buildContentTypeHierarchyFilter(
         .getClient({ apiVersion: API_VERSION })
         .fetch(groq`*[_id == "${contentTypeId}"][0]{ title }`);
 
-      return (
-        S.documentTypeList(contentType.name)
-          .title(document.title)
-          .params({ contentTypeId })
-          .filter(
-            // We need to check up maximum to 5 levels deep.
-            `_type == "${contentType.name}" && ($contentTypeId == parent._ref || $contentTypeId == parent->parent._ref || $contentTypeId == parent->parent->parent._ref || $contentTypeId == parent->parent->parent->parent._ref)`,
-          )
-          .initialValueTemplates([
-            S.initialValueTemplateItem(`kit.hierarchy.${contentType.name}`, {
-              parentId: contentTypeId,
-            }),
-          ])
-      );
+      return S.documentTypeList(contentType.name)
+        .title(document.title)
+        .params({ contentTypeId })
+        .filter(
+          // We need to check up maximum to 5 levels deep.
+          `_type == "${contentType.name}" && ($contentTypeId == parent._ref || $contentTypeId == parent->parent._ref || $contentTypeId == parent->parent->parent._ref || $contentTypeId == parent->parent->parent->parent._ref)`,
+        )
+        .initialValueTemplates([
+          S.initialValueTemplateItem(`kit.hierarchy.${contentType.name}`, {
+            parentId: contentTypeId,
+          }),
+        ]);
     });
 
   return (

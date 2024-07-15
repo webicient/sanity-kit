@@ -6,6 +6,7 @@ import { type KitConfig } from "./kitConfig";
 import { normalizeCollections, normalizeSingletons } from "./registry/document";
 import { singleton } from "./plugins/singleton";
 import { structure } from "./plugins/structure";
+import { productionUrl } from "./plugins/productionUrl";
 import { presentationTool } from "sanity/presentation";
 import { template } from "./plugins/template";
 
@@ -55,6 +56,9 @@ export const sanityKit = definePlugin<KitConfig>((config: KitConfig) => {
         ...normalizeSingletons(config.schema?.entities ?? []),
       ],
       templates: template(),
+    },
+    document: {
+      productionUrl,
     },
   };
 });
