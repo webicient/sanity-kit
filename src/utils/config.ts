@@ -31,3 +31,13 @@ export function getContentTypes(): ContentType[] {
 export function getTaxonomies(): Taxonomy[] {
   return getConfig().schema?.taxonomies ?? [];
 }
+
+/**
+ * Retrieves a taxonomy by its name.
+ *
+ * @param name - The name of the taxonomy to retrieve.
+ * @returns The taxonomy object if found, otherwise undefined.
+ */
+export function getTaxonomyByName(name: string): Taxonomy | undefined {
+  return getTaxonomies().find((taxonomy) => taxonomy.name === name);
+}

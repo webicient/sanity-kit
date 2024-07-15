@@ -7,6 +7,7 @@ import { normalizeCollections, normalizeSingletons } from "./registry/document";
 import { singleton } from "./plugins/singleton";
 import { structure } from "./plugins/structure";
 import { presentationTool } from "sanity/presentation";
+import { template } from "./plugins/template";
 
 /**
  * Usage in `sanity.config.ts` (or .js)
@@ -33,12 +34,12 @@ export const sanityKit = definePlugin<KitConfig>((config: KitConfig) => {
       presentationTool({
         previewUrl: {
           origin:
-            typeof location === 'undefined'
-              ? 'http://localhost:3000'
+            typeof location === "undefined"
+              ? "http://localhost:3000"
               : location.origin,
           draftMode: {
-            enable: '/api/draft',
-            disable: '/api/disable-draft',
+            enable: "/api/draft",
+            disable: "/api/disable-draft",
           },
         },
       }),
@@ -53,6 +54,7 @@ export const sanityKit = definePlugin<KitConfig>((config: KitConfig) => {
         ...normalizeCollections("taxonomy", config.schema?.taxonomies ?? []),
         ...normalizeSingletons(config.schema?.entities ?? []),
       ],
+      templates: template(),
     },
   };
 });
