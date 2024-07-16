@@ -5,7 +5,7 @@ import { SanityClient } from "sanity";
 
 const MAX_DEPTH = 10;
 
-async function getHierarchy(client: SanityClient, documentId: string | null) {
+async function getDocumentHierarchy(client: SanityClient, documentId: string | null) {
   const composeQuery = (depth: number = MAX_DEPTH): string => {
     return `"parent": parent->{ _id, "slug": slug.current, ${depth > 0 ? composeQuery(depth - 1) : ""}}`;
   };
@@ -31,21 +31,28 @@ async function getHierarchy(client: SanityClient, documentId: string | null) {
   return hierarchy;
 }
 
+/**
+ * Resolves the production URL for a document.
+ *
+ * @param prev - The previous production URL.
+ * @param context - The context object containing the necessary information.
+ * @returns A promise that resolves to the production URL for the document, or undefined if it cannot be resolved.
+ */
 export async function productionUrl(
   prev: string,
   context: ResolveProductionUrlContext,
 ): Promise<string | undefined> {
-  const { getClient, dataset, document } = context;
+  const { getClient, document } = context;
 
-  const slugSegments = await getHierarchy(
+  const slugSegments = await getDocumentHierarchy(
     getClient({ apiVersion: API_VERSION }),
     document._id,
   );
-  const slug = slugSegments.map(({ slug }) => slug).join("/");
-  const params = new URLSearchParams();
 
-  params.set("preview", "true");
-  params.set("dataset", dataset);
-
-  return resolveHref(document._type, slug) || prev;
+  return (
+    resolveHref(
+      document._type,
+      slugSegments.map(({ slug }) => slug).join("/"),
+    ) || prev
+  );
 }
