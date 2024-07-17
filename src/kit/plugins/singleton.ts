@@ -3,10 +3,13 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call -- Temporarily ignored. */
 /* eslint-disable @typescript-eslint/no-unsafe-return -- Temporarily ignored. */
 import { definePlugin } from "sanity";
-import { getEntities } from "../../utils/config";
+import { getEntities, getSettings } from "../../utils/config";
 
 export const singleton = definePlugin(() => {
-  const entities = getEntities().map(({ name }) => name);
+  const singletons = [
+    ...getEntities().map(({ name }) => name),
+    ...getSettings().map(({ name }) => name),
+  ];
 
   return {
     name: "@webicient/singleton",
@@ -15,13 +18,13 @@ export const singleton = definePlugin(() => {
         if (creationContext.type === "global") {
           return prev.filter(
             (templateItem: { templateId: string }) =>
-              !entities.includes(templateItem.templateId),
+              !singletons.includes(templateItem.templateId),
           );
         }
         return prev;
       },
       actions: (prev: any, { schemaType }: { schemaType: string }) => {
-        if (entities.includes(schemaType)) {
+        if (singletons.includes(schemaType)) {
           prev.filter(({ action }: any) => action !== "duplicate");
         }
         return prev;
