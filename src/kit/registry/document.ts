@@ -8,9 +8,9 @@ import {
 import { coreGroups } from "../defaults/groups";
 import { type ValidCollectionType } from "../../types/validity";
 import {
-  type Entity,
   type ContentType,
   type Taxonomy,
+  type Singleton,
 } from "../../types/definition";
 import { resolveHref } from "../../utils/url";
 import {
@@ -114,13 +114,15 @@ export function normalizeCollections(
 }
 
 /**
- * Normalizes an array of entities.
+ * Normalizes an array of singletons.
  *
- * @param entities - The array of entities to normalize.
- * @returns An array of normalized entities.
+ * @param singletons - The array of singletons to normalize.
+ * @returns An array of normalized singletons.
  */
-export function normalizeSingletons(entities: Entity[]): DocumentDefinition[] {
-  return entities.map(({ name, title, icon, groups = [], fields = [] }) =>
+export function normalizeSingletons(
+  singletons: Singleton[],
+): DocumentDefinition[] {
+  return singletons.map(({ name, title, icon, groups = [], fields = [] }) =>
     defineType({
       type: "document",
       name,
@@ -128,6 +130,9 @@ export function normalizeSingletons(entities: Entity[]): DocumentDefinition[] {
       icon,
       groups,
       fields,
+      preview: {
+        prepare: () => ({ title }),
+      },
     }),
   );
 }
