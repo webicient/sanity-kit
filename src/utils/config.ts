@@ -1,5 +1,6 @@
 import { getConfig } from "../kit/kitConfig";
 import {
+  Setting,
   type ContentType,
   type Entity,
   type Taxonomy,
@@ -30,6 +31,15 @@ export function getContentTypes(): ContentType[] {
  */
 export function getTaxonomies(): Taxonomy[] {
   return getConfig().schema?.taxonomies ?? [];
+}
+
+/**
+ * Get settings from the configuration.
+ *
+ * @returns Get all settings.
+ */
+export function getSettings(): Setting[] {
+  return getConfig().schema?.settings ?? [];
 }
 
 /**
