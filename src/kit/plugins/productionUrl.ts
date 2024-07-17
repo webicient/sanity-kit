@@ -5,7 +5,17 @@ import { SanityClient } from "sanity";
 
 const MAX_DEPTH = 10;
 
-async function getDocumentHierarchy(client: SanityClient, documentId: string | null) {
+/**
+ * Gets the document hierarchy for a given document.
+ *
+ * @param client - The Sanity client instance.
+ * @param documentId - The ID of the document to get the hierarchy for.
+ * @returns A promise that resolves to the document hierarchy.
+ */
+async function getDocumentHierarchy(
+  client: SanityClient,
+  documentId: string | null,
+) {
   const composeQuery = (depth: number = MAX_DEPTH): string => {
     return `"parent": parent->{ _id, "slug": slug.current, ${depth > 0 ? composeQuery(depth - 1) : ""}}`;
   };
