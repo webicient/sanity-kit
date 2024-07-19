@@ -108,6 +108,7 @@ export function normalizeCollections(
         groups: [...coreGroups, ...groups],
         fields: [...defaultFields, ...fields],
         preview,
+        ...collection,
       });
     },
   );
@@ -122,7 +123,7 @@ export function normalizeCollections(
 export function normalizeSingletons(
   singletons: Singleton[],
 ): DocumentDefinition[] {
-  return singletons.map(({ name, title, icon, groups = [], fields = [] }) =>
+  return singletons.map(({ name, title, icon, groups = [], fields = [], ...singleton }) =>
     defineType({
       type: "document",
       name,
@@ -133,6 +134,7 @@ export function normalizeSingletons(
       preview: {
         prepare: () => ({ title }),
       },
+      ...singleton,
     }),
   );
 }
