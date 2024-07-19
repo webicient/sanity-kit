@@ -6,7 +6,6 @@ import {
   type Entity,
   type Taxonomy,
   type ContentType,
-  type Type,
   type Setting,
 } from "../types/definition";
 import { seo } from "./schemas/types";
@@ -16,7 +15,7 @@ import { home } from "./schemas/entities";
 import { general } from "./schemas/settings";
 
 interface Schema {
-  types?: Type[];
+  types?: ReturnType<typeof defineType>[];
   contentTypes?: ContentType[];
   taxonomies?: Taxonomy[];
   entities?: Entity[];
