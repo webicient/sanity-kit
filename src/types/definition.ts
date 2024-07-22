@@ -1,38 +1,53 @@
-import { type ComponentType, type ReactNode } from "react";
-import { type FieldDefinition, type FieldGroupDefinition } from "sanity";
-import { type CollectionSupports } from "./core";
+import { DocumentDefinition, type FieldDefinition } from "sanity";
+import { CoreFields } from "../kit/defaults/fields";
 
-/**
- * Almost a replica of the `DocumentDefinition` type from the `sanity` package.
- */
-export interface Document {
-  name: string;
-  title: string;
-  icon?: ComponentType | ReactNode;
-  groups?: FieldGroupDefinition[];
-  fields?: FieldDefinition[];
-}
+export type Supports = keyof CoreFields;
 
-export interface Collection extends Document {
-  pluralTitle: string;
-  hierarchical?: boolean;
-  supports?: CollectionSupports[];
-}
+export type Hierarchical = boolean;
 
-export type TaxonomySetting = {
+export type PluralTitle = string;
+
+export type Rewrite = string;
+
+export type StructureMenu = {
+  level: number;
+};
+
+export type ContentTypeTaxonomy = {
   name: string;
   multiple?: boolean;
   required?: boolean;
 };
 
-export interface ContentType extends Collection {
-  taxonomies?: TaxonomySetting[];
-  rewrite?: string;
+export interface Collection
+  extends Omit<DocumentDefinition, "type" | "title" | "fields"> {
+  title: string;
+  pluralTitle: PluralTitle;
+  supports?: Supports[];
+  fields?: FieldDefinition[];
 }
 
-/* Non-interfaced types yet.  */
-export type Singleton = Document;
-export type Taxonomy = Collection;
-export type Entity = Singleton;
-export type Setting = Singleton;
-export type Type = FieldDefinition;
+export interface ContentType extends Collection {
+  rewrite?: Rewrite;
+  taxonomies?: ContentTypeTaxonomy[];
+  hierarchical?: Hierarchical;
+  menu?: StructureMenu;
+}
+
+export interface Taxonomy extends Collection {
+  /* No additional properties. */
+}
+
+export interface Singleton
+  extends Omit<DocumentDefinition, "type" | "title" | "fields"> {
+  title: string;
+  fields?: FieldDefinition[];
+}
+
+export interface Entity extends Singleton {
+  menu?: StructureMenu;
+}
+
+export interface Setting extends Singleton {
+  /* No additional properties. */
+}

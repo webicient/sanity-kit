@@ -1,6 +1,8 @@
 import {
   ChildResolverOptions,
+  Divider,
   ListBuilder,
+  ListItem,
   ListItemBuilder,
   StructureBuilder,
   type StructureResolver,
@@ -8,12 +10,44 @@ import {
 import {
   getContentTypes,
   getEntities,
+  getSettings,
   getTaxonomies,
 } from "../../utils/config";
-import { ContentType, TaxonomySetting } from "../../types/definition";
-import { FilterIcon } from "@sanity/icons";
+import {
+  ContentType,
+  ContentTypeTaxonomy,
+  Entity,
+} from "../../types/definition";
+import { CogIcon, FilterIcon } from "@sanity/icons";
 import { groq } from "next-sanity";
 import { API_VERSION } from "../defaults/constants";
+
+const LEVEL_1 = 1;
+const LEVEL_2 = 2;
+const LEVEL_3 = 3;
+const LEVEL_4 = 4;
+const LEVEL_5 = 5;
+
+/**
+ * Adds a type to each item in the given array.
+ *
+ * @param items - The array of items to add the type to.
+ * @param type - The type to add to each item.
+ * @returns The array of items with the type added.
+ */
+function prepareBuild(
+  items: Entity[] | ContentType[],
+  type: "entity" | "contentType",
+  defaultLevel: number,
+): Entity[] | ContentType[] {
+  return items.map((item) => {
+    return {
+      type: type,
+      menu: item.menu ? item.menu : { level: defaultLevel },
+      ...item,
+    };
+  }) as any;
+}
 
 /**
  * Builds a hierarchy filter for the given content type.
@@ -81,7 +115,7 @@ function buildContentTypeTaxonomyFilters(
   const getRegisteredTaxonomySetting = (taxonomyName: string) => {
     return (
       contentType?.taxonomies?.find(({ name }) => name === taxonomyName) ||
-      ({} as TaxonomySetting)
+      ({} as ContentTypeTaxonomy)
     );
   };
 
@@ -180,35 +214,93 @@ function buildContentType(
 }
 
 /**
+ * Builds the settings structure.
+ *
+ * @param {StructureBuilder} S - The StructureBuilder instance.
+ * @returns {ListItemBuilder} The settings list item.
+ */
+function buildSettings(S: StructureBuilder): ListItemBuilder {
+  return S.listItem()
+    .title("Settings")
+    .icon(CogIcon)
+    .child(
+      S.list()
+        .title("Settings")
+        .items([
+          ...getSettings().map((setting) =>
+            S.listItem()
+              .title(setting.title)
+              .icon(setting.icon)
+              .child(
+                S.editor()
+                  .id(setting.name)
+                  .schemaType(setting.name)
+                  .documentId(setting.name),
+              ),
+          ),
+        ]),
+    );
+}
+
+/**
+ * Builds a list item for the given entity.
+ *
+ * @param S - The StructureBuilder instance.
+ * @param entity - The entity object.
+ * @returns The ListItemBuilder instance.
+ */
+function buildEntity(S: StructureBuilder, entity: Entity): ListItemBuilder {
+  return S.listItem()
+    .title(entity.title)
+    .icon(entity.icon)
+    .child(
+      S.editor()
+        .id(entity.name)
+        .schemaType(entity.name)
+        .documentId(entity.name),
+    );
+}
+
+/**
+ * Builds an entity or content type based on the provided item.
+ *
+ * @param {StructureBuilder} S - The StructureBuilder instance.
+ * @param {Entity & WithType | ContentType & WithType} item - The item to build.
+ * @returns {ListItemBuilder | null} The built entity or content type as a ListItemBuilder, or null if the item type is not recognized.
+ */
+function maybeBuildEntitiesOrContentTypes(
+  S: StructureBuilder,
+  group: number,
+  items: ContentType[] | Entity[],
+): ListItemBuilder[] {
+  return items
+    .filter(({ menu }) => menu?.level === group)
+    .map((schema: any) => {
+      switch (schema.type) {
+        case "entity":
+          return buildEntity(S, schema);
+        case "contentType":
+          return buildContentType(S, schema);
+        default:
+          return null;
+      }
+    })
+    .filter(Boolean) as ListItemBuilder[];
+}
+
+/**
  * Sanity Kit main structure resolver.
  *
  * @returns The structure resolver for the Sanity Studio.
  */
 export const structure = (): StructureResolver => {
   return (S) => {
-    // Build entities.
-    const entities = getEntities().map((entity) =>
-      S.listItem()
-        .title(entity.title)
-        .icon(entity.icon)
-        .child(
-          S.editor()
-            .id(entity.name)
-            .schemaType(entity.name)
-            .documentId(entity.name),
-        ),
-    );
-
-    // Build content types.
-    const contentTypes = getContentTypes().map((contentType) =>
-      buildContentType(S, contentType),
-    );
-
     // Hide schemas that are not supposed to be visible in the structure pane.
     const hiddenSchema = [
       ...getEntities(),
       ...getContentTypes(),
       ...getTaxonomies(),
+      ...getSettings(),
       ...[{ name: "media.tag" }],
     ].map(({ name }) => name);
 
@@ -217,8 +309,55 @@ export const structure = (): StructureResolver => {
       (listItem) => !hiddenSchema.find((name) => name === listItem.getId()),
     );
 
-    return S.list()
-      .title("Structure")
-      .items([...entities, S.divider(), ...contentTypes, ...defaultListItems]);
+    // Moveable schema are entities and content types. This is used to determine the order of the schema in the structure pane.
+    const moveableSchema = [
+      ...prepareBuild(getEntities(), "entity", LEVEL_1),
+      ...prepareBuild(getContentTypes(), "contentType", LEVEL_2),
+    ];
+
+    let child: (ListItemBuilder | ListItem | Divider)[] = [];
+
+    // Level 1 is reserved for the entities.
+    child = [
+      ...child,
+      ...maybeBuildEntitiesOrContentTypes(S, LEVEL_1, moveableSchema),
+      S.divider(),
+    ];
+
+    // Level 2 is reserved for the content types.
+    child = [
+      ...child,
+      ...maybeBuildEntitiesOrContentTypes(S, LEVEL_2, moveableSchema),
+      S.divider(),
+    ];
+
+    // Level 3 is reserved other types that was registered directly to Sanity config.
+    const levelThreeGroup = [
+      ...maybeBuildEntitiesOrContentTypes(S, LEVEL_3, moveableSchema),
+      ...defaultListItems,
+    ];
+
+    if (levelThreeGroup.length) {
+      child = [...child, ...levelThreeGroup, S.divider()];
+    }
+
+    // Level 4 is reserved for the settings.
+    child = [
+      ...child,
+      ...maybeBuildEntitiesOrContentTypes(S, LEVEL_4, moveableSchema),
+      buildSettings(S),
+    ];
+
+    // Level 5 is reserved other types that was registered directly to Sanity config.
+    const levelFiveGroup = [
+      ...maybeBuildEntitiesOrContentTypes(S, LEVEL_5, moveableSchema),
+    ];
+
+    if (levelFiveGroup.length) {
+      child = [...child, S.divider(), ...levelFiveGroup];
+    }
+
+    // TODO: i18n
+    return S.list().title("Structure").items(child);
   };
 };

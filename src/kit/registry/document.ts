@@ -123,18 +123,19 @@ export function normalizeCollections(
 export function normalizeSingletons(
   singletons: Singleton[],
 ): DocumentDefinition[] {
-  return singletons.map(({ name, title, icon, groups = [], fields = [], ...singleton }) =>
-    defineType({
-      type: "document",
-      name,
-      title,
-      icon,
-      groups,
-      fields,
-      preview: {
-        prepare: () => ({ title }),
-      },
-      ...singleton,
-    }),
+  return singletons.map(
+    ({ name, title, icon, groups = [], fields = [], ...singleton }) =>
+      defineType({
+        type: "document",
+        name,
+        title,
+        icon,
+        groups,
+        fields,
+        preview: {
+          prepare: () => ({ title }),
+        },
+        ...singleton,
+      }),
   );
 }

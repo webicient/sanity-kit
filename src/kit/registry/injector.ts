@@ -1,7 +1,6 @@
 import { defineField, FieldDefinition } from "sanity";
-import { TaxonomySetting } from "../../types/definition";
+import { ContentTypeTaxonomy, Supports } from "../../types/definition";
 import { getTaxonomies } from "../../utils/config";
-import { CollectionSupports } from "../../types/core";
 import { coreFields } from "../defaults/fields";
 
 /**
@@ -10,9 +9,7 @@ import { coreFields } from "../defaults/fields";
  * @param supports - An array of support types.
  * @returns An array of field definitions.
  */
-export function getSupportFields(
-  supports: CollectionSupports[],
-): FieldDefinition[] {
+export function getSupportFields(supports: Supports[]): FieldDefinition[] {
   return supports.map((support) => coreFields[support]).filter(Boolean);
 }
 
@@ -60,7 +57,7 @@ export function injectTaxonomyFields(
  * @returns An array of FieldDefinition objects representing the relational fields.
  */
 export function getTaxonomyFields(
-  taxonomies: TaxonomySetting[],
+  taxonomies: ContentTypeTaxonomy[],
 ): FieldDefinition[] {
   return taxonomies
     .map((_taxonomy) => {

@@ -10,12 +10,13 @@ import {
  * usually used to create settings, options, or other data structures that are not content types or
  * taxonomies.
  */
-export function defineEntity(entity: Setting): Entity {
+export function defineEntity(entity: Entity): Entity {
   return entity;
 }
 
 /**
- * Defines a setting.
+ * Defines a setting, similar to an entity, but with a different menu group.
+ * Every setting is a singleton stored under `Settings` in the Sanity Studio.
  *
  * @param setting - The setting to define.
  * @returns The defined setting.
@@ -37,6 +38,6 @@ export function defineContentType(contentType: ContentType): ContentType {
  * taxonomy called "Categories" that groups content types like "Post" and "Page" into categories like
  * "News", "Blog", etc.
  */
-export function defineTaxonomy(taxonomy: Omit<Taxonomy, "type">): Taxonomy {
+export function defineTaxonomy(taxonomy: Taxonomy): Taxonomy {
   return taxonomy;
 }
