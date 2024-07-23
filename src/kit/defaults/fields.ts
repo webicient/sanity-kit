@@ -16,7 +16,7 @@ type DynamicType<T> = {
 /**
  * Core fields are the default fields that are supported by a collection.
  */
-export const coreFields: DynamicType<CoreFields> = {
+export const CORE_FIELDS: DynamicType<CoreFields> = {
   title: defineField({
     name: "title",
     title: "Title",

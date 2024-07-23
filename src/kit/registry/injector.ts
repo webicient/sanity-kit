@@ -1,7 +1,7 @@
 import { defineField, FieldDefinition } from "sanity";
 import { ContentTypeTaxonomy, Supports } from "../../types/definition";
 import { getTaxonomies } from "../../utils/config";
-import { coreFields } from "../defaults/fields";
+import { CORE_FIELDS } from "../defaults/fields";
 
 /**
  * Retrieves the field definitions for the given support types.
@@ -10,7 +10,7 @@ import { coreFields } from "../defaults/fields";
  * @returns An array of field definitions.
  */
 export function getSupportFields(supports: Supports[]): FieldDefinition[] {
-  return supports.map((support) => coreFields[support]).filter(Boolean);
+  return supports.map((support) => CORE_FIELDS[support]).filter(Boolean);
 }
 
 /**
