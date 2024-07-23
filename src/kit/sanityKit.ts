@@ -54,6 +54,7 @@ export const sanityKit = definePlugin<KitConfig>((config: KitConfig) => {
         ),
         ...normalizeCollections("taxonomy", config.schema?.taxonomies ?? []),
         ...normalizeSingletons(config.schema?.entities ?? []),
+        ...normalizeSingletons(config.schema?.settings ?? []),
       ],
       templates: template(),
     },

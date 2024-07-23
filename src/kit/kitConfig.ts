@@ -9,10 +9,18 @@ import {
   type Setting,
 } from "../types/definition";
 import { seo } from "./schemas/types";
-import { page, post } from "./schemas/contentTypes";
+import { page, post, preset, redirect } from "./schemas/contentTypes";
 import { category } from "./schemas/taxonomies";
 import { home } from "./schemas/entities";
-import { general } from "./schemas/settings";
+import {
+  advancedSettings,
+  generalSettings,
+  integrationSettings,
+  scriptsSettings,
+  seoSettings,
+  socialSettings,
+} from "./schemas/settings";
+import { defineType } from "sanity";
 
 interface Schema {
   types?: ReturnType<typeof defineType>[];
@@ -34,11 +42,18 @@ export function kitConfig(_config: KitConfig): KitConfig {
     config = deepmerge(
       {
         schema: {
-          types: [seo],
-          contentTypes: [page, post],
-          taxonomies: [category],
           entities: [home],
-          settings: [general],
+          contentTypes: [page, post, redirect, preset],
+          types: [seo],
+          taxonomies: [category],
+          settings: [
+            generalSettings,
+            socialSettings,
+            seoSettings,
+            integrationSettings,
+            scriptsSettings,
+            advancedSettings,
+          ],
         },
         languages: {},
       },

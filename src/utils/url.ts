@@ -22,6 +22,17 @@ export function isValidUrlSegment(segment?: string) {
 }
 
 /**
+ * Checks if a given domain is valid.
+ *
+ * @param domain - The domain to be checked.
+ * @returns A boolean indicating whether the domain is valid or not.
+ */
+export function isValidDomain(domain?: string) {
+  const pattern = /^(?!:\/\/)([a-zA-Z0-9-_]{1,63}\.)+[a-zA-Z]{2,6}$/;
+  return domain && pattern.test(domain);
+}
+
+/**
  * Resolves the href for a document based on its document type and slug.
  *
  * @param documentType - The document type.

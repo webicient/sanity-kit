@@ -1,4 +1,5 @@
 import { defineField, defineType } from "sanity";
+import { REDIRECT_OPTIONS } from "../defaults/constants";
 
 export const seo = defineType({
   name: "seo",
@@ -88,13 +89,7 @@ export const seo = defineType({
               type: "string",
               initialValue: "301",
               options: {
-                list: [
-                  { title: "301 Permanent move", value: "301" },
-                  { title: "302 Temporary move", value: "302" },
-                  { title: "307 Temporary redirect", value: "307" },
-                  { title: "410 Permanently deleted", value: "410" },
-                  { title: "451 Legal reasons", value: "451" },
-                ],
+                list: REDIRECT_OPTIONS,
                 layout: "radio",
               },
               hidden: ({ parent = {} }) => {
