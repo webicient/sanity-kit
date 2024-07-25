@@ -1,6 +1,4 @@
 import { type Metadata } from "next";
-import { imageBuilder } from "../utils/image";
-import { realUrl, resolveHref } from "../utils/url";
 import { SEO } from "../types/seo";
 import { Slug } from "sanity";
 import { WithHierarchyPayload } from "./loadHierarchy";

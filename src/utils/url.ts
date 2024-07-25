@@ -58,6 +58,22 @@ export function realUrl(domain?: string, path?: string) {
 }
 
 /**
+ * Transforms a rewrite template by replacing placeholders with corresponding values from the params object.
+ * @param template - The rewrite template string.
+ * @param params - An object containing key-value pairs for the placeholders in the template.
+ * @returns The transformed rewrite string.
+ */
+function transformRewrite(template: string, params?: Record<string, string>) {
+  if (!params) {
+    return template;
+  }
+
+  return template.replace(/:([a-zA-Z0-9_]+)/g, (_: string, key: number) => {
+    return params[key] !== undefined ? encodeURIComponent(params[key]) : "";
+  });
+}
+
+/**
  * Resolves the href for a document based on its document type and slug.
  *
  * @param documentType - The document type.
@@ -66,13 +82,13 @@ export function realUrl(domain?: string, path?: string) {
  */
 export function resolveHref(
   documentType?: string | null,
-  slug?: string,
+  params?: Record<string, string>,
 ): string | undefined {
   const allContentTypes = getContentTypes();
   const contentType = allContentTypes.find(
     (contentType) => contentType.name === documentType,
   );
   return contentType?.rewrite
-    ? `${endWithTrailingSlash(contentType.rewrite)}${slug}`
+    ? endWithTrailingSlash(transformRewrite(contentType.rewrite, params))
     : undefined;
 }

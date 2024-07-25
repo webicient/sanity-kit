@@ -10,7 +10,7 @@ export const page = defineContentType({
   pluralTitle: "Pages",
   icon: DocumentIcon,
   hierarchical: true,
-  rewrite: "/",
+  rewrite: "/:slug",
 });
 
 export const post = defineContentType({
@@ -20,7 +20,7 @@ export const post = defineContentType({
   icon: EditIcon,
   taxonomies: [{ name: "category", multiple: true, required: true }],
   supports: ["title", "slug", "excerpt", "body", "seo"],
-  rewrite: "/post",
+  rewrite: "/post/:slug",
 });
 
 export const redirect = defineContentType({

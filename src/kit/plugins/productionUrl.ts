@@ -60,9 +60,8 @@ export async function productionUrl(
   );
 
   return (
-    resolveHref(
-      document._type,
-      slugSegments.map(({ slug }) => slug).join("/"),
-    ) || prev
+    resolveHref(document._type, {
+      slug: slugSegments.map(({ slug }) => slug).join("/"),
+    }) || prev
   );
 }

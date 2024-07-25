@@ -93,7 +93,9 @@ export function normalizeCollections(
 
               return {
                 title,
-                subtitle: slug ? resolveHref(name, pathSegment) : undefined,
+                subtitle: slug
+                  ? resolveHref(name, { slug: pathSegment })
+                  : undefined,
               };
             },
           };
