@@ -1,5 +1,5 @@
 import { loadPost } from "@/loaders/loadPost";
-import { loadSettings, loadMetadata } from "@webicient/sanity-kit/query";
+import { loadMetadata } from "@webicient/sanity-kit/query";
 import { notFound } from "next/navigation";
 
 type RouteParams = {
