@@ -51,3 +51,13 @@ export function getSettings(): Setting[] {
 export function getTaxonomyByName(name: string): Taxonomy | undefined {
   return getTaxonomies().find((taxonomy) => taxonomy.name === name);
 }
+
+/**
+ * Retrieves a content type object by its name.
+ *
+ * @param name - The name of the content type to retrieve.
+ * @returns The content type object with the specified name, or undefined if not found.
+ */
+export function getContentTypeByName(name: string): ContentType | undefined {
+  return getContentTypes().find((contentType) => contentType.name === name);
+}

@@ -1,12 +1,22 @@
 import { getContentTypes } from "./config";
 
 /**
+ * Adds a leading slash to the given string if it doesn't already have one.
+ *
+ * @param str - The string to check.
+ * @returns The string with a leading slash.
+ */
+function startWithLeadingSlash(str: string) {
+  return str.startsWith("/") ? str : `/${str}`;
+}
+
+/**
  * Adds a trailing slash to the given string if it doesn't already have one.
  *
  * @param str - The string to add a trailing slash to.
  * @returns The string with a trailing slash.
  */
-function addTrailingSlash(str: string) {
+function endWithTrailingSlash(str: string) {
   return str.endsWith("/") ? str : str + "/";
 }
 
@@ -33,6 +43,21 @@ export function isValidDomain(domain?: string) {
 }
 
 /**
+ * Returns the real URL by combining the domain and path.
+ *
+ * @param domain - The domain of the URL.
+ * @param path - The path of the URL.
+ * @returns The real URL.
+ */
+export function realUrl(domain?: string, path?: string) {
+  if (!domain || !path) {
+    return path;
+  }
+
+  return `https://${domain}${startWithLeadingSlash(path)}`;
+}
+
+/**
  * Resolves the href for a document based on its document type and slug.
  *
  * @param documentType - The document type.
@@ -48,6 +73,6 @@ export function resolveHref(
     (contentType) => contentType.name === documentType,
   );
   return contentType?.rewrite
-    ? `${addTrailingSlash(contentType.rewrite)}${slug}`
+    ? `${endWithTrailingSlash(contentType.rewrite)}${slug}`
     : undefined;
 }

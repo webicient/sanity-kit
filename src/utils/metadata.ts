@@ -1,68 +1,25 @@
-import { type Metadata } from "next";
-import { groq } from "next-sanity";
-import { client } from "../query/client";
-import { getContentTypes } from "./config";
+import { Metadata } from "next";
+import { WithSEOPayload } from "../query";
+import { realUrl, resolveHref } from "./url";
 import { imageBuilder } from "./image";
-import { resolveHref } from "./url";
-import merge from "lodash/merge";
-import { SEO } from "../types/seo";
 
-export interface MetadataParams {
-  params: {
-    segments: string[];
-  };
-}
+/**
+ * Retrieves metadata for a document based on its SEO data.
+ *
+ * @param domain - The domain of the website.
+ * @param path - The path of the document.
+ * @param document - The document with SEO data.
+ * @returns The metadata object containing title, description, openGraph, alternates, and robots settings.
+ */
+export function getMetadata(
+  domain: string,
+  path: string,
+  document: WithSEOPayload,
+): Metadata {
+  const { _type, slug, seo } = document;
 
-export interface MetadataPayload {
-  title: string;
-  seo: SEO;
-}
-
-const QUERY = groq`
-  *[_type == $type && slug.current == $slug][0]{
-    title,
-    seo
-  }
-`;
-
-const getContentTypeNameBySegment = (segment: string): string | undefined => {
-  // Special case for the root path.
-  if (segment === "/") {
-    return "page";
-  }
-
-  return getContentTypes()
-    .filter(({ name }) => name !== "page")
-    .find(({ rewrite }) => {
-      return rewrite?.startsWith(segment);
-    })?.name;
-};
-
-export async function getMetadata() {}
-
-export async function metadata(
-  { params }: MetadataParams,
-  override?: Metadata,
-): Promise<Metadata> {
-  const segments = [...params.segments];
-  const slug = segments.pop();
-  const contentType = getContentTypeNameBySegment(`/${segments.join("/")}`);
-
-  const data = await client.fetch<MetadataPayload>(
-    QUERY,
-    { slug: slug, type: contentType },
-    { next: { tags: [`${contentType}:${slug}`] } },
-  );
-
-  if (!data) {
-    return {};
-  }
-
-  const { seo } = data;
-
-  if (!seo) {
-    // Helpful for debugging, or incorrect usage of this function in Vercel.
-    console.log(`No SEO data found for ${contentType}:${slug}.`);
+  // These 3 are required.
+  if (!domain || !path || !seo) {
     return {};
   }
 
@@ -79,9 +36,11 @@ export async function metadata(
     : null;
 
   // If the document has SEO data, use it. Otherwise, use the document title.
-  metadata.title = seo?.title || data.title;
+  metadata.title = seo?.title || document.title;
+
   // Get the description from the SEO data.
   metadata.description = seo?.description;
+
   // OpenGraph data.
   metadata.openGraph = {
     title: seo?.openGraph?.title || metadata.title,
@@ -97,18 +56,22 @@ export async function metadata(
         ]
       : undefined,
   };
+
   // Canonical URL.
   metadata.alternates = {
-    canonical: data.seo?.advanced?.canonical || resolveHref(contentType, slug),
-  };
-  // Robots settings.
-  metadata.robots = {
-    index: data.seo?.advanced?.robots?.index !== false,
-    follow: data.seo?.advanced?.robots?.follow !== false,
-    noarchive: data.seo?.advanced?.robots?.archive === false,
-    noimageindex: data.seo?.advanced?.robots?.imageIndex === false,
-    nosnippet: data.seo?.advanced?.robots?.snippet === false,
+    canonical: resolveHref(_type, slug.current)
+      ? realUrl(domain, path)
+      : document.seo?.advanced?.canonical,
   };
 
-  return merge(metadata, override);
+  // Robots settings.
+  metadata.robots = {
+    index: document.seo?.advanced?.robots?.index !== false,
+    follow: document.seo?.advanced?.robots?.follow !== false,
+    noarchive: document.seo?.advanced?.robots?.archive === false,
+    noimageindex: document.seo?.advanced?.robots?.imageIndex === false,
+    nosnippet: document.seo?.advanced?.robots?.snippet === false,
+  };
+
+  return metadata;
 }
