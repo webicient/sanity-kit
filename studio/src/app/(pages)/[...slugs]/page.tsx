@@ -9,7 +9,7 @@ type RouteParams = {
 };
 
 export async function generateMetadata({ params: { slugs } }: RouteParams) {
-  return await loadMetadata({ contentType: "page", slugs });
+  return await loadMetadata({ type: "contentType", name: "page", slugs });
 }
 
 export default async function Page({ params: { slugs } }: RouteParams) {

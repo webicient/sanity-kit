@@ -1,10 +1,10 @@
-import { loadQuery } from "./loadQuery";
-import { getContentTypeByName } from "../utils/config";
+import { loadQuery } from "../loadQuery";
+import { getContentTypeByName } from "../../utils/config";
 import {
   appendFieldToGROQStatement,
   composeParentFieldQuery,
-} from "../utils/groq";
-import { ContentType } from "../types";
+} from "../../utils/groq";
+import { isSupports } from "./utils";
 
 type LoadContentTypeParams = {
   /**
@@ -20,17 +20,6 @@ type LoadContentTypeParams = {
    */
   projection?: string;
 };
-
-/**
- * Checks if the given content type supports the specified type.
- *
- * @param contentType - The content type to check.
- * @param type - The type to check for support.
- * @returns A boolean indicating whether the content type supports the specified type.
- */
-function isSupports(contentType: ContentType, type: string) {
-  return contentType.supports?.findIndex((t) => t === type) !== -1;
-}
 
 /**
  * Loads a single content type document by name and slugs.

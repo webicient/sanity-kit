@@ -68,9 +68,11 @@ function transformRewrite(template: string, params?: Record<string, string>) {
     return template;
   }
 
-  return template.replace(/:([a-zA-Z0-9_]+)/g, (_: string, key: number) => {
-    return params[key] !== undefined ? encodeURIComponent(params[key]) : "";
-  });
+  return decodeURIComponent(
+    template.replace(/:([a-zA-Z0-9_]+)/g, (_: string, key: number) => {
+      return params[key] !== undefined ? encodeURIComponent(params[key]) : "";
+    }),
+  );
 }
 
 /**

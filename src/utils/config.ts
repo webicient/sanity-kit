@@ -61,3 +61,13 @@ export function getTaxonomyByName(name: string): Taxonomy | undefined {
 export function getContentTypeByName(name: string): ContentType | undefined {
   return getContentTypes().find((contentType) => contentType.name === name);
 }
+
+/**
+ * Retrieves an entity by its name.
+ *
+ * @param name - The name of the entity to retrieve.
+ * @returns The entity with the specified name, or undefined if not found.
+ */
+export function getEntityByName(name: string): Entity | undefined {
+  return getEntities().find((entity) => entity.name === name);
+}

@@ -1,7 +1,7 @@
-import { loadQuery } from "./loadQuery";
-import { getTaxonomyByName } from "../utils/config";
-import { appendFieldToGROQStatement } from "../utils/groq";
-import { Taxonomy } from "../types";
+import { loadQuery } from "../loadQuery";
+import { getTaxonomyByName } from "../../utils/config";
+import { appendFieldToGROQStatement } from "../../utils/groq";
+import { isSupports } from "./utils";
 
 type LoadTaxonomyParams = {
   /**
@@ -17,17 +17,6 @@ type LoadTaxonomyParams = {
    */
   projection?: string;
 };
-
-/**
- * Checks if the given taxonomy supports the specified type.
- *
- * @param taxonomy - The taxonomy to check.
- * @param type - The type to check for support.
- * @returns A boolean indicating whether the taxonomy supports the specified type.
- */
-function isSupports(taxonomy: Taxonomy, type: string) {
-  return taxonomy.supports?.findIndex((t) => t === type) !== -1;
-}
 
 /**
  * Loads a single taxonomy document by name and slugs.

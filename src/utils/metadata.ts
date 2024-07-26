@@ -59,9 +59,9 @@ export function getMetadata(
 
   // Canonical URL.
   metadata.alternates = {
-    canonical: resolveHref(_type, { slug: slug.current })
-      ? realUrl(domain, path)
-      : document.seo?.advanced?.canonical,
+    canonical: document.seo?.advanced?.canonical
+      ? document.seo?.advanced?.canonical
+      : realUrl(domain, resolveHref(_type, { slug: path })),
   };
 
   // Robots settings.

@@ -1,6 +1,6 @@
 import { Slug } from "sanity";
-import { loadQuery } from "./loadQuery";
-import { composeParentFieldQuery } from "../utils/groq";
+import { loadQuery } from "../loadQuery";
+import { composeParentFieldQuery } from "../../utils/groq";
 
 type Options = {
   /**

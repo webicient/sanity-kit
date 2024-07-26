@@ -1,5 +1,5 @@
-import { getSettings } from "../utils/config";
-import { loadQuery } from "./loadQuery";
+import { getSettings } from "../../utils/config";
+import { loadQuery } from "../loadQuery";
 
 type LoadSettingsParams = {
   /**
