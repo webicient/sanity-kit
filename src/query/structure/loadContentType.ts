@@ -70,7 +70,7 @@ export async function loadContentType<PayloadType>({
   // Always add `type` field.
   queryProjection = appendFieldToGROQStatement(
     queryProjection,
-    "_type: type",
+    `"_type": _type`,
   );
 
   // Additional field for hierarchical content type.
