@@ -107,6 +107,13 @@ export const integrationSettings = defineSetting({
       description:
         "The tag manager ID for Google Tag Manager. You can find this in the GTM interface. Formatted as `GTM-XXXXXX",
     }),
+    defineField({
+      name: "markerId",
+      title: "Marker ID",
+      type: "string",
+      description:
+        "Integration ID for marker.io. You can find this in the marker.io interface.",
+    }),
   ],
 });
 

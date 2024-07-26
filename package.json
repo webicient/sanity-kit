@@ -20,24 +20,29 @@
   "type": "module",
   "exports": {
     ".": {
-      "source": "./src/index.ts",
-      "import": "./dist/index.js",
-      "default": "./dist/index.mjs"
+      "source": "./src/kit/index.ts",
+      "import": "./dist/kit/index.js",
+      "default": "./dist/kit/index.js"
     },
     "./utils": {
       "source": "./src/utils/index.ts",
       "import": "./dist/utils/index.js",
-      "default": "./dist/utils/index.mjs"
+      "default": "./dist/utils/index.js"
     },
     "./query": {
       "source": "./src/query/index.ts",
       "import": "./dist/query/index.js",
-      "default": "./dist/query/index.mjs"
+      "default": "./dist/query/index.js"
     },
     "./config": {
       "source": "./src/config/index.ts",
       "import": "./dist/config/index.js",
-      "default": "./dist/config/index.mjs"
+      "default": "./dist/config/index.js"
+    },
+    "./components": {
+      "source": "./src/components/index.ts",
+      "import": "./dist/components/index.js",
+      "default": "./dist/components/index.js"
     },
     "./package.json": "./package.json"
   },
@@ -58,6 +63,7 @@
     "watch": "pkg-utils watch --strict"
   },
   "dependencies": {
+    "@next/third-parties": "^14.2.5",
     "@sanity/client": "^6.20.1",
     "@sanity/icons": "^3.0.0",
     "@sanity/image-url": "^1.0.2",
