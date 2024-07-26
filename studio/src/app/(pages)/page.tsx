@@ -7,12 +7,12 @@ import { getMetadata } from "@webicient/sanity-kit/utils";
 import Image from "next/image";
 
 export async function generateMetadata() {
-  const [{ data: post }, { data: generalSettings }] = await Promise.all([
+  const [{ data: home }, { data: generalSettings }] = await Promise.all([
     loadEntity<WithSEOPayload>({ name: "home" }),
     loadSettings({ name: "generalSettings" }),
   ]);
 
-  return getMetadata(post, {}, generalSettings.domain);
+  return getMetadata(home, {}, generalSettings.domain);
 }
 
 export default async function Home() {
