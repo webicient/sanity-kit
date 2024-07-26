@@ -2,24 +2,49 @@ import { Metadata } from "next";
 import { WithSEOPayload } from "../query";
 import { realUrl, resolveHref } from "./url";
 import { imageBuilder } from "./image";
+import { headers } from "next/headers";
+import { getContentTypes, getEntities } from "./config";
 
 /**
- * Retrieves metadata for a document based on its SEO data.
+ * Retrieves the metadata for a document.
  *
- * @param domain - The domain of the website.
- * @param path - The path of the document.
- * @param document - The document with SEO data.
- * @returns The metadata object containing title, description, openGraph, alternates, and robots settings.
+ * @param document - The document object.
+ * @param replaceData - Optional. A record of key-value pairs used to replace data in the URL.
+ * @param siteDomain - Optional. The domain of the site.
+ * @returns The metadata object.
+ * @throws Error if the document is null, or if the document does not have a type or the type's rewrite URL is empty.
  */
 export function getMetadata(
-  domain: string,
-  path: string,
-  document: WithSEOPayload,
+  document: WithSEOPayload | null,
+  replaceData?: Record<string, string>,
+  siteDomain?: string,
 ): Metadata {
-  const { _type, slug, seo } = document;
+  // In case a document was not passed.
+  if (!document) {
+    return {};
+  }
 
-  // These 3 are required.
-  if (!domain || !path || !seo) {
+  // If the document does not have a type.
+  if (!document?._type) {
+    throw new Error(
+      `Kit: The \`_type\` field is missing in the document object. Maybe query projection is missing the \`_type\` field.`,
+    );
+  }
+
+  const typeObject = [...getContentTypes(), ...getEntities()].find(
+    (type) => type.name === document?._type,
+  );
+
+  if (!typeObject || !typeObject.rewrite) {
+    throw new Error(
+      `Kit: Document with name "${typeObject}" not found or its rewrite URL is empty.`,
+    );
+  }
+
+  const { _type, seo } = document;
+
+  // In case a document was passed without SEO data.
+  if (!seo) {
     return {};
   }
 
@@ -57,11 +82,13 @@ export function getMetadata(
       : undefined,
   };
 
+  const domain = siteDomain || headers().get("host") || "";
+
   // Canonical URL.
   metadata.alternates = {
     canonical: document.seo?.advanced?.canonical
       ? document.seo?.advanced?.canonical
-      : realUrl(domain, resolveHref(_type, { slug: path })),
+      : realUrl(domain, resolveHref(_type, replaceData)),
   };
 
   // Robots settings.

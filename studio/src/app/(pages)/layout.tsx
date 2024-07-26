@@ -5,7 +5,9 @@ export async function generateMetadata() {
   const { data: seoSettings } = await loadSettings({ name: "seoSettings" });
 
   return {
-    title: seoSettings.title,
+    title: seoSettings.title
+      ? { template: `%s | ${seoSettings.title}` }
+      : undefined,
     description: seoSettings.description,
   };
 }

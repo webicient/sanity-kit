@@ -1,8 +1,18 @@
-import { loadEntity, loadMetadata } from "@webicient/sanity-kit/query";
+import {
+  loadEntity,
+  loadSettings,
+  WithSEOPayload,
+} from "@webicient/sanity-kit/query";
+import { getMetadata } from "@webicient/sanity-kit/utils";
 import Image from "next/image";
 
 export async function generateMetadata() {
-  return await loadMetadata({ type: "entity", name: "home" });
+  const [{ data: post }, { data: generalSettings }] = await Promise.all([
+    loadEntity<WithSEOPayload>({ name: "home" }),
+    loadSettings({ name: "generalSettings" }),
+  ]);
+
+  return getMetadata(post, {}, generalSettings.domain);
 }
 
 export default async function Home() {

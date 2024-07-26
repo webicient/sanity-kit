@@ -1,5 +1,6 @@
 import { loadPage } from "@/loaders/loadPage";
-import { loadMetadata } from "@webicient/sanity-kit/query";
+import { loadSettings } from "@webicient/sanity-kit/query";
+import { getMetadata } from "@webicient/sanity-kit/utils";
 import { notFound } from "next/navigation";
 
 type RouteParams = {
@@ -9,7 +10,12 @@ type RouteParams = {
 };
 
 export async function generateMetadata({ params: { slugs } }: RouteParams) {
-  return await loadMetadata({ type: "contentType", name: "page", slugs });
+  const [{ data: page }, { data: generalSettings }] = await Promise.all([
+    loadPage({ slugs }),
+    loadSettings({ name: "generalSettings" }),
+  ]);
+
+  return getMetadata(page, { slug: slugs.join("/") }, generalSettings.domain);
 }
 
 export default async function Page({ params: { slugs } }: RouteParams) {
