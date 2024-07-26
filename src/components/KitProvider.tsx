@@ -2,7 +2,7 @@
 
 import { GoogleTagManager } from "@next/third-parties/google";
 import Script from "next/script";
-import React, { createContext, useContext, ReactNode } from "react";
+import React, { createContext, useContext, ReactNode, Suspense } from "react";
 import PageView from "./analytics/PageView";
 
 interface KitContextProps {
@@ -42,7 +42,9 @@ export const KitProvider: React.FC<KitProviderProps> = ({
         <>
           <GoogleTagManager gtmId={integrationSettings?.gtmId} />
           {/* Tracking page view */}
-          <PageView />
+          <Suspense>
+            <PageView />
+          </Suspense>
         </>
       )}
       {/* Custom scripts inside head. */}
