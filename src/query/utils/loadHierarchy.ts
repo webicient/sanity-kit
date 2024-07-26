@@ -52,11 +52,9 @@ export async function loadHierarchy(documentId: string, options: Options) {
     }
   `;
 
-  const { data } = await loadQuery<WithHierarchyPayload>(
+  return await loadQuery<WithHierarchyPayload>(
     query,
     { id: documentId },
     { next: { tags: [documentId] } },
   );
-
-  return data;
 }
