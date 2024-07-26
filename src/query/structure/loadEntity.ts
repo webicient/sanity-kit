@@ -39,7 +39,7 @@ export async function loadEntity<PayloadType>({
     }
   }
 
-  let query = `*[_type == $type][0]`;
+  let query = `*[_id == "home"][0]`;
 
   let queryProjection = projection
     ? `${projection}`
