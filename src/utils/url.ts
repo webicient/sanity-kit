@@ -1,4 +1,4 @@
-import { getContentTypes } from "./config";
+import { getContentTypes, getEntities } from "./config";
 
 /**
  * Adds a leading slash to the given string if it doesn't already have one.
@@ -84,11 +84,15 @@ export function resolveHref(
   documentType?: string | null,
   params?: Record<string, string>,
 ): string | undefined {
-  const allContentTypes = getContentTypes();
-  const contentType = allContentTypes.find(
-    (contentType) => contentType.name === documentType,
+  const rewriteableTypes = [...getContentTypes(), ...getEntities()].filter(
+    ({ rewrite }) => Boolean(rewrite),
   );
-  return contentType?.rewrite
-    ? endWithTrailingSlash(transformRewrite(contentType.rewrite, params))
+
+  const readType = rewriteableTypes.find(
+    (readType) => readType.name === documentType,
+  );
+
+  return readType?.rewrite
+    ? endWithTrailingSlash(transformRewrite(readType.rewrite, params))
     : undefined;
 }

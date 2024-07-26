@@ -8,6 +8,7 @@ export const home = defineEntity({
   title: "Home",
   icon: HomeIcon,
   groups: coreGroups,
+  rewrite: "/",
   fields: [
     defineField({
       name: "title",

@@ -46,6 +46,7 @@ export interface Singleton
 
 export interface Entity extends Singleton {
   menu?: StructureMenu;
+  rewrite?: Rewrite;
 }
 
 export interface Setting extends Singleton {
