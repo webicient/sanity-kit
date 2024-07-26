@@ -45,9 +45,9 @@ export async function loadContentType<PayloadType>({
   slugs,
   projection,
 }: LoadContentTypeParams) {
-  const contentType = getContentTypeByName(name);
+  const contentTypeObject = getContentTypeByName(name);
 
-  if (!contentType) {
+  if (!contentTypeObject) {
     throw new Error(`Content type "${name}" not found.`);
   }
 
@@ -80,7 +80,7 @@ export async function loadContentType<PayloadType>({
     }`;
 
   // Additional field for hierarchical content type.
-  if (Boolean(contentType.hierarchical)) {
+  if (Boolean(contentTypeObject.hierarchical)) {
     queryProjection = appendFieldToGROQStatement(
       queryProjection,
       composeParentFieldQuery(),
@@ -95,7 +95,7 @@ export async function loadContentType<PayloadType>({
     "excerpt",
     "body",
   ]) {
-    if (isSupports(contentType, type)) {
+    if (isSupports(contentTypeObject, type)) {
       queryProjection = appendFieldToGROQStatement(
         queryProjection,
         `"${type}": ${type}`,
