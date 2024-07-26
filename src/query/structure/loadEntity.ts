@@ -48,6 +48,12 @@ export async function loadEntity<PayloadType>({
       _type
     }`;
 
+  // Always add `type` field.
+  queryProjection = appendFieldToGROQStatement(
+    queryProjection,
+    "_type: type",
+  );
+
   for (const type of [
     "seo",
     "slug",

@@ -54,9 +54,14 @@ export async function loadTaxonomy<PayloadType>({
     ? `${projection}`
     : `{
       _id,
-      _type,
-      slug
+      _type
     }`;
+
+  // Always add `type` field.
+  queryProjection = appendFieldToGROQStatement(
+    queryProjection,
+    "_type: type",
+  );
 
   for (const type of [
     "seo",
