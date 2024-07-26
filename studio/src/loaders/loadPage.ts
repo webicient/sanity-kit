@@ -13,12 +13,12 @@ export interface PagePayload extends WithSEOPayload, WithHierarchyPayload {
 }
 
 type PageParams = {
-  slugs: string[];
+  slug: string[];
 };
 
-export async function loadPage({ slugs }: PageParams) {
+export async function loadPage({ slug }: PageParams) {
   return await loadContentType<PagePayload | null>({
     name: "page",
-    slugs,
+    slug,
   });
 }

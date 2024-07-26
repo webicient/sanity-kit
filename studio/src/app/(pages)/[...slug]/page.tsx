@@ -1,25 +1,31 @@
 import { loadPage } from "@/loaders/loadPage";
-import { loadSettings } from "@webicient/sanity-kit/query";
+import { generateStaticSlugs, loadSettings } from "@webicient/sanity-kit/query";
 import { getMetadata } from "@webicient/sanity-kit/utils";
 import { notFound } from "next/navigation";
 
 type RouteParams = {
   params: {
-    slugs: string[];
+    slug: string[];
   };
 };
 
-export async function generateMetadata({ params: { slugs } }: RouteParams) {
+export const dynamicParams = true;
+
+export async function generateStaticParams() {
+  return await generateStaticSlugs({ type: "page" });
+}
+
+export async function generateMetadata({ params: { slug } }: RouteParams) {
   const [{ data: page }, { data: generalSettings }] = await Promise.all([
-    loadPage({ slugs }),
+    loadPage({ slug }),
     loadSettings({ name: "generalSettings" }),
   ]);
 
-  return getMetadata(page, { slug: slugs.join("/") }, generalSettings.domain);
+  return getMetadata(page, { slug: slug.join("/") }, generalSettings.domain);
 }
 
-export default async function Page({ params: { slugs } }: RouteParams) {
-  const { data: page } = await loadPage({ slugs });
+export default async function Page({ params: { slug } }: RouteParams) {
+  const { data: page } = await loadPage({ slug });
 
   if (!page) {
     notFound();

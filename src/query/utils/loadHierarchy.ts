@@ -27,7 +27,7 @@ export function getDocumentHierarchyPath(document: WithHierarchyPayload) {
   let currentDoc: WithHierarchyPayload | null | undefined = document;
 
   while (currentDoc) {
-    hierarchy.unshift({ slug: currentDoc.slug.current });
+    hierarchy.unshift(currentDoc.slug.current);
     currentDoc = currentDoc?.parent;
   }
 

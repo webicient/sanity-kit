@@ -14,7 +14,7 @@ type LoadContentTypeParams = {
   /**
    * Accepts slug segments as an array.
    */
-  slugs: string[];
+  slug: string[];
   /**
    * Custom projection for the query. Must starts with `{` and ends with `}`.
    */
@@ -22,16 +22,16 @@ type LoadContentTypeParams = {
 };
 
 /**
- * Loads a single content type document by name and slugs.
+ * Loads a single content type document by name and slug.
  *
  * @param name - The name of the content type.
- * @param slugs - The slugs of the content type.
+ * @param slug - The slug of the content type.
  * @param projection - The projection for the content type.
  * @returns A promise that resolves to the loaded content type.
  */
 export async function loadContentType<PayloadType>({
   name,
-  slugs,
+  slug,
   projection,
 }: LoadContentTypeParams) {
   const contentTypeObject = getContentTypeByName(name);
@@ -48,14 +48,14 @@ export async function loadContentType<PayloadType>({
     }
   }
 
-  const _slugs = slugs.reverse();
+  const _slug = slug.reverse();
 
-  // Construct the dynamic GROQ query that retrieves the page by its slug and its parent slugs.
-  let query = `*[_type == $type && slug.current == "${_slugs[0]}"`;
+  // Construct the dynamic GROQ query that retrieves the page by its slug and its parent slug.
+  let query = `*[_type == $type && slug.current == "${_slug[0]}"`;
 
-  for (let i = 1; i < _slugs.length; i++) {
+  for (let i = 1; i < _slug.length; i++) {
     let parentPath = "parent" + "->parent".repeat(i - 1);
-    query += ` && ${parentPath}->slug.current == "${_slugs[i]}"`;
+    query += ` && ${parentPath}->slug.current == "${_slug[i]}"`;
   }
 
   query += `][0]`;
@@ -102,6 +102,6 @@ export async function loadContentType<PayloadType>({
   return await loadQuery<PayloadType | null>(
     query,
     { type: name },
-    { next: { tags: [`${name}:${_slugs[0]}`] } },
+    { next: { tags: [`${name}:${_slug[0]}`] } },
   );
 }

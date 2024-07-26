@@ -13,12 +13,12 @@ export interface PostPayload extends WithSEOPayload, WithHierarchyPayload {
 }
 
 type PostParams = {
-  slugs: string[];
+  slug: string[];
 };
 
-export async function loadPost({ slugs }: PostParams) {
+export async function loadPost({ slug }: PostParams) {
   return await loadContentType<PostPayload | null>({
     name: "post",
-    slugs,
+    slug,
   });
 }

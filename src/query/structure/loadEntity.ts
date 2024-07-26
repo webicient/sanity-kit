@@ -15,7 +15,7 @@ type LoadEntityParams = {
 };
 
 /**
- * Loads a single entity document by name and slugs.
+ * Loads a single entity document by name and slug.
  *
  * @param name - The name of the entity.
  * @param projection - The projection for the entity.

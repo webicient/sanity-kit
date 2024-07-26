@@ -11,7 +11,7 @@ type LoadTaxonomyParams = {
   /**
    * Accepts slug segments as an array.
    */
-  slugs: string[];
+  slug: string[];
   /**
    * Custom projection for the query. Must starts with `{` and ends with `}`.
    */
@@ -19,16 +19,16 @@ type LoadTaxonomyParams = {
 };
 
 /**
- * Loads a single taxonomy document by name and slugs.
+ * Loads a single taxonomy document by name and slug.
  *
  * @param name - The name of the taxonomy.
- * @param slugs - The slugs of the taxonomy.
+ * @param slug - The slug of the taxonomy.
  * @param projection - The projection for the taxonomy.
  * @returns A promise that resolves to the loaded taxonomy.
  */
 export async function loadTaxonomy<PayloadType>({
   name,
-  slugs,
+  slug,
   projection,
 }: LoadTaxonomyParams) {
   const taxonomy = getTaxonomyByName(name);
@@ -45,10 +45,10 @@ export async function loadTaxonomy<PayloadType>({
     }
   }
 
-  const _slugs = slugs.reverse();
+  const _slug = slug.reverse();
 
-  // Construct the dynamic GROQ query that retrieves the page by its slug and its parent slugs.
-  let query = `*[_type == $type && slug.current == "${_slugs[0]}"][0]`;
+  // Construct the dynamic GROQ query that retrieves the page by its slug and its parent slug.
+  let query = `*[_type == $type && slug.current == "${_slug[0]}"][0]`;
 
   let queryProjection = projection
     ? `${projection}`
@@ -84,6 +84,6 @@ export async function loadTaxonomy<PayloadType>({
   return await loadQuery<PayloadType | null>(
     query,
     { type: name },
-    { next: { tags: [`${name}:${_slugs[0]}`] } },
+    { next: { tags: [`${name}:${_slug[0]}`] } },
   );
 }
