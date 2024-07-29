@@ -39,8 +39,8 @@ export const sanityKit = definePlugin<KitConfig>((config: KitConfig) => {
               ? "http://localhost:3000"
               : location.origin,
           draftMode: {
-            enable: "/api/draft",
-            disable: "/api/disable-draft",
+            enable: "/api/draft/enable",
+            disable: "/api/draft/disable",
           },
         },
       }),
