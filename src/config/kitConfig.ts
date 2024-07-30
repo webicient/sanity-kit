@@ -21,6 +21,7 @@ import {
   socialSettings,
 } from "./schemas/settings";
 import { defineType } from "sanity";
+import { seo } from "./schemas/objects";
 
 interface Schema {
   types?: ReturnType<typeof defineType>[];
