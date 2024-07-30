@@ -39,10 +39,11 @@
       "import": "./dist/config/index.js",
       "default": "./dist/config/index.js"
     },
-    "./components": {
-      "source": "./src/components/index.ts",
-      "import": "./dist/components/index.js",
-      "default": "./dist/components/index.js"
+    "./provider": {
+      "source": "./src/provider/index.ts",
+      "import": "./dist/provider/index.js",
+      "default": "./dist/provider/index.js"
+    },
     "./visual-editing": {
       "source": "./src/visual-editing/index.ts",
       "import": "./dist/visual-editing/index.js",
