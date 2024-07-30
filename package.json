@@ -20,9 +20,9 @@
   "type": "module",
   "exports": {
     ".": {
-      "source": "./src/kit/index.ts",
-      "import": "./dist/kit/index.js",
-      "default": "./dist/kit/index.js"
+      "source": "./src/index.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
     },
     "./utils": {
       "source": "./src/utils/index.ts",
