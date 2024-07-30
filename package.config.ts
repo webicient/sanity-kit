@@ -5,6 +5,7 @@ export default defineConfig({
   dist: "dist",
   tsconfig: "tsconfig.dist.json",
   rollup: {
+    output: { preserveModules: true },
     plugins: [preserveDirectives()],
   },
   extract: {
