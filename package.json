@@ -43,6 +43,10 @@
       "source": "./src/components/index.ts",
       "import": "./dist/components/index.js",
       "default": "./dist/components/index.js"
+    "./visual-editing": {
+      "source": "./src/visual-editing/index.ts",
+      "import": "./dist/visual-editing/index.js",
+      "default": "./dist/visual-editing/index.js"
     },
     "./package.json": "./package.json"
   },

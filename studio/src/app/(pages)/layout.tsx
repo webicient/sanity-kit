@@ -1,5 +1,6 @@
 import { loadSettings } from "@webicient/sanity-kit/query";
-import { SiteProvider } from "@/components/SiteProvider";
+import { KitVisualEditing } from "@webicient/sanity-kit/visual-editing";
+import { KitProvider } from "@webicient/sanity-kit/provider";
 
 export async function generateMetadata() {
   const { data: seoSettings } = await loadSettings({ name: "seoSettings" });
@@ -18,5 +19,11 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const { data: settings } = await loadSettings();
-  return <SiteProvider settings={settings}>{children}</SiteProvider>;
+
+  return (
+    <KitProvider settings={settings}>
+      {children}
+      <KitVisualEditing />
+    </KitProvider>
+  );
 }
