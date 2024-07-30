@@ -1,4 +1,4 @@
-import preserveDirectives from 'rollup-preserve-directives';
+import preserveDirectives from "rollup-preserve-directives";
 import { defineConfig } from "@sanity/pkg-utils";
 
 export default defineConfig({
