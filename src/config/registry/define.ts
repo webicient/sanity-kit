@@ -3,6 +3,7 @@ import {
   type Taxonomy,
   type ContentType,
   type Setting,
+  type Module,
 } from "../../types/definition";
 
 /**
@@ -40,4 +41,14 @@ export function defineContentType(contentType: ContentType): ContentType {
  */
 export function defineTaxonomy(taxonomy: Taxonomy): Taxonomy {
   return taxonomy;
+}
+
+/**
+ * Defines a module.
+ *
+ * @param module - The module to define.
+ * @returns The defined module.
+ */
+export function defineModule(module: Module): Module {
+  return module;
 }

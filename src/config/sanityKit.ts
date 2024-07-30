@@ -3,12 +3,17 @@ import { definePlugin } from "sanity";
 import { structureTool } from "sanity/structure";
 import { media } from "sanity-plugin-media";
 import { type KitConfig } from "./kitConfig";
-import { normalizeCollections, normalizeSingletons } from "./registry/document";
+import {
+  normalizeCollections,
+  normalizeModules,
+  normalizeSingletons,
+} from "./registry/document";
 import { singleton } from "./plugins/singleton";
 import { structure } from "./plugins/structure";
 import { productionUrl } from "./plugins/productionUrl";
 import { presentationTool } from "sanity/presentation";
 import { template } from "./plugins/template";
+import { getObjectsWithConfigRequired } from "./schemas/objects";
 
 /**
  * Usage in `sanity.config.ts` (or .js)
@@ -47,14 +52,16 @@ export const sanityKit = definePlugin<KitConfig>((config: KitConfig) => {
     ],
     schema: {
       types: [
-        ...(config.schema?.types ?? []),
+        ...getObjectsWithConfigRequired(),
+        ...normalizeModules(config.schema?.modules ?? []),
+        ...(config.schema?.objects ?? []),
         ...normalizeCollections(
           "contentType",
           config.schema?.contentTypes ?? [],
         ),
         ...normalizeCollections("taxonomy", config.schema?.taxonomies ?? []),
-        ...normalizeSingletons(config.schema?.entities ?? []),
-        ...normalizeSingletons(config.schema?.settings ?? []),
+        ...normalizeSingletons("entity", config.schema?.entities ?? []),
+        ...normalizeSingletons("setting", config.schema?.settings ?? []),
       ],
       templates: template(),
     },

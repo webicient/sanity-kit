@@ -1,5 +1,6 @@
 import { getConfig } from "../config/kitConfig";
 import {
+  Module,
   Setting,
   type ContentType,
   type Entity,
@@ -40,6 +41,15 @@ export function getTaxonomies(): Taxonomy[] {
  */
 export function getSettings(): Setting[] {
   return getConfig().schema?.settings ?? [];
+}
+
+/**
+ * Retrieves the modules from the configuration.
+ *
+ * @returns An array of modules.
+ */
+export function getModules(): Module[] {
+  return getConfig().schema?.modules ?? [];
 }
 
 /**

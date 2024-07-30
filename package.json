@@ -44,6 +44,11 @@
       "import": "./dist/provider/index.js",
       "default": "./dist/provider/index.js"
     },
+    "./resolvers": {
+      "source": "./src/resolvers/index.ts",
+      "import": "./dist/resolvers/index.js",
+      "default": "./dist/resolvers/index.js"
+    },
     "./visual-editing": {
       "source": "./src/visual-editing/index.ts",
       "import": "./dist/visual-editing/index.js",

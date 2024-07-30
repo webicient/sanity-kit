@@ -1,16 +1,20 @@
 import {
   defineType,
-  type FieldDefinition,
   defineField,
+  type PreviewConfig,
+  type FieldDefinition,
   type DocumentDefinition,
-  PreviewConfig,
 } from "sanity";
 import { coreGroups } from "../defaults/groups";
-import { type ValidCollectionType } from "../../types/validity";
+import {
+  ValidSingletonType,
+  type ValidCollectionType,
+} from "../../types/validity";
 import {
   type ContentType,
   type Taxonomy,
-  type Singleton,
+  type Module,
+  type Entity,
 } from "../../types/definition";
 import { resolveHref } from "../../utils/url";
 import {
@@ -102,13 +106,27 @@ export function normalizeCollections(
         }
       }
 
+      // Merge the core groups with the custom groups.
+      const _groups = [...coreGroups, ...groups];
+      // Ensure that all fields have a group.
+      const _fields = [...defaultFields, ...fields].map((field) => {
+        if (_groups.some((group) => group.name === field.group)) {
+          return field;
+        }
+
+        return {
+          ...field,
+          group: "content",
+        };
+      });
+
       return defineType({
         type: "document",
         name,
         title,
         icon,
-        groups: [...coreGroups, ...groups],
-        fields: [...defaultFields, ...fields],
+        groups: _groups,
+        fields: _fields,
         preview,
         ...collection,
       });
@@ -123,21 +141,71 @@ export function normalizeCollections(
  * @returns An array of normalized singletons.
  */
 export function normalizeSingletons(
-  singletons: Singleton[],
+  type: ValidSingletonType,
+  singletons: Entity[],
 ): DocumentDefinition[] {
   return singletons.map(
-    ({ name, title, icon, groups = [], fields = [], ...singleton }) =>
-      defineType({
+    ({
+      name,
+      title,
+      icon,
+      groups = [],
+      fields = [],
+      supports = [],
+      ...singleton
+    }) => {
+      let defaultFields: FieldDefinition[] = getSupportFields(supports);
+      let _groups = groups;
+      let _fields = fields;
+
+      if (type === "entity") {
+        // Merge the core groups with the custom groups.
+        _groups = [...coreGroups, ...groups];
+        // Ensure that all fields have a group.
+        _fields = [...defaultFields, ...fields].map((field) => {
+          if (_groups.some((group) => group.name === field.group)) {
+            return field;
+          }
+
+          return {
+            ...field,
+            group: "content",
+          };
+        });
+      }
+
+      return defineType({
         type: "document",
+        name,
+        title,
+        icon,
+        groups: _groups,
+        fields: _fields,
+        preview: {
+          prepare: () => ({ title }),
+        },
+        ...singleton,
+      });
+    },
+  );
+}
+
+export function normalizeModules(
+  modules: Module[],
+): ReturnType<typeof defineType>[] {
+  return modules.map(
+    ({ name, title, icon, groups = [], fields = [], imageUrl, ...module }) =>
+      defineType({
+        type: "object",
         name,
         title,
         icon,
         groups,
         fields,
         preview: {
-          prepare: () => ({ title }),
+          prepare: () => ({ title, imageUrl: imageUrl || undefined }),
         },
-        ...singleton,
+        ...module,
       }),
   );
 }

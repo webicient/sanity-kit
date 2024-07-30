@@ -1,5 +1,6 @@
 import { DocumentDefinition, type FieldDefinition } from "sanity";
 import { CoreFields } from "../config/defaults/fields";
+import { ComponentType } from "react";
 
 export type Supports = keyof CoreFields;
 
@@ -52,4 +53,11 @@ export interface Entity extends Singleton {
 
 export interface Setting extends Singleton {
   /* No additional properties. */
+}
+
+export interface Module extends Omit<DocumentDefinition, "type" | "fields"> {
+  renderer: ComponentType<any>;
+  query: string;
+  fields?: FieldDefinition[];
+  imageUrl: string;
 }

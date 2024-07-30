@@ -7,8 +7,8 @@ import {
   type Taxonomy,
   type ContentType,
   type Setting,
+  Module,
 } from "../types/definition";
-import { seo } from "./schemas/types";
 import { page, post, preset, redirect } from "./schemas/contentTypes";
 import { category } from "./schemas/taxonomies";
 import { home } from "./schemas/entities";
@@ -21,14 +21,15 @@ import {
   socialSettings,
 } from "./schemas/settings";
 import { defineType } from "sanity";
-import { seo } from "./schemas/objects";
+import { editor, seo } from "./schemas/objects";
 
 interface Schema {
-  types?: ReturnType<typeof defineType>[];
+  objects?: ReturnType<typeof defineType>[];
   contentTypes?: ContentType[];
   taxonomies?: Taxonomy[];
   entities?: Entity[];
   settings?: Setting[];
+  modules?: Module[];
 }
 
 export interface KitConfig {
@@ -45,7 +46,7 @@ export function kitConfig(_config: KitConfig): KitConfig {
         schema: {
           entities: [home],
           contentTypes: [page, post, redirect, preset],
-          types: [seo],
+          objects: [seo, editor],
           taxonomies: [category],
           settings: [
             generalSettings,

@@ -10,6 +10,7 @@ export const page = defineContentType({
   pluralTitle: "Pages",
   icon: DocumentIcon,
   hierarchical: true,
+  supports: ["title", "slug", "seo", "modules"],
   rewrite: "/:slug",
 });
 
