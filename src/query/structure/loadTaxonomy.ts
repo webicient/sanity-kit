@@ -2,6 +2,7 @@ import { loadQuery } from "../loadQuery";
 import { getTaxonomyByName } from "../../utils/config";
 import { appendFieldToGROQStatement } from "../../utils/groq";
 import { isSupports } from "./utils";
+import { CORE_FIELDS } from "../../kit/defaults/fields";
 
 type LoadTaxonomyParams = {
   /**
@@ -63,14 +64,7 @@ export async function loadTaxonomy<PayloadType>({
     `"_type": _type`,
   );
 
-  for (const type of [
-    "seo",
-    "slug",
-    "title",
-    "featuredImage",
-    "excerpt",
-    "body",
-  ]) {
+  for (const type of Object.keys(CORE_FIELDS)) {
     if (isSupports(taxonomy, type)) {
       queryProjection = appendFieldToGROQStatement(
         queryProjection,

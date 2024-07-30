@@ -5,6 +5,7 @@ import {
   composeParentFieldQuery,
 } from "../../utils/groq";
 import { isSupports } from "./utils";
+import { CORE_FIELDS } from "../../kit/defaults/fields";
 
 type LoadContentTypeParams = {
   /**
@@ -81,14 +82,7 @@ export async function loadContentType<PayloadType>({
     );
   }
 
-  for (const type of [
-    "seo",
-    "slug",
-    "title",
-    "featuredImage",
-    "excerpt",
-    "body",
-  ]) {
+  for (const type of Object.keys(CORE_FIELDS)) {
     if (isSupports(contentTypeObject, type)) {
       queryProjection = appendFieldToGROQStatement(
         queryProjection,

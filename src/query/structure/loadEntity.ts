@@ -2,6 +2,7 @@ import { loadQuery } from "../loadQuery";
 import { getEntityByName } from "../../utils/config";
 import { appendFieldToGROQStatement } from "../../utils/groq";
 import { isSupports } from "./utils";
+import { CORE_FIELDS } from "../../kit/defaults/fields";
 
 type LoadEntityParams = {
   /**
@@ -54,14 +55,7 @@ export async function loadEntity<PayloadType>({
     `"_type": _type`,
   );
 
-  for (const type of [
-    "seo",
-    "slug",
-    "title",
-    "featuredImage",
-    "excerpt",
-    "body",
-  ]) {
+  for (const type of Object.keys(CORE_FIELDS)) {
     if (isSupports(entity, type)) {
       queryProjection = appendFieldToGROQStatement(
         queryProjection,
