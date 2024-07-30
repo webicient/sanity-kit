@@ -1,3 +1,3 @@
-export * from "./kit/kitConfig";
-export * from "./kit/sanityKit";
-export * from "./kit/registry/define";
+export * from "./config/kitConfig";
+export * from "./config/sanityKit";
+export * from "./config/registry/define";

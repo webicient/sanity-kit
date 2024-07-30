@@ -5,8 +5,8 @@ import {
   projectId,
   studioUrl,
   useCdn,
-} from "../config/env";
-import { readToken } from "../config/token";
+} from "../env/env";
+import { readToken } from "../env/token";
 
 /**
  * The Sanity client that allows us to fetch data from the Sanity API. This client

@@ -1,5 +1,5 @@
 import { DocumentDefinition, type FieldDefinition } from "sanity";
-import { CoreFields } from "../kit/defaults/fields";
+import { CoreFields } from "../config/defaults/fields";
 
 export type Supports = keyof CoreFields;
 

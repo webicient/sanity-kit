@@ -2,7 +2,7 @@ import { loadQuery } from "../loadQuery";
 import { getEntityByName } from "../../utils/config";
 import { appendFieldToGROQStatement } from "../../utils/groq";
 import { isSupports } from "./utils";
-import { CORE_FIELDS } from "../../kit/defaults/fields";
+import { CORE_FIELDS } from "../../config/defaults/fields";
 
 type LoadEntityParams = {
   /**

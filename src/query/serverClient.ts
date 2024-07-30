@@ -7,8 +7,8 @@ import {
   projectId,
   studioUrl,
   useCdn,
-} from "../config/env";
-import { writeToken } from "../config/token";
+} from "../env/env";
+import { writeToken } from "../env/token";
 
 /**
  * The Sanity client that allows to read and update data in the Sanity API. This client

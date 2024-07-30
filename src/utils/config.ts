@@ -1,4 +1,4 @@
-import { getConfig } from "../kit/kitConfig";
+import { getConfig } from "../config/kitConfig";
 import {
   Setting,
   type ContentType,
