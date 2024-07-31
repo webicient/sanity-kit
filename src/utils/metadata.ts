@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { realUrl, resolveHref } from "./url";
 import { imageBuilder } from "./image";
 import { getContentTypes, getEntities } from "./config";
-import { SEOPayload } from "../types";
+import { SEOPayload } from "../types/payload";
 
 /**
  * Retrieves the metadata for a document.

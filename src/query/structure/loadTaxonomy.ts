@@ -1,6 +1,6 @@
 import { loadQuery } from "../loadQuery";
 import { getTaxonomyByName } from "../../utils/config";
-import { composeSupportsQuery, isValidProjection } from "../../utils/groq";
+import { supportsFieldsProjection, isValidProjection } from "../../utils/groq";
 
 type LoadTaxonomyParams = {
   /**
@@ -47,7 +47,14 @@ export async function loadTaxonomy<PayloadType>({
 
   // Construct the dynamic GROQ query that retrieves the page by its slug and its parent slug.
   let query = `*[_type == $type && slug.current == "${_slug[0]}"][0]`;
-  let queryProjection = composeSupportsQuery(taxonomy, projection);
+  let queryProjection = projection
+    ? `${projection}`
+    : `{
+      _id,
+      _type
+    }`;
+
+  queryProjection = supportsFieldsProjection(taxonomy, queryProjection);
   query += queryProjection;
 
   return await loadQuery<PayloadType | null>(

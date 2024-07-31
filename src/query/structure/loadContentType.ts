@@ -1,9 +1,9 @@
 import { loadQuery } from "../loadQuery";
 import { getContentTypeByName } from "../../utils/config";
 import {
-  appendFieldToGROQStatement,
-  composeParentFieldQuery,
-  composeSupportsQuery,
+  appendFieldtoProjection,
+  parentProjection,
+  supportsFieldsProjection,
   isValidProjection,
 } from "../../utils/groq";
 
@@ -60,13 +60,20 @@ export async function loadContentType<PayloadType>({
 
   query += `][0]`;
 
-  let queryProjection = composeSupportsQuery(contentTypeObject, projection);
+  let queryProjection = projection
+    ? `${projection}`
+    : `{
+      _id,
+      _type
+    }`;
+
+  queryProjection = supportsFieldsProjection(contentTypeObject, queryProjection);
 
   // Additional field for hierarchical content type.
   if (Boolean(contentTypeObject.hierarchical)) {
-    queryProjection = appendFieldToGROQStatement(
+    queryProjection = appendFieldtoProjection(
       queryProjection,
-      composeParentFieldQuery(),
+      parentProjection(),
     );
   }
 

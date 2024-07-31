@@ -1,7 +1,7 @@
 import { serverClient } from "../serverClient";
-import { PARENT_FIELD_QUERY } from "../groq";
-import { HierarchyPayload } from "../../types";
+import { HierarchyPayload } from "../../types/payload";
 import { getDocumentHierarchyPath } from "../../utils/hierarchy";
+import { parentProjection } from "../../utils/groq";
 
 type GenerateStaticSlugsParams = {
   /**
@@ -13,7 +13,7 @@ type GenerateStaticSlugsParams = {
 export async function generateStaticSlugs({ type }: GenerateStaticSlugsParams) {
   const query = `*[_type == $type && defined(slug)]{
     slug,
-    ${PARENT_FIELD_QUERY}
+    ${parentProjection()}
   }`;
 
   const docs = await serverClient

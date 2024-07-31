@@ -1,4 +1,4 @@
-import { HierarchyPayload } from "../types";
+import { HierarchyPayload } from "../types/payload";
 
 /**
  * Retrieves the hierarchy path of a document.

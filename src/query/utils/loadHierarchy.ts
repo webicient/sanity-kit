@@ -1,6 +1,6 @@
 import { loadQuery } from "../loadQuery";
-import { composeParentFieldQuery } from "../../utils/groq";
-import { HierarchyPayload } from "../../types";
+import { parentProjection } from "../../utils/groq";
+import { HierarchyPayload } from "../../types/payload";
 
 type Options = {
   /**
@@ -23,7 +23,7 @@ export async function loadHierarchy(documentId: string, options: Options) {
       _type,
       title,
       slug,
-      ${composeParentFieldQuery(options.depth)}
+      ${parentProjection(options.depth)}
     }
   `;
 

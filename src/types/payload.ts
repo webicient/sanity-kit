@@ -27,6 +27,7 @@ export interface ExcerptPayload {
 }
 
 export interface HierarchyPayload {
+  _type: string;
   title: string;
   slug: Slug;
   parent: HierarchyPayload | null;

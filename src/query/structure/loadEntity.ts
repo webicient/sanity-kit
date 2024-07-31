@@ -1,6 +1,6 @@
 import { loadQuery } from "../loadQuery";
 import { getEntityByName } from "../../utils/config";
-import { composeSupportsQuery, isValidProjection } from "../../utils/groq";
+import { supportsFieldsProjection, isValidProjection } from "../../utils/groq";
 
 type LoadEntityParams = {
   /**
@@ -38,7 +38,14 @@ export async function loadEntity<PayloadType>({
   }
 
   let query = `*[_id == $type][0]`;
-  let queryProjection = composeSupportsQuery(entity, projection);
+  let queryProjection = projection
+    ? `${projection}`
+    : `{
+      _id,
+      _type
+    }`;
+
+  queryProjection = supportsFieldsProjection(entity, queryProjection);
   query += queryProjection;
 
   return await loadQuery<PayloadType | null>(

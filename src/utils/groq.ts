@@ -1,5 +1,6 @@
+import { groq } from "next-sanity";
 import { CORE_FIELDS } from "../config/defaults/fields";
-import { ContentType, Entity, Taxonomy } from "../types";
+import { ContentType, Entity, Taxonomy } from "../types/definition";
 import { getModules, isSupports } from "./config";
 
 type GroqQuery = string;
@@ -21,14 +22,14 @@ export function isValidProjection(projection: string): boolean {
 }
 
 /**
- * Appends new fields to an existing GROQ query.
+ * Appends new fields to an existing GROQ query statement.
  *
  * @param existingQuery - The existing GROQ query.
  * @param newFields - The new fields to append to the query.
  * @returns The modified GROQ query with the new fields appended.
  * @throws {Error} If the existing query is not in the expected format.
  */
-export function appendFieldToGROQStatement(
+export function appendFieldtoProjection(
   existingQuery: GroqQuery,
   newFields: GroqQuery,
 ): GroqQuery {
@@ -52,7 +53,7 @@ export function appendFieldToGROQStatement(
  * @param depth The depth of the hierarchy to retrieve. Defaults to MAX_DEPTH.
  * @returns The composed parent query field.
  */
-export function composeParentFieldQuery(depth: number = MAX_DEPTH): string {
+export function parentProjection(depth: number = MAX_DEPTH): string {
   let queryField = `"parent": parent->{ _type, _id, title, slug`;
   for (let i = 1; i < depth; i++) {
     queryField += `, "parent": parent->{ _type, _id, title, slug`;
@@ -67,31 +68,22 @@ export function composeParentFieldQuery(depth: number = MAX_DEPTH): string {
  *
  * @returns The composed query string.
  */
-export function composeModulesQuery(): string {
-  // Validate the GROQ query for each module.
-  for (const module of getModules()) {
-    if (module.query) {
-      if (!isValidProjection(module.query)) {
+export function modulesFieldProjection(): string {
+  const modulesQueries = getModules()
+    .map((module) => {
+      if (module.query && !isValidProjection(module.query)) {
         throw new Error(
           `Invalid GROQ query format for module "${module.name}".`,
         );
       }
-    }
-  }
 
-  const modulesQueries = getModules()
-    .map((module) => {
       return module.query
         ? `_type == "${module.name}" => ${module.query}`
         : null;
     })
     .filter(Boolean);
 
-  let query = "modules[] {";
-  query += ["...", ...modulesQueries].join(",");
-  query += "}";
-
-  return query;
+  return ["...", ...modulesQueries].join(",");
 }
 
 /**
@@ -101,31 +93,32 @@ export function composeModulesQuery(): string {
  * @param projection - The custom projection string to include in the query. If not provided, default fields will be included.
  * @returns The GROQ query projection string.
  */
-export function composeSupportsQuery(
+export function supportsFieldsProjection(
   schemaObject: ContentType | Entity | Taxonomy,
   projection?: string,
 ): string {
-  let queryProjection = projection
-    ? `${projection}`
-    : `{
-      _id,
-      _type
-    }`;
+  if (!projection) {
+    return "...";
+  }
 
-  // Always add `type` field.
-  queryProjection = appendFieldToGROQStatement(
+  let queryProjection = projection;
+
+  // Always add `_type` field.
+  queryProjection = appendFieldtoProjection(
     queryProjection,
     `"_type": _type`,
   );
 
   for (const type of Object.keys(CORE_FIELDS)) {
     if (type === "modules" && isSupports(schemaObject, type)) {
-      queryProjection = appendFieldToGROQStatement(
+      queryProjection = appendFieldtoProjection(
         queryProjection,
-        composeModulesQuery(),
+        `modules[] {
+          ${modulesFieldProjection()}
+        }`,
       );
     } else if (isSupports(schemaObject, type)) {
-      queryProjection = appendFieldToGROQStatement(
+      queryProjection = appendFieldtoProjection(
         queryProjection,
         `"${type}": ${type}`,
       );
@@ -133,4 +126,33 @@ export function composeSupportsQuery(
   }
 
   return queryProjection;
+}
+
+/**
+ * Returns the projection for an internal link.
+ * Includes the _id, _type, title, slug, and parent projection.
+ *
+ * @returns The projection string.
+ */
+export function internalLinkProjection(): string {
+  return `
+    _id,
+    _type,
+    title,
+    slug,
+    ${parentProjection()}
+  `;
+}
+
+/**
+ * Returns the link projection for a Sanity query.
+ * This includes the internal link projection.
+ *
+ * @returns The link projection as a string.
+ */
+export function linkProjection(): string {
+  return `
+    ...,
+    internal->{ ${internalLinkProjection()} }
+  `;
 }
