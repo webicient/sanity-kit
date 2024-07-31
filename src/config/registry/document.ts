@@ -190,6 +190,12 @@ export function normalizeSingletons(
   );
 }
 
+/**
+ * Normalizes an array of modules and returns an array of defined types.
+ *
+ * @param modules - The array of modules to normalize.
+ * @returns An array of defined types.
+ */
 export function normalizeModules(
   modules: Module[],
 ): ReturnType<typeof defineType>[] {
