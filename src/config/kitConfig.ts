@@ -40,16 +40,23 @@ export interface KitConfig {
 let config: KitConfig | null = null;
 
 export function kitConfig(_config: KitConfig): KitConfig {
-  // Guard config from being named incorrectly.
-  if (_config?.schema?.modules) {
-    for (const module of _config.schema.modules) {
-      if (!module.name.startsWith("module.")) {
-        throw new Error(
-          `Module name "${module.name}" does not start with "module."`,
-        );
-      }
+  _config?.schema?.modules?.forEach((module) => {
+    // Guard config from being named incorrectly.
+    if (!module.name.startsWith("module.")) {
+      throw new Error(
+        `Module name "${module.name}" does not start with "module."`,
+      );
     }
-  }
+  })
+
+  _config?.schema?.contentTypes?.forEach((contentType) => {
+    // Guard config from being named incorrectly.
+    if (contentType.rewrite && !contentType.rewrite.includes(":slug")) {
+      throw new Error(
+        `Rewrite path "${contentType.rewrite}" does not include ":slug".`,
+      );
+    }
+  });
 
   return once(() => {
     config = deepmerge(
