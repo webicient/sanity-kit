@@ -1,0 +1,41 @@
+import { loadService } from "@/loaders/loadService";
+import { generateStaticSlugs, loadSettings } from "@webicient/sanity-kit/query";
+import { getMetadata } from "@webicient/sanity-kit/utils";
+import { notFound } from "next/navigation";
+
+type RouteParams = {
+  params: {
+    slug: string[];
+  };
+};
+
+export const dynamicParams = true;
+
+export async function generateStaticParams() {
+  return await generateStaticSlugs({ type: "service" });
+}
+
+export async function generateMetadata({ params: { slug } }: RouteParams) {
+  const [{ data: service }, { data: generalSettings }] = await Promise.all([
+    loadService({ slug }),
+    loadSettings({ name: "generalSettings" }),
+  ]);
+
+  return getMetadata(service, { slug: slug.join("/") }, generalSettings.domain);
+}
+
+export default async function Post({ params: { slug } }: RouteParams) {
+  const { data: service } = await loadService({ slug });
+
+  if (!service) {
+    notFound();
+  }
+
+  return (
+    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
+        {service.title}
+      </div>
+    </main>
+  );
+}

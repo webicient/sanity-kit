@@ -3,27 +3,25 @@ import dynamic from "next/dynamic";
 import { defineField } from "sanity";
 import { QUERY } from "./query";
 
-const Component = dynamic(() => import("./Module01"));
+const Component = dynamic(() => import("./Pages"));
 
 export default defineModule({
-  name: "module.01",
-  title: "Module 01",
+  name: "module.pages",
+  title: "Pages",
   icon: null,
   fields: [
     defineField({
       name: "title",
       title: "Title",
       type: "string",
-      validation: (rule) => rule.required(),
     }),
     defineField({
-      name: "description",
-      title: "Description",
+      name: "text",
+      title: "Text",
       type: "kit.editor",
-      validation: (rule) => rule.required(),
     }),
   ],
   renderer: Component,
   query: QUERY,
-  imageUrl: "/modules/module01.png",
+  imageUrl: "/modules/module02.png",
 });
