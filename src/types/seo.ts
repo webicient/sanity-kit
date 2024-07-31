@@ -1,3 +1,5 @@
+import { Image } from "sanity";
+
 export interface SEO {
   title: string;
   description: string;
@@ -9,13 +11,6 @@ interface OpenGraph {
   title: string;
   description: string;
   image: Image;
-}
-
-interface Image {
-  asset: {
-    _ref: string;
-    _type: string;
-  };
 }
 
 interface AdvancedSeoSettings {

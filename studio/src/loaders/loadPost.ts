@@ -1,15 +1,8 @@
-import {
-  loadContentType,
-  type WithSEOPayload,
-  type WithHierarchyPayload,
-} from "@webicient/sanity-kit/query";
-import { Slug } from "sanity";
+import { loadContentType } from "@webicient/sanity-kit/query";
+import { ContentTypePayload } from "@webicient/sanity-kit";
 
-export interface PostPayload extends WithSEOPayload, WithHierarchyPayload {
-  _id: string;
-  _type: string;
-  title: string;
-  slug: Slug;
+export interface PostPayload extends ContentTypePayload {
+  /* No other types. */
 }
 
 type PostParams = {

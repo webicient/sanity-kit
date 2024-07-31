@@ -6,10 +6,10 @@
 export function getISODateString(): string {
   return new Date()
     .toLocaleDateString()
-    .replace(/\//g, '-')
-    .split('-')
+    .replace(/\//g, "-")
+    .split("-")
     .reverse()
-    .join('-');
+    .join("-");
 }
 
 /**

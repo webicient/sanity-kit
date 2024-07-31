@@ -2,3 +2,7 @@ export * from "./config/kitConfig";
 export * from "./config/sanityKit";
 export * from "./config/registry/define";
 export * from "./config/defaults/fields";
+export * from "./types/definition";
+export * from "./types/seo";
+export * from "./types/validity";
+export * from "./types/payload";

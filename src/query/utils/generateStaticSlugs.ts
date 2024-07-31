@@ -1,9 +1,7 @@
 import { serverClient } from "../serverClient";
 import { PARENT_FIELD_QUERY } from "../groq";
-import {
-  getDocumentHierarchyPath,
-  WithHierarchyPayload,
-} from "./loadHierarchy";
+import { HierarchyPayload } from "../../types";
+import { getDocumentHierarchyPath } from "../../utils/hierarchy";
 
 type GenerateStaticSlugsParams = {
   /**
@@ -24,7 +22,7 @@ export async function generateStaticSlugs({ type }: GenerateStaticSlugsParams) {
       useCdn: false,
       stega: false,
     })
-    .fetch<WithHierarchyPayload[]>(query, { type });
+    .fetch<HierarchyPayload[]>(query, { type });
 
   return docs.map((doc) => {
     return {

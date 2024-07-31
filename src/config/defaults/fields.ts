@@ -81,7 +81,7 @@ export const LINK_FIELD = defineField({
   name: "link",
   title: "Link",
   type: "kit.link",
-})
+});
 
 /**
  * Core fields are the default fields that are supported by a collection.

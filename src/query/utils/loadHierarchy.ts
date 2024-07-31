@@ -1,6 +1,6 @@
-import { Slug } from "sanity";
 import { loadQuery } from "../loadQuery";
 import { composeParentFieldQuery } from "../../utils/groq";
+import { HierarchyPayload } from "../../types";
 
 type Options = {
   /**
@@ -8,31 +8,6 @@ type Options = {
    */
   depth?: number;
 };
-
-export interface WithHierarchyPayload {
-  _id: string;
-  title: string;
-  slug: Slug;
-  parent?: WithHierarchyPayload | null;
-}
-
-/**
- * Retrieves the hierarchy path of a document.
- *
- * @param document - The document with hierarchy information.
- * @returns An array representing the hierarchy path of the document.
- */
-export function getDocumentHierarchyPath(document: WithHierarchyPayload) {
-  const hierarchy = [];
-  let currentDoc: WithHierarchyPayload | null | undefined = document;
-
-  while (currentDoc) {
-    hierarchy.unshift(currentDoc.slug.current);
-    currentDoc = currentDoc?.parent;
-  }
-
-  return hierarchy;
-}
 
 /**
  * Retrieves the hierarchy of a document by its ID.
@@ -52,7 +27,7 @@ export async function loadHierarchy(documentId: string, options: Options) {
     }
   `;
 
-  return await loadQuery<WithHierarchyPayload>(
+  return await loadQuery<HierarchyPayload>(
     query,
     { id: documentId },
     { next: { tags: [documentId] } },

@@ -1,9 +1,9 @@
 import { Metadata } from "next";
-import { WithSEOPayload } from "../query";
 import { realUrl, resolveHref } from "./url";
 import { imageBuilder } from "./image";
 import { headers } from "next/headers";
 import { getContentTypes, getEntities } from "./config";
+import { SEOPayload } from "../types";
 
 /**
  * Retrieves the metadata for a document.
@@ -15,7 +15,7 @@ import { getContentTypes, getEntities } from "./config";
  * @throws Error if the document is null, or if the document does not have a type or the type's rewrite URL is empty.
  */
 export function getMetadata(
-  document: WithSEOPayload | null,
+  document: SEOPayload | null,
   replaceData?: Record<string, string>,
   siteDomain?: string,
 ): Metadata {

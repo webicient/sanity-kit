@@ -1,8 +1,6 @@
 import { loadHome } from "@/loaders/loadHome";
 import {
-  loadEntity,
   loadSettings,
-  WithSEOPayload,
 } from "@webicient/sanity-kit/query";
 import { getMetadata } from "@webicient/sanity-kit/utils";
 import { ModuleResolver } from "@webicient/sanity-kit/resolvers";
@@ -10,7 +8,7 @@ import { notFound } from "next/navigation";
 
 export async function generateMetadata() {
   const [{ data: home }, { data: generalSettings }] = await Promise.all([
-    loadEntity<WithSEOPayload>({ name: "home" }),
+    loadHome(),
     loadSettings({ name: "generalSettings" }),
   ]);
 

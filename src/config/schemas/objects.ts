@@ -198,9 +198,7 @@ export const editor = defineType({
           { title: "Emphasis", value: "em" },
         ],
         // Annotations can be any object structure – e.g. a link or a footnote.
-        annotations: [
-          LINK_FIELD,
-        ],
+        annotations: [LINK_FIELD],
       },
     }),
     IMAGE_FIELD,

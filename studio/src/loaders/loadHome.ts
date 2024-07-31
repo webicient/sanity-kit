@@ -1,10 +1,8 @@
-import { type WithSEOPayload, loadEntity } from "@webicient/sanity-kit/query";
+import { loadEntity } from "@webicient/sanity-kit/query";
+import { EntityPayload } from "@webicient/sanity-kit";
 
-export interface HomePayload extends WithSEOPayload {
-  _id: string;
-  _type: string;
-  title: string;
-  modules: any[];
+export interface HomePayload extends EntityPayload {
+  /* No other types. */
 }
 
 export async function loadHome() {
