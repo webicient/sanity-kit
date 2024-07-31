@@ -1,7 +1,6 @@
 import { Metadata } from "next";
 import { realUrl, resolveHref } from "./url";
 import { imageBuilder } from "./image";
-import { headers } from "next/headers";
 import { getContentTypes, getEntities } from "./config";
 import { SEOPayload } from "../types";
 
@@ -16,8 +15,8 @@ import { SEOPayload } from "../types";
  */
 export function getMetadata(
   document: SEOPayload | null,
-  replaceData?: Record<string, string>,
-  siteDomain?: string,
+  replaceData: Record<string, string>,
+  siteDomain: string,
 ): Metadata {
   // In case a document was not passed.
   if (!document) {
@@ -82,7 +81,7 @@ export function getMetadata(
       : undefined,
   };
 
-  const domain = siteDomain || headers().get("host") || "";
+  const domain = siteDomain || "";
 
   // Canonical URL.
   metadata.alternates = {
