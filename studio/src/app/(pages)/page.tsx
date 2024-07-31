@@ -1,7 +1,5 @@
 import { loadHome } from "@/loaders/loadHome";
-import {
-  loadSettings,
-} from "@webicient/sanity-kit/query";
+import { loadSettings } from "@webicient/sanity-kit/query";
 import { getMetadata } from "@webicient/sanity-kit/utils";
 import { ModuleResolver } from "@webicient/sanity-kit/resolvers";
 import { notFound } from "next/navigation";

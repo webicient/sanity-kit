@@ -1,7 +1,7 @@
 import { defineModule } from "@webicient/sanity-kit";
 import dynamic from "next/dynamic";
 import { defineField } from "sanity";
-import module01 from "/public/images/module01.png";
+import { QUERY } from "./query";
 
 const Component = dynamic(() => import("./Module01"));
 
@@ -24,6 +24,6 @@ export default defineModule({
     }),
   ],
   renderer: Component,
-  query: "",
+  query: QUERY,
   imageUrl: "/modules/module01.png",
 });

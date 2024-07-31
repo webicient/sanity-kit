@@ -20,7 +20,15 @@ export const post = defineContentType({
   pluralTitle: "Posts",
   icon: EditIcon,
   taxonomies: [{ name: "category", multiple: true, required: true }],
-  supports: ["title", "slug", "publishedAt", "featuredImage", "excerpt", "body", "seo"],
+  supports: [
+    "title",
+    "slug",
+    "publishedAt",
+    "featuredImage",
+    "excerpt",
+    "body",
+    "seo",
+  ],
   rewrite: "/post/:slug",
 });
 

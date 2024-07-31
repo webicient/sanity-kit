@@ -1,8 +1,6 @@
 import { loadQuery } from "../loadQuery";
 import { getEntityByName } from "../../utils/config";
-import { appendFieldToGROQStatement } from "../../utils/groq";
-import { isSupports } from "./utils";
-import { CORE_FIELDS } from "../../config/defaults/fields";
+import { composeSupportsQuery, isValidProjection } from "../../utils/groq";
 
 type LoadEntityParams = {
   /**
@@ -34,36 +32,13 @@ export async function loadEntity<PayloadType>({
 
   // Construct the dynamic GROQ query
   if (projection) {
-    // Detect if usage of projection is correct.
-    if (!projection.startsWith("{") || !projection.endsWith("}")) {
+    if (!isValidProjection(projection)) {
       throw new Error("Projection must start and close with a curly brace.");
     }
   }
 
-  let query = `*[_id == "home"][0]`;
-
-  let queryProjection = projection
-    ? `${projection}`
-    : `{
-      _id,
-      _type
-    }`;
-
-  // Always add `type` field.
-  queryProjection = appendFieldToGROQStatement(
-    queryProjection,
-    `"_type": _type`,
-  );
-
-  for (const type of Object.keys(CORE_FIELDS)) {
-    if (isSupports(entity, type)) {
-      queryProjection = appendFieldToGROQStatement(
-        queryProjection,
-        `"${type}": ${type}`,
-      );
-    }
-  }
-
+  let query = `*[_id == $type][0]`;
+  let queryProjection = composeSupportsQuery(entity, projection);
   query += queryProjection;
 
   return await loadQuery<PayloadType | null>(

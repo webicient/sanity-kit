@@ -16,6 +16,5 @@ export default defineModule({
     }),
   ],
   renderer: Component,
-  query: "",
   imageUrl: "/modules/module02.png",
 });

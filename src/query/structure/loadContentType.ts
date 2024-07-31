@@ -3,9 +3,9 @@ import { getContentTypeByName } from "../../utils/config";
 import {
   appendFieldToGROQStatement,
   composeParentFieldQuery,
+  composeSupportsQuery,
+  isValidProjection,
 } from "../../utils/groq";
-import { isSupports } from "./utils";
-import { CORE_FIELDS } from "../../config/defaults/fields";
 
 type LoadContentTypeParams = {
   /**
@@ -43,8 +43,7 @@ export async function loadContentType<PayloadType>({
 
   // Construct the dynamic GROQ query
   if (projection) {
-    // Detect if usage of projection is correct.
-    if (!projection.startsWith("{") || !projection.endsWith("}")) {
+    if (!isValidProjection(projection)) {
       throw new Error("Projection must start and close with a curly brace.");
     }
   }
@@ -61,18 +60,7 @@ export async function loadContentType<PayloadType>({
 
   query += `][0]`;
 
-  let queryProjection = projection
-    ? `${projection}`
-    : `{
-      _id,
-      _type
-    }`;
-
-  // Always add `type` field.
-  queryProjection = appendFieldToGROQStatement(
-    queryProjection,
-    `"_type": _type`,
-  );
+  let queryProjection = composeSupportsQuery(contentTypeObject, projection);
 
   // Additional field for hierarchical content type.
   if (Boolean(contentTypeObject.hierarchical)) {
@@ -80,15 +68,6 @@ export async function loadContentType<PayloadType>({
       queryProjection,
       composeParentFieldQuery(),
     );
-  }
-
-  for (const type of Object.keys(CORE_FIELDS)) {
-    if (isSupports(contentTypeObject, type)) {
-      queryProjection = appendFieldToGROQStatement(
-        queryProjection,
-        `"${type}": ${type}`,
-      );
-    }
   }
 
   query += queryProjection;

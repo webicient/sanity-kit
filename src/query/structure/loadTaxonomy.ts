@@ -1,8 +1,6 @@
 import { loadQuery } from "../loadQuery";
 import { getTaxonomyByName } from "../../utils/config";
-import { appendFieldToGROQStatement } from "../../utils/groq";
-import { isSupports } from "./utils";
-import { CORE_FIELDS } from "../../config/defaults/fields";
+import { composeSupportsQuery, isValidProjection } from "../../utils/groq";
 
 type LoadTaxonomyParams = {
   /**
@@ -40,8 +38,7 @@ export async function loadTaxonomy<PayloadType>({
 
   // Construct the dynamic GROQ query
   if (projection) {
-    // Detect if usage of projection is correct.
-    if (!projection.startsWith("{") || !projection.endsWith("}")) {
+    if (!isValidProjection(projection)) {
       throw new Error("Projection must start and close with a curly brace.");
     }
   }
@@ -50,29 +47,7 @@ export async function loadTaxonomy<PayloadType>({
 
   // Construct the dynamic GROQ query that retrieves the page by its slug and its parent slug.
   let query = `*[_type == $type && slug.current == "${_slug[0]}"][0]`;
-
-  let queryProjection = projection
-    ? `${projection}`
-    : `{
-      _id,
-      _type
-    }`;
-
-  // Always add `type` field.
-  queryProjection = appendFieldToGROQStatement(
-    queryProjection,
-    `"_type": _type`,
-  );
-
-  for (const type of Object.keys(CORE_FIELDS)) {
-    if (isSupports(taxonomy, type)) {
-      queryProjection = appendFieldToGROQStatement(
-        queryProjection,
-        `"${type}": ${type}`,
-      );
-    }
-  }
-
+  let queryProjection = composeSupportsQuery(taxonomy, projection);
   query += queryProjection;
 
   return await loadQuery<PayloadType | null>(
