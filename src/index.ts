@@ -6,3 +6,4 @@ export * from "./types/definition";
 export * from "./types/seo";
 export * from "./types/validity";
 export * from "./types/payload";
+export * from "./types/object";
