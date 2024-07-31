@@ -8,4 +8,3 @@ export * from "./structure/loadContentType";
 export * from "./structure/loadTaxonomy";
 export * from "./structure/loadSettings";
 export * from "./structure/loadEntity";
-export * from "./groq";
