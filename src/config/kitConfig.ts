@@ -47,7 +47,7 @@ export function kitConfig(_config: KitConfig): KitConfig {
         `Module name "${module.name}" does not start with "module."`,
       );
     }
-  })
+  });
 
   _config?.schema?.contentTypes?.forEach((contentType) => {
     // Guard config from being named incorrectly.

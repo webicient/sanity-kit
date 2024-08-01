@@ -104,10 +104,7 @@ export function supportsFieldsProjection(
   let queryProjection = projection;
 
   // Always add `_type` field.
-  queryProjection = appendFieldtoProjection(
-    queryProjection,
-    `"_type": _type`,
-  );
+  queryProjection = appendFieldtoProjection(queryProjection, `"_type": _type`);
 
   for (const type of Object.keys(CORE_FIELDS)) {
     if (type === "modules" && isSupports(schemaObject, type)) {
@@ -154,5 +151,26 @@ export function linkProjection(): string {
   return `
     ...,
     internal->{ ${internalLinkProjection()} }
+  `;
+}
+
+/**
+ * Returns a string representing the hierarchy projection.
+ * The projection includes the following fields:
+ * - _id
+ * - _type
+ * - title
+ * - slug
+ * - parentProjection (provided by the parentProjection function)
+ *
+ * @returns The hierarchy projection as a string.
+ */
+export function hierarchyProjection(): string {
+  return `
+    _id,
+    _type,
+    title,
+    slug,
+    ${parentProjection()}
   `;
 }

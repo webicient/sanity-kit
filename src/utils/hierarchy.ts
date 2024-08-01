@@ -1,4 +1,6 @@
-import { HierarchyPayload } from "../types/payload";
+import { LinkablePayload } from "../types/globals";
+import { InternalLinkPayload } from "../types/object";
+import { ContentTypePayload, HierarchyPayload } from "../types/payload";
 
 /**
  * Retrieves the hierarchy path of a document.
@@ -6,9 +8,14 @@ import { HierarchyPayload } from "../types/payload";
  * @param document - The document with hierarchy information.
  * @returns An array representing the hierarchy path of the document.
  */
-export function getDocumentHierarchyPath(document: HierarchyPayload) {
+export function getDocumentHierarchyPath(document: LinkablePayload) {
   const hierarchy = [];
-  let currentDoc: HierarchyPayload | null | undefined = document;
+  let currentDoc:
+    | HierarchyPayload
+    | InternalLinkPayload
+    | ContentTypePayload
+    | null
+    | undefined = document;
 
   while (currentDoc) {
     hierarchy.unshift(currentDoc.slug.current);

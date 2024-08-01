@@ -1,17 +1,18 @@
 import Section from "@/components/Section";
 import { LinkPayload } from "@webicient/sanity-kit";
+import { LinkResolver } from "@webicient/sanity-kit/resolvers";
 
 type Card = {
   title: string;
   text: string;
   link: LinkPayload;
-}
+};
 
 type CardsProps = {
   title: string;
   text: string;
   cards: Card[];
-}
+};
 
 export default function Cards({ title, text, cards }: CardsProps): JSX.Element {
   return (
@@ -23,7 +24,12 @@ export default function Cards({ title, text, cards }: CardsProps): JSX.Element {
           <li className="shadow-sm bg-white p-6 rounded-md" key={index}>
             <h3 className="mb-6 text-lg font-bold">{card.title}</h3>
             <p>{card.text}</p>
-
+            <LinkResolver
+              link={card.link}
+              className="inline-block mt-6 text-blue-500 underline"
+            >
+              {card.link.label}
+            </LinkResolver>
           </li>
         ))}
       </ul>

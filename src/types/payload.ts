@@ -11,7 +11,7 @@ export interface TitlePayload {
 }
 
 export interface SlugPayload {
-  slug?: Slug;
+  slug: Slug;
 }
 
 export interface PublishedAtPayload {
@@ -27,6 +27,7 @@ export interface ExcerptPayload {
 }
 
 export interface HierarchyPayload {
+  _id: string;
   _type: string;
   title: string;
   slug: Slug;

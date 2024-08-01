@@ -46,11 +46,11 @@ export default defineModule({
               name: "link",
               title: "Link",
               type: "kit.link",
-            })
+            }),
           ],
         }),
       ],
-    })
+    }),
   ],
   renderer: Component,
   query: QUERY,

@@ -1,4 +1,11 @@
-import { getContentTypes, getEntities } from "./config";
+import { LinkablePayload } from "../types/globals";
+import {
+  getContentTypeByName,
+  getContentTypes,
+  getEntities,
+  getEntityByName,
+} from "./config";
+import { getDocumentHierarchyPath } from "./hierarchy";
 
 /**
  * Adds a leading slash to the given string if it doesn't already have one.
@@ -85,7 +92,7 @@ function transformRewrite(template: string, params?: Record<string, string>) {
 export function resolveHref(
   documentType?: string | null,
   params?: Record<string, string>,
-): string | undefined {
+): string {
   const rewriteableTypes = [...getContentTypes(), ...getEntities()].filter(
     ({ rewrite }) => Boolean(rewrite),
   );
@@ -96,5 +103,45 @@ export function resolveHref(
 
   return readType?.rewrite
     ? endWithTrailingSlash(transformRewrite(readType.rewrite, params))
-    : undefined;
+    : "";
+}
+
+/**
+ * Resolves the href for a given document.
+ *
+ * @param document - The document to resolve the href for.
+ * @returns The resolved href.
+ */
+export function resolveDocumentHref(
+  document: LinkablePayload | null | undefined,
+): string {
+  if (!document) {
+    return "";
+  }
+
+  if (!document._type) {
+    throw new Error(
+      "The `_type` field is missing in the document object. Make sure it is included in the query projection from root to its descendants.",
+    );
+  }
+
+  const fromContentType = getContentTypeByName(document._type);
+
+  if (fromContentType?.rewrite) {
+    if (fromContentType.hierarchical) {
+      return resolveHref(document._type, {
+        slug: getDocumentHierarchyPath(document).join("/"),
+      });
+    } else {
+      return resolveHref(document._type, { slug: document.slug.current });
+    }
+  }
+
+  const fromEntity = getEntityByName(document._type);
+
+  if (fromEntity?.rewrite) {
+    return resolveHref(document._type);
+  }
+
+  return "";
 }

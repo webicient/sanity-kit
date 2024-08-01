@@ -67,7 +67,10 @@ export async function loadContentType<PayloadType>({
       _type
     }`;
 
-  queryProjection = supportsFieldsProjection(contentTypeObject, queryProjection);
+  queryProjection = supportsFieldsProjection(
+    contentTypeObject,
+    queryProjection,
+  );
 
   // Additional field for hierarchical content type.
   if (Boolean(contentTypeObject.hierarchical)) {

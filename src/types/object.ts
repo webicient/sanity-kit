@@ -1,11 +1,7 @@
 import { HierarchyPayload } from "./payload";
 
 export interface InternalLinkPayload extends HierarchyPayload {
-  label: string;
-  link: {
-    _type: string;
-    slug: string;
-  };
+  /* No other types. */
 }
 
 export interface LinkPayload {
@@ -15,4 +11,5 @@ export interface LinkPayload {
   external?: string;
   internal?: InternalLinkPayload;
   openInNewTab: boolean;
+  rel: string;
 }
