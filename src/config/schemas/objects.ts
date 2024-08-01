@@ -256,6 +256,43 @@ export function getObjectsWithConfigRequired() {
           type: "boolean",
           initialValue: false,
         }),
+        defineField({
+          name: "rel",
+          title: "Rel",
+          type: "string",
+          description:
+            "Specifies the relationship between the current document and the linked document. Acceptable values are: nofollow, noopener, noreferrer, prefetch, preload, prerender. Values must be separated by commas.",
+          validation: (rule) =>
+            rule.custom((value) => {
+              if (!value) return true; // Allow empty values
+
+              // Define the set of valid rel values
+              const validRelValues = [
+                "nofollow",
+                "noopener",
+                "noreferrer",
+                "prefetch",
+                "preload",
+                "prerender",
+              ];
+
+              // Split the value by comma and remove any empty values
+              const relValues = value
+                .split(",")
+                .map((rel) => rel.trim())
+                .filter(Boolean);
+
+              // Check if every rel value is valid
+              const isValid = relValues.every((rel) =>
+                validRelValues.includes(rel),
+              );
+
+              return isValid
+                ? true
+                : "Invalid rel value(s). Only allow: " +
+                    validRelValues.join(", ");
+            }),
+        }),
       ],
     }),
   );
