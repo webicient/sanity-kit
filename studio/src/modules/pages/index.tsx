@@ -16,6 +16,11 @@ export default defineModule({
       type: "string",
     }),
     defineField({
+      name: "image",
+      title: "Image",
+      type: "image",
+    }),
+    defineField({
       name: "text",
       title: "Text",
       type: "kit.editor",

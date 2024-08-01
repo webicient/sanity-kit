@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { realUrl, resolveHref } from "./url";
-import { imageBuilder } from "./image";
+import { urlForOpenGraphImage } from "./image";
 import { getContentTypes, getEntities } from "./config";
 import { SEOPayload } from "../types/payload";
 
@@ -51,12 +51,7 @@ export function getMetadata(
 
   // Grab the image URL from the SEO data.
   const imageUrl = seo?.openGraph?.image
-    ? imageBuilder
-        ?.image(seo?.openGraph?.image)
-        .width(1200)
-        .height(630)
-        .fit("crop")
-        .url()
+    ? urlForOpenGraphImage(seo.openGraph.image)
     : null;
 
   // If the document has SEO data, use it. Otherwise, use the document title.

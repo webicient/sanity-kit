@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@portabletext/react": "^3.1.0",
     "@sanity/client": "^6.19.1",
     "@webicient/sanity-kit": "file:.yalc/@webicient/sanity-kit",
     "next": "14.2.3",

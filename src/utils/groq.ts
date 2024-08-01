@@ -174,3 +174,27 @@ export function hierarchyProjection(): string {
     ${parentProjection()}
   `;
 }
+
+/**
+ * Returns a string representing the projection for an image asset.
+ * The projection includes the _ref, _type, altText, description, and title fields.
+ *
+ * @returns {string} The projection string.
+ */
+export function imageProjection(): string {
+  return `
+    _type,
+    asset->{
+      "_ref": _id,
+      _type,
+      url,
+      altText,
+      description,
+      title,
+      originalFilename,
+      mimeType,
+      "width": metadata.dimensions.width,
+      "height": metadata.dimensions.height
+    }
+  `;
+}

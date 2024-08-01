@@ -1,4 +1,4 @@
-import { Image } from "sanity";
+import { ImagePayload } from "./object";
 
 export interface SEO {
   title: string;
@@ -10,7 +10,7 @@ export interface SEO {
 interface OpenGraph {
   title: string;
   description: string;
-  image: Image;
+  image: ImagePayload;
 }
 
 interface AdvancedSeoSettings {
