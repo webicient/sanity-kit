@@ -10,7 +10,13 @@ type ImageResolverProps = Omit<ImageProps, "src" | "alt"> & {
   height: number;
 };
 
-export function ImageResolver({ image, width, height, alt, ...props }: ImageResolverProps) {
+export function ImageResolver({
+  image,
+  width,
+  height,
+  alt,
+  ...props
+}: ImageResolverProps) {
   if (!image) {
     return null;
   }
@@ -43,7 +49,5 @@ export function ImageResolver({ image, width, height, alt, ...props }: ImageReso
     delete passProps.height;
   }
 
-  return (
-    <Image {...passProps} {...props} />
-  );
+  return <Image {...passProps} {...props} />;
 }

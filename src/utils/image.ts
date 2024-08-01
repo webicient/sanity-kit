@@ -30,7 +30,11 @@ export function urlForImage(image: ImagePayload | undefined) {
  * @param image - The image object.
  * @returns The URL of the image.
  */
-export function urlForImageWithDimensions(image: ImagePayload | undefined, width: number, height: number) {
+export function urlForImageWithDimensions(
+  image: ImagePayload | undefined,
+  width: number,
+  height: number,
+) {
   return image && imageBuilder?.image(image).width(width).height(height).url();
 }
 

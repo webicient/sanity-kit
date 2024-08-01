@@ -198,3 +198,17 @@ export function imageProjection(): string {
     }
   `;
 }
+
+export function editorProjection(): string {
+  return `
+    ...,
+    _type == "image" => { ${imageProjection()} },
+    _type == "block" => {
+      ...,
+      markDefs[] {
+        ...,
+        _type == "link" => { ${linkProjection()} }
+      }
+    },
+  `;
+}

@@ -28,5 +28,9 @@ export interface ImagePayload {
     description?: string;
     width?: number;
     height?: number;
-  }
+  };
+}
+
+export interface EditorPayload extends PortableTextBlock {
+  /* No other types. */
 }
