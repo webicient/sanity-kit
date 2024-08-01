@@ -32,9 +32,16 @@ interface Schema {
   modules?: Module[];
 }
 
+export type CustomProjectionType = "parent" | "modules" | "supports" | "internalLink" | "link" | "hierarchy" | "image" | "editor" ;
+
+interface Custom {
+  projection?: (type: CustomProjectionType, defaultProjection: string) => string;
+}
+
 export interface KitConfig {
   schema?: Schema;
   languages?: Record<string, string>;
+  custom?: Custom;
 }
 
 let config: KitConfig | null = null;

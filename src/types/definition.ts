@@ -57,7 +57,7 @@ export interface Setting extends Singleton {
 
 export interface Module extends Omit<DocumentDefinition, "type" | "fields"> {
   renderer: ComponentType<any>;
-  query?: string;
+  query?: () => string;
   fields?: FieldDefinition[];
   imageUrl: string;
 }

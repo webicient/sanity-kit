@@ -1,4 +1,4 @@
-import { getConfig } from "../config/kitConfig";
+import { CustomProjectionType, getConfig } from "../config/kitConfig";
 import {
   Module,
   Setting,
@@ -94,4 +94,15 @@ export function isSupports(
   type: string,
 ) {
   return structureType.supports?.findIndex((t) => t === type) !== -1;
+}
+
+/**
+ * Retrieves the custom projection from the configuration.
+ *
+ * @returns A function that returns the custom projection as a string, or undefined if not found.
+ */
+export function getCustomProjection():
+  | ((type: CustomProjectionType, defaultProjection: string) => string)
+  | undefined {
+  return getConfig().custom?.projection;
 }

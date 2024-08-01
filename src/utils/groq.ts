@@ -1,7 +1,7 @@
-import { groq } from "next-sanity";
 import { CORE_FIELDS } from "../config/defaults/fields";
+import { CustomProjectionType } from "../config/kitConfig";
 import { ContentType, Entity, Taxonomy } from "../types/definition";
-import { getModules, isSupports } from "./config";
+import { getCustomProjection, getModules, isSupports } from "./config";
 
 type GroqQuery = string;
 
@@ -48,6 +48,27 @@ export function appendFieldtoProjection(
 }
 
 /**
+ * Applies a custom projection to a given type.
+ * If a custom projection function is defined, it will be used to generate the projection.
+ * Otherwise, the default projection will be returned.
+ *
+ * @param type - The type of the custom projection.
+ * @param defaultProjection - The default projection to be used if no custom projection is defined.
+ * @returns The custom projection or the default projection.
+ */
+export function withCustomProjection(
+  type: CustomProjectionType,
+  defaultProjection: string,
+): string {
+  const projectionFunction = getCustomProjection();
+  // Allow devs to define custom projections for specific types.
+  if (projectionFunction && typeof projectionFunction === "function") {
+    return projectionFunction(type, defaultProjection);
+  }
+  return defaultProjection;
+}
+
+/**
  * Composes the parent query field for retrieving hierarchical data.
  *
  * @param depth The depth of the hierarchy to retrieve. Defaults to MAX_DEPTH.
@@ -60,7 +81,7 @@ export function parentProjection(depth: number = MAX_DEPTH): string {
   }
   // Close all opened braces.
   queryField += "}".repeat(depth);
-  return queryField;
+  return withCustomProjection("parent", queryField);
 }
 
 /**
@@ -71,19 +92,23 @@ export function parentProjection(depth: number = MAX_DEPTH): string {
 export function modulesFieldProjection(): string {
   const modulesQueries = getModules()
     .map((module) => {
-      if (module.query && !isValidProjection(module.query)) {
+      let query = module.query ? module.query() : null;
+
+      if (!query) {
+        return null;
+      }
+
+      if (!isValidProjection(query)) {
         throw new Error(
           `Invalid GROQ query format for module "${module.name}".`,
         );
       }
 
-      return module.query
-        ? `_type == "${module.name}" => ${module.query}`
-        : null;
+      return `_type == "${module.name}" => ${query}`
     })
     .filter(Boolean);
 
-  return ["...", ...modulesQueries].join(",");
+  return withCustomProjection("modules", ["...", ...modulesQueries].join(","));
 }
 
 /**
@@ -122,7 +147,7 @@ export function supportsFieldsProjection(
     }
   }
 
-  return queryProjection;
+  return withCustomProjection("supports", queryProjection);
 }
 
 /**
@@ -132,13 +157,16 @@ export function supportsFieldsProjection(
  * @returns The projection string.
  */
 export function internalLinkProjection(): string {
-  return `
+  return withCustomProjection(
+    "internalLink",
+    `
     _id,
     _type,
     title,
     slug,
     ${parentProjection()}
-  `;
+  `,
+  );
 }
 
 /**
@@ -148,10 +176,13 @@ export function internalLinkProjection(): string {
  * @returns The link projection as a string.
  */
 export function linkProjection(): string {
-  return `
+  return withCustomProjection(
+    "link",
+    `
     ...,
     internal->{ ${internalLinkProjection()} }
-  `;
+  `,
+  );
 }
 
 /**
@@ -166,13 +197,16 @@ export function linkProjection(): string {
  * @returns The hierarchy projection as a string.
  */
 export function hierarchyProjection(): string {
-  return `
+  return withCustomProjection(
+    "hierarchy",
+    `
     _id,
     _type,
     title,
     slug,
     ${parentProjection()}
-  `;
+  `,
+  );
 }
 
 /**
@@ -182,7 +216,9 @@ export function hierarchyProjection(): string {
  * @returns {string} The projection string.
  */
 export function imageProjection(): string {
-  return `
+  return withCustomProjection(
+    "image",
+    `
     _type,
     asset->{
       "_ref": _id,
@@ -196,11 +232,20 @@ export function imageProjection(): string {
       "width": metadata.dimensions.width,
       "height": metadata.dimensions.height
     }
-  `;
+  `,
+  );
 }
 
+/**
+ * Returns the projection string for the "editor" field.
+ * This projection includes custom projections for "image" and "link" types.
+ *
+ * @returns The projection string for the "editor" field.
+ */
 export function editorProjection(): string {
-  return `
+  return withCustomProjection(
+    "editor",
+    `
     ...,
     _type == "image" => { ${imageProjection()} },
     _type == "block" => {
@@ -210,5 +255,6 @@ export function editorProjection(): string {
         _type == "link" => { ${linkProjection()} }
       }
     },
-  `;
+  `,
+  );
 }

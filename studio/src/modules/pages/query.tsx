@@ -5,7 +5,7 @@ import {
 } from "@webicient/sanity-kit/utils";
 import { groq } from "next-sanity";
 
-export const QUERY = groq`{
+export const getQuery = (): string => groq`{
   title,
   text[] { ${editorProjection()} },
   image { ${imageProjection()} },
