@@ -1,11 +1,17 @@
+import { Language } from "@sanity/language-filter";
 import { getSettings } from "../../utils/config";
 import { loadQuery } from "../loadQuery";
+import { getSettingsQuery } from "../../queries/settings";
 
 type LoadSettingsParams = {
   /**
    * Target certain settings group.
    */
   name?: string;
+  /**
+   * The language of the content type.
+   */
+  language?: Language["id"];
 };
 
 /**
@@ -15,35 +21,14 @@ type LoadSettingsParams = {
  * @returns The loaded settings.
  * @throws Error if the specified settings group does not exist.
  */
-export function loadSettings(params: LoadSettingsParams = {}) {
-  const settingsNames = getSettings().map((setting) => setting.name);
-
-  if (params.name && !settingsNames.includes(params.name)) {
-    throw new Error(`Settings group "${params.name}" does not exist.`);
-  }
-
-  // Get the settings by params.name.
-  if (params.name) {
-    return loadQuery<any>(
-      `*[_type == $name][0]`,
-      { name: params.name },
-      { next: { tags: [params.name] } },
-    );
-  }
-
-  let query = `*[][0]{`;
-
-  settingsNames.forEach((settingName, index) => {
-    query +=
-      '"' +
-      settingName +
-      '": *[_type == "' +
-      settingName +
-      '"][0]' +
-      (index < settingsNames.length - 1 ? "," : "");
-  });
-
-  query += "}";
-
-  return loadQuery<any>(query, {}, { next: { tags: settingsNames } });
+export function loadSettings({ name, language }: LoadSettingsParams = {}) {
+  return loadQuery<any>(
+    getSettingsQuery(name, language),
+    {},
+    {
+      next: {
+        tags: name ? [name] : getSettings().map((setting) => setting.name),
+      },
+    },
+  );
 }

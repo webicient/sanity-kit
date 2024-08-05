@@ -2,7 +2,6 @@ export * from "./client";
 export * from "./serverClient";
 export * from "./useQuery";
 export * from "./loadQuery";
-export * from "./utils/loadHierarchy";
 export * from "./utils/generateStaticSlugs";
 export * from "./structure/loadContentType";
 export * from "./structure/loadTaxonomy";

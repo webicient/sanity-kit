@@ -1,7 +1,9 @@
 import { serverClient } from "../serverClient";
 import { HierarchyPayload } from "../../types/payload";
 import { getDocumentHierarchyPath } from "../../utils/hierarchy";
-import { parentProjection } from "../../utils/groq";
+import { canTranslate, getContentTypeByName, getLanguages } from "../../utils/config";
+import { parentQueryField } from "../../queries/hierarchy";
+import { LinkablePayload } from "../../types/globals";
 
 type GenerateStaticSlugsParams = {
   /**
@@ -11,12 +13,43 @@ type GenerateStaticSlugsParams = {
 };
 
 export async function generateStaticSlugs({ type }: GenerateStaticSlugsParams) {
-  const query = `*[_type == $type && defined(slug)]{
+  const languages = getLanguages();
+  const contentTypeObject = getContentTypeByName(type);
+  let docs: LinkablePayload[] = [];
+
+  if (canTranslate(Boolean(contentTypeObject?.translate))) {
+    for (const language of languages) {
+      const query = `*[_type == $type && defined(slug.${language.id})]{
+        "slug": slug.${language.id},
+        ${parentQueryField(language.id)}
+      }`;
+
+      console.log(`"${query}"`);
+
+      const langDocs = await serverClient
+        .withConfig({
+          perspective: "published",
+          useCdn: false,
+          stega: false,
+        })
+        .fetch<HierarchyPayload[]>(query, { type });
+
+      docs = langDocs;
+    }
+
+    return docs.map((doc) => {
+      return {
+        slug: getDocumentHierarchyPath(doc),
+      };
+    });
+  }
+
+  const query = `*[_type == $type && defined(slug.current)]{
     slug,
-    ${parentProjection()}
+    ${parentQueryField()}
   }`;
 
-  const docs = await serverClient
+  docs = await serverClient
     .withConfig({
       perspective: "published",
       useCdn: false,

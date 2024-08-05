@@ -133,7 +133,9 @@ export function resolveDocumentHref(
         slug: getDocumentHierarchyPath(document).join("/"),
       });
     } else {
-      return resolveHref(document._type, { slug: document.slug.current });
+      return resolveHref(document._type, {
+        slug: document.slug.current as string,
+      });
     }
   }
 

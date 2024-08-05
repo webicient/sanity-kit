@@ -54,6 +54,11 @@
       "import": "./dist/visual-editing/index.js",
       "default": "./dist/visual-editing/index.js"
     },
+    "./queries": {
+      "source": "./src/queries/index.ts",
+      "import": "./dist/queries/index.js",
+      "default": "./dist/queries/index.js"
+    },
     "./package.json": "./package.json"
   },
   "main": "./dist/index.js",
@@ -70,7 +75,8 @@
     "format": "prettier --write --cache --ignore-unknown .",
     "lint": "eslint .",
     "prepublishOnly": "npm run build",
-    "watch": "pkg-utils watch --strict"
+    "watch": "pkg-utils watch --strict",
+    "test": "vitest"
   },
   "dependencies": {
     "@next/third-parties": "^14.2.5",
@@ -81,9 +87,11 @@
     "@sanity/icons": "^3.0.0",
     "@sanity/image-url": "^1.0.2",
     "@sanity/incompatible-plugin": "^1.0.4",
+    "@sanity/language-filter": "^4.0.2",
     "@sanity/react-loader": "^1.10.4",
     "@sanity/vision": "^3.45.0",
     "deepmerge": "^4.3.1",
+    "groq": "^3.52.4",
     "lodash": "^4.17.21",
     "rollup-preserve-directives": "^1.1.1",
     "sanity-plugin-media": "^2.2.5",
@@ -97,6 +105,7 @@
     "@typescript-eslint/eslint-plugin": "^7.11.0",
     "@typescript-eslint/parser": "^7.11.0",
     "@vercel/style-guide": "^6.0.0",
+    "dotenv": "^16.4.5",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-config-sanity": "^7.1.2",
@@ -109,13 +118,14 @@
     "react-dom": "^18.3.1",
     "sanity": "^3.45.0",
     "styled-components": "^6.1",
-    "typescript": "^5.4.5"
+    "typescript": "^5.5.4",
+    "vitest": "^2.0.5"
   },
   "peerDependencies": {
     "next": "14.2.3",
     "next-sanity": "^9.3.10",
     "react": "^18",
-    "sanity": "^3"
+    "sanity": "^3.45.0"
   },
   "engines": {
     "node": ">=18"
@@ -124,7 +134,8 @@
     "verifyPackage": {
       "eslintImports": false,
       "studioConfig": false,
-      "scripts": false
+      "scripts": false,
+      "dependencies": false
     }
   },
   "browserslist": [

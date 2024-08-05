@@ -23,7 +23,7 @@ export default defineModule({
     defineField({
       name: "text",
       title: "Text",
-      type: "kit.editor",
+      type: "kit.richText",
     }),
   ],
   renderer: Component,

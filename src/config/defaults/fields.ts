@@ -44,7 +44,7 @@ export const EXCERPT_FIELD = defineField({
 export const BODY_FIELD = defineField({
   name: "body",
   title: "Body",
-  type: "kit.editor",
+  type: "kit.richText",
 });
 
 export const PUBLISHED_AT_FIELD = defineField({
@@ -52,7 +52,6 @@ export const PUBLISHED_AT_FIELD = defineField({
   initialValue: getISODateString(),
   title: "Date",
   type: "date",
-  validation: (Rule: DateRule) => Rule.required(),
 });
 
 export const IMAGE_FIELD = defineField({

@@ -1,13 +1,13 @@
 import {
-  hierarchyProjection,
-  imageProjection,
-  editorProjection,
-} from "@webicient/sanity-kit/utils";
+  hierarchyQueryFields,
+  imageQueryFields,
+  richTextQueryFields,
+} from "@webicient/sanity-kit/queries";
 import { groq } from "next-sanity";
 
-export const getQuery = (): string => groq`{
+export const getQuery = (language?: string): string => groq`{
   title,
-  text[] { ${editorProjection()} },
-  image { ${imageProjection()} },
-  "pages": *[_type == "page"] { ${hierarchyProjection()} }
+  text[] { ${richTextQueryFields(language)} },
+  image { ${imageQueryFields} },
+  "pages": *[_type == "page"] { ${hierarchyQueryFields(language)} }
 }`;

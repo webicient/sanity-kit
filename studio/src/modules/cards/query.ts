@@ -1,12 +1,12 @@
-import { linkProjection } from "@webicient/sanity-kit/utils";
 import { groq } from "next-sanity";
+import { linkQueryFields } from "@webicient/sanity-kit/queries";
 
-export const getQuery = (): string => groq`{
+export const getQuery = (language?: string): string => groq`{
   cards[] {
     title,
     text,
     link {
-      ${linkProjection()}
+      ${linkQueryFields(language)}
     }
   }
 }`;

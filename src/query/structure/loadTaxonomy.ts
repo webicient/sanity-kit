@@ -1,6 +1,5 @@
 import { loadQuery } from "../loadQuery";
-import { getTaxonomyByName } from "../../utils/config";
-import { supportsFieldsProjection, isValidProjection } from "../../utils/groq";
+import { getTaxonomyQuery } from "../../queries/taxonomy";
 
 type LoadTaxonomyParams = {
   /**
@@ -11,6 +10,10 @@ type LoadTaxonomyParams = {
    * Accepts slug segments as an array.
    */
   slug: string[];
+  /**
+   * Custom language for the query.
+   */
+  language?: string;
   /**
    * Custom projection for the query. Must starts with `{` and ends with `}`.
    */
@@ -28,38 +31,12 @@ type LoadTaxonomyParams = {
 export async function loadTaxonomy<PayloadType>({
   name,
   slug,
+  language,
   projection,
 }: LoadTaxonomyParams) {
-  const taxonomy = getTaxonomyByName(name);
-
-  if (!taxonomy) {
-    throw new Error(`Taxonomy "${name}" not found.`);
-  }
-
-  // Construct the dynamic GROQ query
-  if (projection) {
-    if (!isValidProjection(projection)) {
-      throw new Error("Projection must start and close with a curly brace.");
-    }
-  }
-
-  const _slug = slug.reverse();
-
-  // Construct the dynamic GROQ query that retrieves the page by its slug and its parent slug.
-  let query = `*[_type == $type && slug.current == "${_slug[0]}"][0]`;
-  let queryProjection = projection
-    ? `${projection}`
-    : `{
-      _id,
-      _type
-    }`;
-
-  queryProjection = supportsFieldsProjection(taxonomy, queryProjection);
-  query += queryProjection;
-
   return await loadQuery<PayloadType | null>(
-    query,
+    getTaxonomyQuery(name, slug, language, projection),
     { type: name },
-    { next: { tags: [`${name}:${_slug[0]}`] } },
+    { next: { tags: [`${name}:${slug.reverse()[0]}`] } },
   );
 }

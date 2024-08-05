@@ -14,6 +14,7 @@ import { productionUrl } from "./plugins/productionUrl";
 import { presentationTool } from "sanity/presentation";
 import { template } from "./plugins/template";
 import { getObjectsWithConfigRequired } from "./schemas/objects";
+import { Language, languageFilter } from "@sanity/language-filter";
 
 /**
  * Usage in `sanity.config.ts` (or .js)
@@ -49,6 +50,33 @@ export const sanityKit = definePlugin<KitConfig>((config: KitConfig) => {
           },
         },
       }),
+      Boolean(config.languages?.length) &&
+        languageFilter({
+          supportedLanguages: config.languages as Language[],
+          defaultLanguages: config?.languages
+            ? [config?.languages?.[0]?.id]
+            : undefined,
+          documentTypes: [
+            ...(config.schema?.contentTypes
+              ?.filter(({ translate }) => translate)
+              .map(({ name }) => name) || []),
+            ...(config.schema?.entities
+              ?.filter(({ translate }) => translate)
+              .map(({ name }) => name) || []),
+            ...(config.schema?.taxonomies
+              ?.filter(({ translate }) => translate)
+              .map(({ name }) => name) || []),
+            ...(config.schema?.settings
+              ?.filter(({ translate }) => translate)
+              .map(({ name }) => name) || []),
+          ],
+          filterField: (enclosingType, field, selectedLanguageIds) => {
+            return !(
+              config.languages?.map(({ id }) => id).includes(field.name) &&
+              !selectedLanguageIds.includes(field.name)
+            );
+          },
+        }),
     ],
     schema: {
       types: [

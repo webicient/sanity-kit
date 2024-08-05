@@ -5,8 +5,13 @@ export interface HomePayload extends EntityPayload {
   /* No other types. */
 }
 
-export async function loadHome() {
+type HomeParams = {
+  language: string;
+};
+
+export async function loadHome({ language }: HomeParams) {
   return await loadEntity<HomePayload | null>({
     name: "home",
+    language,
   });
 }

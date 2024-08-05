@@ -6,4 +6,5 @@ export const category = defineTaxonomy({
   title: "Category",
   pluralTitle: "Categories",
   icon: TagIcon,
+  translate: true,
 });

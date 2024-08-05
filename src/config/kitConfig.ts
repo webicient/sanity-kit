@@ -21,7 +21,8 @@ import {
   socialSettings,
 } from "./schemas/settings";
 import { defineType } from "sanity";
-import { editor, seo } from "./schemas/objects";
+import { richText, seo } from "./schemas/objects";
+import { Language } from "@sanity/language-filter";
 
 interface Schema {
   objects?: ReturnType<typeof defineType>[];
@@ -32,15 +33,26 @@ interface Schema {
   modules?: Module[];
 }
 
-export type CustomProjectionType = "parent" | "modules" | "supports" | "internalLink" | "link" | "hierarchy" | "image" | "editor" ;
+export type CustomProjectionType =
+  | "parent"
+  | "modules"
+  | "supports"
+  | "internalLink"
+  | "link"
+  | "hierarchy"
+  | "image"
+  | "editor";
 
 interface Custom {
-  projection?: (type: CustomProjectionType, defaultProjection: string) => string;
+  projection?: (
+    type: CustomProjectionType,
+    defaultProjection: string,
+  ) => string;
 }
 
 export interface KitConfig {
   schema?: Schema;
-  languages?: Record<string, string>;
+  languages?: (Language & { isDefault?: boolean })[];
   custom?: Custom;
 }
 
@@ -71,7 +83,7 @@ export function kitConfig(_config: KitConfig): KitConfig {
         schema: {
           entities: [home],
           contentTypes: [page, post, redirect, preset],
-          objects: [seo, editor],
+          objects: [seo, richText],
           taxonomies: [category],
           settings: [
             generalSettings,
@@ -82,7 +94,7 @@ export function kitConfig(_config: KitConfig): KitConfig {
             advancedSettings,
           ],
         },
-        languages: {},
+        languages: [],
       },
       _config,
     );

@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 type RouteParams = {
   params: {
     slug: string[];
+    language: string;
   };
 };
 
@@ -15,17 +16,21 @@ export async function generateStaticParams() {
   return await generateStaticSlugs({ type: "page" });
 }
 
-export async function generateMetadata({ params: { slug } }: RouteParams) {
+export async function generateMetadata({
+  params: { slug, language },
+}: RouteParams) {
   const [{ data: page }, { data: generalSettings }] = await Promise.all([
-    loadPage({ slug }),
-    loadSettings({ name: "generalSettings" }),
+    loadPage({ slug, language }),
+    loadSettings({ name: "generalSettings", language }),
   ]);
 
   return getMetadata(page, { slug: slug.join("/") }, generalSettings.domain);
 }
 
-export default async function Page({ params: { slug } }: RouteParams) {
-  const { data: page } = await loadPage({ slug });
+export default async function Page({
+  params: { slug, language },
+}: RouteParams) {
+  const { data: page } = await loadPage({ slug, language });
 
   if (!page) {
     notFound();

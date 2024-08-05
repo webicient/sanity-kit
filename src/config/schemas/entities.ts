@@ -7,4 +7,5 @@ export const home = defineEntity({
   icon: HomeIcon,
   supports: ["title", "seo", "modules"],
   rewrite: "/",
+  translate: true,
 });

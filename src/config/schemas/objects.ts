@@ -166,9 +166,9 @@ export const seo = defineType({
   ],
 });
 
-export const editor = defineType({
-  title: "Editor",
-  name: "kit.editor",
+export const richText = defineType({
+  title: "Rich Text",
+  name: "kit.richText",
   type: "array",
   of: [
     defineArrayMember({

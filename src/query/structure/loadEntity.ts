@@ -1,12 +1,17 @@
 import { loadQuery } from "../loadQuery";
 import { getEntityByName } from "../../utils/config";
-import { supportsFieldsProjection, isValidProjection } from "../../utils/groq";
+import { Language } from "@sanity/language-filter";
+import { getEntityQuery } from "../../queries/entity";
 
 type LoadEntityParams = {
   /**
    * Unique name of entity.
    */
   name: string;
+  /**
+   * The language of the content type.
+   */
+  language?: Language["id"];
   /**
    * Custom projection for the query. Must starts with `{` and ends with `}`.
    */
@@ -22,34 +27,11 @@ type LoadEntityParams = {
  */
 export async function loadEntity<PayloadType>({
   name,
+  language,
   projection,
 }: LoadEntityParams) {
-  const entity = getEntityByName(name);
-
-  if (!entity) {
-    throw new Error(`Entity "${name}" not found.`);
-  }
-
-  // Construct the dynamic GROQ query
-  if (projection) {
-    if (!isValidProjection(projection)) {
-      throw new Error("Projection must start and close with a curly brace.");
-    }
-  }
-
-  let query = `*[_id == $type][0]`;
-  let queryProjection = projection
-    ? `${projection}`
-    : `{
-      _id,
-      _type
-    }`;
-
-  queryProjection = supportsFieldsProjection(entity, queryProjection);
-  query += queryProjection;
-
   return await loadQuery<PayloadType | null>(
-    query,
+    getEntityQuery(name, language, projection),
     { type: name },
     { next: { tags: [`${name}`] } },
   );

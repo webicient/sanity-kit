@@ -12,6 +12,7 @@ export const page = defineContentType({
   hierarchical: true,
   supports: ["title", "slug", "seo", "modules"],
   rewrite: "/:slug",
+  translate: true,
 });
 
 export const post = defineContentType({
@@ -30,6 +31,7 @@ export const post = defineContentType({
     "seo",
   ],
   rewrite: "/post/:slug",
+  translate: true,
 });
 
 export const redirect = defineContentType({

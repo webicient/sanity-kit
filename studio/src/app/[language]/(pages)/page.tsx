@@ -4,17 +4,26 @@ import { getMetadata } from "@webicient/sanity-kit/utils";
 import { ModuleResolver } from "@webicient/sanity-kit/resolvers";
 import { notFound } from "next/navigation";
 
-export async function generateMetadata() {
+type RouteParams = {
+  params: {
+    slug: string[];
+    language: string;
+  };
+};
+
+export const dynamicParams = true;
+
+export async function generateMetadata({ params: { language } }: RouteParams) {
   const [{ data: home }, { data: generalSettings }] = await Promise.all([
-    loadHome(),
-    loadSettings({ name: "generalSettings" }),
+    loadHome({ language }),
+    loadSettings({ name: "generalSettings", language }),
   ]);
 
   return getMetadata(home, {}, generalSettings.domain);
 }
 
-export default async function Home() {
-  const { data: home } = await loadHome();
+export default async function Home({ params: { language } }: RouteParams) {
+  const { data: home } = await loadHome({ language });
 
   if (!home) {
     notFound();
@@ -22,6 +31,7 @@ export default async function Home() {
 
   return (
     <main className="flex min-h-screen flex-col p-24">
+      <h1 className="text-2xl font-bold">{home.title}</h1>
       {home.modules?.length && <ModuleResolver data={home.modules} />}
     </main>
   );

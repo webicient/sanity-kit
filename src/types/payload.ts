@@ -30,7 +30,7 @@ export interface HierarchyPayload {
   _id: string;
   _type: string;
   title: string;
-  slug: Slug;
+  slug: Slug | Record<string, Slug>;
   parent: HierarchyPayload | null;
 }
 

@@ -7,11 +7,14 @@ export interface PagePayload extends ContentTypePayload {
 
 type PageParams = {
   slug: string[];
+  language?: string;
 };
 
-export async function loadPage({ slug }: PageParams) {
+export async function loadPage({ slug, language }: PageParams) {
   return await loadContentType<PagePayload | null>({
     name: "page",
+    language,
     slug,
+    projection: `{ name }`,
   });
 }

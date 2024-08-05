@@ -26,6 +26,7 @@ export interface Collection
   pluralTitle: PluralTitle;
   supports?: Supports[];
   fields?: FieldDefinition[];
+  translate?: boolean;
 }
 
 export interface ContentType extends Collection {
@@ -43,6 +44,7 @@ export interface Singleton
   extends Omit<DocumentDefinition, "type" | "title" | "fields"> {
   title: string;
   fields?: FieldDefinition[];
+  translate?: boolean;
 }
 
 export interface Entity extends Singleton {
@@ -57,7 +59,7 @@ export interface Setting extends Singleton {
 
 export interface Module extends Omit<DocumentDefinition, "type" | "fields"> {
   renderer: ComponentType<any>;
-  query?: () => string;
+  query?: (language?: string) => string;
   fields?: FieldDefinition[];
   imageUrl: string;
 }

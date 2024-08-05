@@ -4,6 +4,10 @@ import pages from "@/modules/pages";
 import service from "@/schema/service";
 
 export default kitConfig({
+  languages: [
+    { id: "sv", title: "Swedish", isDefault: true },
+    { id: "en", title: "English" },
+  ],
   schema: {
     modules: [cards, pages],
     contentTypes: [service],

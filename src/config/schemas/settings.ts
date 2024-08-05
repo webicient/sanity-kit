@@ -93,6 +93,7 @@ export const seoSettings = defineSetting({
       type: "image",
     }),
   ],
+  translate: true,
 });
 
 export const integrationSettings = defineSetting({

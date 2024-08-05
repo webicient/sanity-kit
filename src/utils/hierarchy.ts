@@ -8,7 +8,9 @@ import { ContentTypePayload, HierarchyPayload } from "../types/payload";
  * @param document - The document with hierarchy information.
  * @returns An array representing the hierarchy path of the document.
  */
-export function getDocumentHierarchyPath(document: LinkablePayload) {
+export function getDocumentHierarchyPath(
+  document: LinkablePayload
+) {
   const hierarchy = [];
   let currentDoc:
     | HierarchyPayload

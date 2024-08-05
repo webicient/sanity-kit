@@ -47,17 +47,16 @@ cd studio && npx yalc add @webicient/sanity-kit && npx yalc link @webicient/sani
 
 ## Features (WIP)
 
-- [ ] Organized structure of Sanity Structure Tool
+- [x] Organized structure of Sanity Structure Tool
 - [ ] Translation ready
-- [ ] Media library
-- [ ] Redirections
+- [x] Media library
+- [x] Redirections
 - [ ] Forms
 - [ ] Modules content builder (section block)
 - [ ] Modules presets
-- [ ] General settings
+- [x] General settings
 - [ ] Sitemap viewer
-- [ ] GTM ready
-- [ ] Cookie Bot ready
+- [x] GTM ready
 - [ ] Embedded video with bunny.net
 - [ ] SEO ready
   - [ ] OpenGraph

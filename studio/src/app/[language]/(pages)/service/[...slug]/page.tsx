@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 type RouteParams = {
   params: {
     slug: string[];
+    language: string;
   };
 };
 
@@ -15,10 +16,12 @@ export async function generateStaticParams() {
   return await generateStaticSlugs({ type: "service" });
 }
 
-export async function generateMetadata({ params: { slug } }: RouteParams) {
+export async function generateMetadata({
+  params: { slug, language },
+}: RouteParams) {
   const [{ data: service }, { data: generalSettings }] = await Promise.all([
     loadService({ slug }),
-    loadSettings({ name: "generalSettings" }),
+    loadSettings({ name: "generalSettings", language }),
   ]);
 
   return getMetadata(service, { slug: slug.join("/") }, generalSettings.domain);

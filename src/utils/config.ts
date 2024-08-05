@@ -1,3 +1,4 @@
+import { Language } from "@sanity/language-filter";
 import { CustomProjectionType, getConfig } from "../config/kitConfig";
 import {
   Module,
@@ -105,4 +106,48 @@ export function getCustomProjection():
   | ((type: CustomProjectionType, defaultProjection: string) => string)
   | undefined {
   return getConfig().custom?.projection;
+}
+
+/**
+ * Retrieves the list of languages from the configuration.
+ * If no languages are found, an empty array is returned.
+ *
+ * @returns An array of Language objects representing the available languages.
+ */
+export function getLanguages(): (Language & { isDefault: boolean })[] {
+  return (getConfig().languages ?? []) as (Language & { isDefault: boolean })[];
+}
+
+/**
+ * Returns the default language from the available languages.
+ *
+ * @returns The default language object with an additional `isDefault` property.
+ */
+export function getDefaultLanguage():
+  | (Language & { isDefault: boolean })
+  | null {
+  return (
+    getLanguages().find((language) => language.isDefault) ||
+    getLanguages()?.[0] ||
+    null
+  );
+}
+
+/**
+ * Checks if a content type with the given name exists.
+ *
+ * @param name - The name of the content type.
+ * @returns A boolean indicating whether the content type exists.
+ */
+export function isContentType(name: string): boolean {
+  return Boolean(getContentTypeByName(name));
+}
+
+/**
+ * Checks if translation is enabled.
+ *
+ * @returns A boolean indicating whether translation is enabled.
+ */
+export function canTranslate(translate: boolean): boolean {
+  return Boolean(getConfig().languages?.length) && translate;
 }
