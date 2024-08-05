@@ -227,7 +227,6 @@ export function getObjectsWithConfigRequired() {
           name: "label",
           title: "Label",
           type: "string",
-          validation: (rule) => rule.required(),
         }),
         defineField({
           name: "isExternal",
