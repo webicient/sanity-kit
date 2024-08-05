@@ -24,12 +24,14 @@ export default function Cards({ title, text, cards }: CardsProps): JSX.Element {
           <li className="shadow-sm bg-white p-6 rounded-md" key={index}>
             <h3 className="mb-6 text-lg font-bold">{card.title}</h3>
             <p>{card.text}</p>
-            {card.link.label && <LinkResolver
-              link={card.link}
-              className="inline-block mt-6 text-blue-500 underline"
-            >
-              {card.link.label}
-            </LinkResolver>}
+            {card.link.label && (
+              <LinkResolver
+                link={card.link}
+                className="inline-block mt-6 text-blue-500 underline"
+              >
+                {card.link.label}
+              </LinkResolver>
+            )}
           </li>
         ))}
       </ul>

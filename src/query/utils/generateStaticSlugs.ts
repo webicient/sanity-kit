@@ -1,8 +1,15 @@
 import { serverClient } from "../serverClient";
 import { HierarchyPayload } from "../../types/payload";
 import { getDocumentHierarchyPath } from "../../utils/hierarchy";
-import { canTranslate, getContentTypeByName, getLanguages } from "../../utils/config";
-import { hierarchyQueryFields, parentQueryField } from "../../queries/hierarchy";
+import {
+  canTranslate,
+  getContentTypeByName,
+  getLanguages,
+} from "../../utils/config";
+import {
+  hierarchyQueryFields,
+  parentQueryField,
+} from "../../queries/hierarchy";
 import { LinkablePayload } from "../../types/globals";
 import { flatMap } from "lodash";
 
@@ -23,26 +30,28 @@ export async function generateStaticSlugs({ type }: GenerateStaticSlugsParams) {
   }
 
   if (canTranslate(Boolean(contentTypeObject?.translate))) {
-    const withLangDocs = await Promise.all(languages.map(async (language) => {
-      const query = `*[_type == $type && defined(slug.${language.id})]{
+    const withLangDocs = await Promise.all(
+      languages.map(async (language) => {
+        const query = `*[_type == $type && defined(slug.${language.id})]{
         ${hierarchyQueryFields(language.id, type)}
       }`;
 
-      const langDocs = await serverClient
-        .withConfig({
-          perspective: "published",
-          useCdn: false,
-          stega: false,
-        })
-        .fetch<HierarchyPayload[]>(query, { type });
+        const langDocs = await serverClient
+          .withConfig({
+            perspective: "published",
+            useCdn: false,
+            stega: false,
+          })
+          .fetch<HierarchyPayload[]>(query, { type });
 
-      return langDocs.map((doc) => {
-        return {
-          slug: getDocumentHierarchyPath(doc),
-          language: language.id,
-        };
-      });
-    }));
+        return langDocs.map((doc) => {
+          return {
+            slug: getDocumentHierarchyPath(doc),
+            language: language.id,
+          };
+        });
+      }),
+    );
 
     return flatMap(withLangDocs);
   }
