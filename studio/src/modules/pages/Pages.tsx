@@ -1,7 +1,7 @@
 import Section from "@/components/Section";
 import { PagePayload } from "@/loaders/loadPage";
-import EditorResolver from "@/resolvers/EditorResolver";
-import { EditorPayload, ImagePayload } from "@webicient/sanity-kit";
+import RichTextResolver from "@/resolvers/RichTextResolver";
+import { RichTextPayload, ImagePayload } from "@webicient/sanity-kit";
 import { ImageResolver } from "@webicient/sanity-kit/resolvers";
 import { resolveDocumentHref } from "@webicient/sanity-kit/utils";
 import Link from "next/link";
@@ -9,7 +9,7 @@ import Link from "next/link";
 type PagesProps = {
   title: string;
   image?: ImagePayload;
-  text: EditorPayload[];
+  text: RichTextPayload[];
   pages: PagePayload[];
 };
 
@@ -23,7 +23,7 @@ export default function Pages({
     <Section className="flex flex-col gap-y-10 my-10">
       <h2 className="text-2xl font-bold">{title}</h2>
       <div className="prose">
-        <EditorResolver value={text} />
+        <RichTextResolver value={text} />
       </div>
       {image && <ImageResolver image={image} width={1024} height={768} />}
       <div className="grid gap-10 lg:grid-cols-3">

@@ -31,6 +31,6 @@ export interface ImagePayload {
   };
 }
 
-export interface EditorPayload extends PortableTextBlock {
+export interface RichTextPayload extends PortableTextBlock {
   /* No other types. */
 }

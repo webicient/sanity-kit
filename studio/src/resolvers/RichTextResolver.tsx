@@ -2,13 +2,13 @@
 /* eslint-disable react/no-unstable-nested-components -- Invalid rule */
 import type { PortableTextComponents } from "@portabletext/react";
 import { PortableText } from "@portabletext/react";
-import { EditorPayload, ImagePayload } from "@webicient/sanity-kit";
+import { RichTextPayload, ImagePayload } from "@webicient/sanity-kit";
 import { ImageResolver, LinkResolver } from "@webicient/sanity-kit/resolvers";
 
-export default function EditorResolver({
+export default function RichTextResolver({
   value,
 }: {
-  value: EditorPayload[];
+  value: RichTextPayload[];
 }): JSX.Element {
   const components: PortableTextComponents = {
     block: {
