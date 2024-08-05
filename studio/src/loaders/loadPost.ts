@@ -1,17 +1,21 @@
 import { loadContentType } from "@webicient/sanity-kit/query";
-import { ContentTypePayload } from "@webicient/sanity-kit";
+import type { ContentTypePayload } from "@webicient/sanity-kit";
+import type { QueryResponseInitial } from "@sanity/react-loader";
 
-export interface PostPayload extends ContentTypePayload {
-  /* No other types. */
+export type PostPayload = ContentTypePayload;
+
+interface PostParams {
+  slug: string[];
+  language: string;
 }
 
-type PostParams = {
-  slug: string[];
-};
-
-export async function loadPost({ slug }: PostParams) {
-  return await loadContentType<PostPayload | null>({
+export async function loadPost({
+  slug,
+  language,
+}: PostParams): Promise<QueryResponseInitial<PostPayload | null>> {
+  return loadContentType<PostPayload | null>({
     name: "post",
     slug,
+    language,
   });
 }

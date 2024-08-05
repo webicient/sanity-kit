@@ -1,17 +1,19 @@
 import { loadContentType } from "@webicient/sanity-kit/query";
-import { ContentTypePayload } from "@webicient/sanity-kit";
+import type { ContentTypePayload } from "@webicient/sanity-kit";
+import type { QueryResponseInitial } from "@sanity/react-loader";
 
-export interface PagePayload extends ContentTypePayload {
-  /* No other types. */
+export type PagePayload = ContentTypePayload;
+
+interface PageParams {
+  slug: string[];
+  language: string;
 }
 
-type PageParams = {
-  slug: string[];
-  language?: string;
-};
-
-export async function loadPage({ slug, language }: PageParams) {
-  return await loadContentType<PagePayload | null>({
+export async function loadPage({
+  slug,
+  language,
+}: PageParams): Promise<QueryResponseInitial<PagePayload | null>> {
+  return loadContentType<PagePayload | null>({
     name: "page",
     language,
     slug,

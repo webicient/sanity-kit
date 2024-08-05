@@ -1,7 +1,9 @@
 import { loadService } from "@/loaders/loadService";
 import { generateStaticSlugs, loadSettings } from "@webicient/sanity-kit/query";
 import { getMetadata } from "@webicient/sanity-kit/utils";
+import { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { Slug } from "sanity";
 
 type RouteParams = {
   params: {
@@ -12,13 +14,15 @@ type RouteParams = {
 
 export const dynamicParams = true;
 
-export async function generateStaticParams() {
+export async function generateStaticParams(): Promise<
+  { slug: (string | Slug)[] }[]
+> {
   return await generateStaticSlugs({ type: "service" });
 }
 
 export async function generateMetadata({
   params: { slug, language },
-}: RouteParams) {
+}: RouteParams): Promise<Metadata> {
   const [{ data: service }, { data: generalSettings }] = await Promise.all([
     loadService({ slug }),
     loadSettings({ name: "generalSettings", language }),
@@ -27,7 +31,9 @@ export async function generateMetadata({
   return getMetadata(service, { slug: slug.join("/") }, generalSettings.domain);
 }
 
-export default async function Post({ params: { slug } }: RouteParams) {
+export default async function Post({
+  params: { slug },
+}: RouteParams): Promise<JSX.Element> {
   const { data: service } = await loadService({ slug });
 
   if (!service) {

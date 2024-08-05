@@ -25,6 +25,13 @@ export function modulesQueryField(language?: string): string {
     })
     .filter(Boolean);
 
+  modulesQueries.push(`_type == "kit.preset" => @->{
+    "data": modules[] {
+      ...,
+      ${modulesQueries.join(",")}
+    }
+  }`);
+
   let query = `"modules": `;
 
   if (language) {

@@ -3,6 +3,7 @@ import { defineContentType } from "../registry/define";
 import { defineField } from "sanity";
 import { REDIRECT_OPTIONS } from "../defaults/constants";
 import { isValidUrlSegment } from "../../utils/url";
+import { MODULES_FIELD } from "../defaults/fields";
 
 export const page = defineContentType({
   name: "page",
@@ -113,10 +114,25 @@ export const preset = defineContentType({
   },
   fields: [
     defineField({
-      name: "title",
-      title: "Title",
+      name: "name",
+      title: "Name",
       type: "string",
       validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: "uniqueId",
+      title: "Unique ID",
+      type: "slug",
+      validation: (rule) => rule.required(),
+      options: {
+        source: "name",
+      },
+    }),
+    MODULES_FIELD,
+    defineField({
+      name: "image",
+      title: "Preview Image",
+      type: "image",
     }),
   ],
 });

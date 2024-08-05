@@ -1,14 +1,17 @@
 import { loadSettings } from "@webicient/sanity-kit/query";
 import { KitVisualEditing } from "@webicient/sanity-kit/visual-editing";
 import { KitProvider } from "@webicient/sanity-kit/provider";
+import type { Metadata } from "next";
 
-type RouteParams = {
+interface RouteParams {
   params: {
     language: string;
   };
-};
+}
 
-export async function generateMetadata({ params: { language } }: RouteParams) {
+export async function generateMetadata({
+  params: { language },
+}: RouteParams): Promise<Metadata> {
   const { data: seoSettings } = await loadSettings({
     name: "seoSettings",
     language,
@@ -16,7 +19,7 @@ export async function generateMetadata({ params: { language } }: RouteParams) {
 
   return {
     title: seoSettings?.title
-      ? { template: `%s | ${seoSettings?.title}` }
+      ? { absolute: seoSettings.title, template: `%s | ${seoSettings?.title}` }
       : undefined,
     description: seoSettings?.description,
   };
@@ -28,7 +31,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }> &
-  RouteParams) {
+  RouteParams): Promise<JSX.Element> {
   const { data: settings } = await loadSettings({ language });
 
   return (

@@ -3,6 +3,7 @@ import { REDIRECT_OPTIONS } from "../defaults/constants";
 import { ImageIcon } from "@sanity/icons";
 import { getContentTypes, getEntities, getModules } from "../../utils/config";
 import { IMAGE_FIELD, LINK_FIELD } from "../defaults/fields";
+import { preset } from "./contentTypes";
 
 export const seo = defineType({
   name: "kit.seo",
@@ -205,6 +206,13 @@ export const richText = defineType({
   ],
 });
 
+export const kitPreset = defineType({
+  name: "kit.preset",
+  title: "Preset",
+  type: "reference",
+  to: [{ type: preset.name }],
+});
+
 export function getObjectsWithConfigRequired() {
   const objects: ReturnType<typeof defineType>[] = [];
 
@@ -213,7 +221,12 @@ export function getObjectsWithConfigRequired() {
       name: "kit.modules",
       title: "Modules",
       type: "array",
-      of: getModules().map(({ name }) => ({ type: name })),
+      of: [
+        ...getModules().map(({ name }) => ({ type: name })),
+        defineArrayMember({
+          type: kitPreset.name,
+        }),
+      ],
     }),
   );
 

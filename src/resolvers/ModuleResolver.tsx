@@ -12,6 +12,10 @@ type ModuleResolverProps = {
  * @returns The component associated with the given type, or null if not found.
  */
 export const getBlock = (type: string): ComponentType<any> | null => {
+  // Recursively resolve modules.
+  if (type === "kit.preset") {
+    return ModuleResolver;
+  }
   return getModules().find((module) => module.name === type)?.renderer || null;
 };
 
@@ -22,7 +26,9 @@ export const getBlock = (type: string): ComponentType<any> | null => {
  * @param {Array} props.data - The data to be resolved.
  * @returns {JSX.Element|null} The rendered module resolver component.
  */
-export function ModuleResolver({ data }: ModuleResolverProps) {
+export function ModuleResolver({
+  data,
+}: ModuleResolverProps): JSX.Element | null {
   if (!data || !Boolean(data.length)) {
     return null;
   }

@@ -21,7 +21,7 @@ import {
   socialSettings,
 } from "./schemas/settings";
 import { defineType } from "sanity";
-import { richText, seo } from "./schemas/objects";
+import { kitPreset, richText, seo } from "./schemas/objects";
 import { Language } from "@sanity/language-filter";
 
 interface Schema {
@@ -83,7 +83,7 @@ export function kitConfig(_config: KitConfig): KitConfig {
         schema: {
           entities: [home],
           contentTypes: [page, post, redirect, preset],
-          objects: [seo, richText],
+          objects: [seo, richText, kitPreset],
           taxonomies: [category],
           settings: [
             generalSettings,

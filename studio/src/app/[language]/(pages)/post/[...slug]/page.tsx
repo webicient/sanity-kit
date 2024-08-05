@@ -1,34 +1,40 @@
-import { loadPost } from "@/loaders/loadPost";
 import { generateStaticSlugs, loadSettings } from "@webicient/sanity-kit/query";
 import { getMetadata } from "@webicient/sanity-kit/utils";
 import { notFound } from "next/navigation";
+import type { Slug } from "sanity";
+import { Metadata } from "next";
+import { loadPost } from "@/loaders/loadPost";
 
-type RouteParams = {
+interface RouteParams {
   params: {
     slug: string[];
     language: string;
   };
-};
+}
 
 export const dynamicParams = true;
 
-export async function generateStaticParams() {
-  return await generateStaticSlugs({ type: "post" });
+export async function generateStaticParams(): Promise<
+  { slug: (string | Slug)[]; language?: string }[]
+> {
+  return generateStaticSlugs({ type: "post" });
 }
 
 export async function generateMetadata({
   params: { slug, language },
-}: RouteParams) {
+}: RouteParams): Promise<Metadata> {
   const [{ data: post }, { data: generalSettings }] = await Promise.all([
-    loadPost({ slug }),
+    loadPost({ slug, language }),
     loadSettings({ name: "generalSettings", language }),
   ]);
 
   return getMetadata(post, { slug: slug.join("/") }, generalSettings.domain);
 }
 
-export default async function Post({ params: { slug } }: RouteParams) {
-  const { data: post } = await loadPost({ slug });
+export default async function Post({
+  params: { slug, language },
+}: RouteParams): Promise<JSX.Element> {
+  const { data: post } = await loadPost({ slug, language });
 
   if (!post) {
     notFound();
