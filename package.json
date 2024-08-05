@@ -9,9 +9,9 @@
     "sanity",
     "sanity-plugin"
   ],
-  "homepage": "https://github.com/webicient/sanity#readme",
+  "homepage": "https://github.com/webicient/sanity-kit#readme",
   "bugs": {
-    "url": "https://github.com/webicient/sanity/issues"
+    "url": "https://github.com/webicient/sanity-kit/issues"
   },
   "repository": {
     "type": "git",
