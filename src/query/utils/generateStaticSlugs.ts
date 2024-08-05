@@ -4,6 +4,7 @@ import { getDocumentHierarchyPath } from "../../utils/hierarchy";
 import { canTranslate, getContentTypeByName, getLanguages } from "../../utils/config";
 import { hierarchyQueryFields, parentQueryField } from "../../queries/hierarchy";
 import { LinkablePayload } from "../../types/globals";
+import { flatMap } from "lodash";
 
 type GenerateStaticSlugsParams = {
   /**
@@ -22,7 +23,7 @@ export async function generateStaticSlugs({ type }: GenerateStaticSlugsParams) {
   }
 
   if (canTranslate(Boolean(contentTypeObject?.translate))) {
-    for (const language of languages) {
+    const withLangDocs = await Promise.all(languages.map(async (language) => {
       const query = `*[_type == $type && defined(slug.${language.id})]{
         ${hierarchyQueryFields(language.id, type)}
       }`;
@@ -35,14 +36,15 @@ export async function generateStaticSlugs({ type }: GenerateStaticSlugsParams) {
         })
         .fetch<HierarchyPayload[]>(query, { type });
 
-      docs = langDocs;
-    }
+      return langDocs.map((doc) => {
+        return {
+          slug: getDocumentHierarchyPath(doc),
+          language: language.id,
+        };
+      });
+    }));
 
-    return docs.map((doc) => {
-      return {
-        slug: getDocumentHierarchyPath(doc),
-      };
-    });
+    return flatMap(withLangDocs);
   }
 
   const query = `*[_type == $type && defined(slug.current)]{
