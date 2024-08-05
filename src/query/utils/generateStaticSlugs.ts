@@ -12,6 +12,7 @@ import {
 } from "../../queries/hierarchy";
 import { LinkablePayload } from "../../types/globals";
 import { flatMap } from "lodash";
+import { Slug } from "sanity";
 
 type GenerateStaticSlugsParams = {
   /**
@@ -20,7 +21,11 @@ type GenerateStaticSlugsParams = {
   type: string;
 };
 
-export async function generateStaticSlugs({ type }: GenerateStaticSlugsParams) {
+export async function generateStaticSlugs({
+  type,
+}: GenerateStaticSlugsParams): Promise<
+  { slug: (string | Slug)[]; language?: string }[]
+> {
   const languages = getLanguages();
   const contentTypeObject = getContentTypeByName(type);
   let docs: LinkablePayload[] = [];
