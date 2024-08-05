@@ -24,8 +24,6 @@ export async function generateStaticSlugs({ type }: GenerateStaticSlugsParams) {
         ${parentQueryField(language.id)}
       }`;
 
-      console.log(`"${query}"`);
-
       const langDocs = await serverClient
         .withConfig({
           perspective: "published",
