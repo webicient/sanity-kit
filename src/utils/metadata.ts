@@ -41,12 +41,6 @@ export function getMetadata(
   }
 
   const { _type, seo } = document;
-
-  // In case a document was passed without SEO data.
-  if (!seo) {
-    return {};
-  }
-
   const metadata: Metadata = {};
 
   // Grab the image URL from the SEO data.
