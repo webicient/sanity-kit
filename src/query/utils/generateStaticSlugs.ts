@@ -17,6 +17,10 @@ export async function generateStaticSlugs({ type }: GenerateStaticSlugsParams) {
   const contentTypeObject = getContentTypeByName(type);
   let docs: LinkablePayload[] = [];
 
+  if (!contentTypeObject) {
+    throw new Error(`generateStaticSlugs: Content type "${type}" not found.`);
+  }
+
   if (canTranslate(Boolean(contentTypeObject?.translate))) {
     for (const language of languages) {
       const query = `*[_type == $type && defined(slug.${language.id})]{
