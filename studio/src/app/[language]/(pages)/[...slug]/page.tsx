@@ -1,5 +1,6 @@
 import { loadPage } from "@/loaders/loadPage";
 import { generateStaticSlugs, loadSettings } from "@webicient/sanity-kit/query";
+import { ModuleResolver } from "@webicient/sanity-kit/resolvers";
 import { getMetadata } from "@webicient/sanity-kit/utils";
 import { notFound } from "next/navigation";
 
@@ -37,10 +38,9 @@ export default async function Page({
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        {page.title}
-      </div>
+    <main className="flex min-h-screen flex-col p-24 max-w-screen-xl mx-auto">
+      <h1 className="text-2xl font-bold">{page.title}</h1>
+      {page.modules?.length && <ModuleResolver data={page.modules} />}
     </main>
   );
 }

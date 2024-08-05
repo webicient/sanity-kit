@@ -2,7 +2,7 @@ import { serverClient } from "../serverClient";
 import { HierarchyPayload } from "../../types/payload";
 import { getDocumentHierarchyPath } from "../../utils/hierarchy";
 import { canTranslate, getContentTypeByName, getLanguages } from "../../utils/config";
-import { parentQueryField } from "../../queries/hierarchy";
+import { hierarchyQueryFields, parentQueryField } from "../../queries/hierarchy";
 import { LinkablePayload } from "../../types/globals";
 
 type GenerateStaticSlugsParams = {
@@ -24,8 +24,7 @@ export async function generateStaticSlugs({ type }: GenerateStaticSlugsParams) {
   if (canTranslate(Boolean(contentTypeObject?.translate))) {
     for (const language of languages) {
       const query = `*[_type == $type && defined(slug.${language.id})]{
-        "slug": slug.${language.id},
-        ${parentQueryField(language.id)}
+        ${hierarchyQueryFields(language.id, type)}
       }`;
 
       const langDocs = await serverClient
@@ -47,8 +46,7 @@ export async function generateStaticSlugs({ type }: GenerateStaticSlugsParams) {
   }
 
   const query = `*[_type == $type && defined(slug.current)]{
-    slug,
-    ${parentQueryField()}
+    ${hierarchyQueryFields(undefined, type)}
   }`;
 
   docs = await serverClient

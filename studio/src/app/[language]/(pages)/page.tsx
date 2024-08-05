@@ -30,7 +30,7 @@ export default async function Home({ params: { language } }: RouteParams) {
   }
 
   return (
-    <main className="flex min-h-screen flex-col p-24">
+    <main className="flex min-h-screen flex-col p-24 max-w-screen-xl mx-auto">
       <h1 className="text-2xl font-bold">{home.title}</h1>
       {home.modules?.length && <ModuleResolver data={home.modules} />}
     </main>
