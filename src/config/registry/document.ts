@@ -42,6 +42,14 @@ function translateField(
   field: FieldDefinition,
   defaultGroup?: string,
 ): FieldDefinition {
+  const { options } = field as any;
+
+  // Skip translation if i18n is disabled.
+  // TODO: Not type-safe, need to fix this.
+  if (options?.translate === false) {
+    return { ...field, group: field.group || DEFAULT_GROUP };
+  }
+
   return defineField({
     title: field.title,
     name: field.name,
