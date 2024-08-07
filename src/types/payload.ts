@@ -1,5 +1,6 @@
-import { Image, PortableTextBlock, Slug } from "sanity";
+import { PortableTextBlock, Slug } from "sanity";
 import { SEO } from "./seo";
+import { ImagePayload } from "./object";
 
 export interface BasePayload {
   _id: string;
@@ -19,7 +20,7 @@ export interface PublishedAtPayload {
 }
 
 export interface FeaturedImagePayload {
-  featuredImage?: Image;
+  featuredImage?: ImagePayload;
 }
 
 export interface ExcerptPayload {
