@@ -7,7 +7,6 @@
     "bal/utils",
     "bal/config.ts",
     "bal/definitions.ts",
-    "global.d.ts",
     "./test"
   ]
 }
