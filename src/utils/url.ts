@@ -128,15 +128,9 @@ export function resolveDocumentHref(
   const fromContentType = getContentTypeByName(document._type);
 
   if (fromContentType?.rewrite) {
-    if (fromContentType.hierarchical) {
-      return resolveHref(document._type, {
-        slug: getDocumentHierarchyPath(document).join("/"),
-      });
-    } else {
-      return resolveHref(document._type, {
-        slug: document.slug.current as string,
-      });
-    }
+    return resolveHref(document._type, {
+      slug: getDocumentHierarchyPath(document).join("/"),
+    });
   }
 
   const fromEntity = getEntityByName(document._type);

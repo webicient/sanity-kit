@@ -52,9 +52,7 @@ export function getContentTypeQuery(
   }
 
   if (isContentType(name)) {
-    if (Boolean(getContentTypeByName(name)?.hierarchical)) {
-      query = appendField(query, parentQueryField(language));
-    }
+    query = appendField(query, parentQueryField(language));
   }
 
   return query;
