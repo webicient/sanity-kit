@@ -54,6 +54,7 @@ export interface KitConfig {
   schema?: Schema;
   languages?: (Language & { isDefault?: boolean })[];
   custom?: Custom;
+  disableDefault?: { schema?: { contentTypes?: string[] } };
 }
 
 let config: KitConfig | null = null;
@@ -77,12 +78,21 @@ export function kitConfig(_config: KitConfig): KitConfig {
     }
   });
 
+  let defaultContentTypes = [page, post, redirect, preset];
+
+  if (_config.disableDefault?.schema?.contentTypes) {
+    defaultContentTypes = defaultContentTypes.filter(
+      (contentType) =>
+        !_config.disableDefault?.schema?.contentTypes?.includes(contentType.name),
+    );
+  }
+
   return once(() => {
     config = deepmerge(
       {
         schema: {
           entities: [home],
-          contentTypes: [page, post, redirect, preset],
+          contentTypes: defaultContentTypes,
           objects: [seo, richText, kitPreset],
           taxonomies: [category],
           settings: [
