@@ -51,19 +51,25 @@ interface Custom {
   ) => string;
 }
 
+interface Resolve {
+  href?: (
+    prev: string,
+    documentType: string | null | undefined,
+    params?: Record<string, any>,
+    document?: LinkablePayload | null | undefined,
+  ) => string;
+  documentHref?: (
+    prev: string,
+    document?: LinkablePayload | null | undefined,
+  ) => string;
+}
+
 export interface KitConfig {
   schema?: Schema;
   languages?: (Language & { isDefault?: boolean })[];
   custom?: Custom;
   disableDefault?: { schema?: { contentTypes?: string[] } };
-  resolve?: {
-    href?: (
-      prev: string,
-      documentType: string | null | undefined,
-      params?: Record<string, any>,
-      document?: LinkablePayload | null | undefined,
-    ) => string;
-  };
+  resolve?: Resolve;
 }
 
 let config: KitConfig | null = null;

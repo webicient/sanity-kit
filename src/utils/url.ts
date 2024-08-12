@@ -140,12 +140,18 @@ export function resolveDocumentHref(
     );
   }
 
+  let href = "";
+
   const fromContentType = getContentTypeByName(document._type);
 
   if (fromContentType?.rewrite) {
-    return resolveHref(document._type, {
-      slug: getDocumentHierarchyPath(document).join("/"),
-    }, document);
+    return resolveHref(
+      document._type,
+      {
+        slug: getDocumentHierarchyPath(document).join("/"),
+      },
+      document,
+    );
   }
 
   const fromEntity = getEntityByName(document._type);
@@ -154,5 +160,14 @@ export function resolveDocumentHref(
     return resolveHref(document._type);
   }
 
-  return "";
+  const documentHrefResolver = getConfig()?.resolve?.documentHref;
+
+  if (
+    documentHrefResolver &&
+    typeof getConfig()?.resolve?.documentHref === "function"
+  ) {
+    return documentHrefResolver(href, document);
+  }
+
+  return href;
 }
