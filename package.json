@@ -96,6 +96,7 @@
     "deepmerge": "^4.3.1",
     "groq": "^3.52.4",
     "lodash": "^4.17.21",
+    "react-error-boundary": "^4.0.13",
     "rollup-preserve-directives": "^1.1.1",
     "sanity-plugin-media": "^2.2.5",
     "server-only": "^0.0.1"
