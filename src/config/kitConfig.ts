@@ -83,7 +83,9 @@ export function kitConfig(_config: KitConfig): KitConfig {
   if (_config.disableDefault?.schema?.contentTypes) {
     defaultContentTypes = defaultContentTypes.filter(
       (contentType) =>
-        !_config.disableDefault?.schema?.contentTypes?.includes(contentType.name),
+        !_config.disableDefault?.schema?.contentTypes?.includes(
+          contentType.name,
+        ),
     );
   }
 

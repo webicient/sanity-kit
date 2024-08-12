@@ -17,6 +17,5 @@ export async function loadPage({
     name: "page",
     language,
     slug,
-    projection: `{ name }`,
   });
 }
