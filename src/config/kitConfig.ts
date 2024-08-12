@@ -23,6 +23,7 @@ import {
 import { defineType } from "sanity";
 import { kitPreset, richText, seo } from "./schemas/objects";
 import { Language } from "@sanity/language-filter";
+import { LinkablePayload } from "../types/globals";
 
 interface Schema {
   objects?: ReturnType<typeof defineType>[];
@@ -55,6 +56,14 @@ export interface KitConfig {
   languages?: (Language & { isDefault?: boolean })[];
   custom?: Custom;
   disableDefault?: { schema?: { contentTypes?: string[] } };
+  resolve?: {
+    href?: (
+      prev: string,
+      documentType: string | null | undefined,
+      params?: Record<string, any>,
+      document?: LinkablePayload | null | undefined,
+    ) => string;
+  };
 }
 
 let config: KitConfig | null = null;

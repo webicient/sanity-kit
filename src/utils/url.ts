@@ -1,3 +1,4 @@
+import { getConfig } from "../config/kitConfig";
 import { LinkablePayload } from "../types/globals";
 import {
   getContentTypeByName,
@@ -92,6 +93,7 @@ function transformRewrite(template: string, params?: Record<string, string>) {
 export function resolveHref(
   documentType?: string | null,
   params?: Record<string, string>,
+  document?: LinkablePayload | null | undefined,
 ): string {
   const rewriteableTypes = [...getContentTypes(), ...getEntities()].filter(
     ({ rewrite }) => Boolean(rewrite),
@@ -100,6 +102,19 @@ export function resolveHref(
   const readType = rewriteableTypes.find(
     (readType) => readType.name === documentType,
   );
+
+  const hrefResolver = getConfig()?.resolve?.href;
+
+  if (hrefResolver && typeof getConfig()?.resolve?.href === "function") {
+    return hrefResolver(
+      readType?.rewrite
+        ? endWithTrailingSlash(transformRewrite(readType.rewrite, params))
+        : "",
+      documentType,
+      params,
+      document,
+    );
+  }
 
   return readType?.rewrite
     ? endWithTrailingSlash(transformRewrite(readType.rewrite, params))
@@ -130,7 +145,7 @@ export function resolveDocumentHref(
   if (fromContentType?.rewrite) {
     return resolveHref(document._type, {
       slug: getDocumentHierarchyPath(document).join("/"),
-    });
+    }, document);
   }
 
   const fromEntity = getEntityByName(document._type);
