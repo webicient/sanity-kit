@@ -8,8 +8,11 @@ import {
   type StructureResolver,
 } from "sanity/structure";
 import {
+  canTranslate,
   getContentTypes,
+  getDefaultLanguage,
   getEntities,
+  getSchemaByName,
   getSettings,
   getTaxonomies,
 } from "../../utils/config";
@@ -59,7 +62,13 @@ function prepareBuild(
 function buildContentTypeHierarchyFilter(
   S: StructureBuilder,
   contentType: ContentType,
-): ListItemBuilder {
+): ListItemBuilder[] | [] {
+  const schemaObject = getSchemaByName(contentType.name);
+
+  if (!schemaObject) {
+    return [];
+  }
+
   const childItem = S.documentList()
     // TODO: i18n
     .title(`${contentType.pluralTitle} by Parent`)
@@ -69,8 +78,15 @@ function buildContentTypeHierarchyFilter(
         .getClient({ apiVersion: API_VERSION })
         .fetch(groq`*[_id == "${contentTypeId}"][0]{ title }`);
 
+      const defaultLanguage = getDefaultLanguage()?.id;
+      let title = document.title;
+
+      if (canTranslate(Boolean(schemaObject?.translate)) && defaultLanguage) {
+        title = document.title[defaultLanguage];
+      }
+
       return S.documentTypeList(contentType.name)
-        .title(document.title)
+        .title(title)
         .params({ contentTypeId })
         .filter(
           // We need to check up maximum to 5 levels deep.
@@ -83,13 +99,13 @@ function buildContentTypeHierarchyFilter(
         ]);
     });
 
-  return (
+  return [
     S.listItem()
       // TODO: i18n
       .title(`${contentType.pluralTitle} by Parent`)
       .icon(FilterIcon)
       .child(childItem)
-  );
+  ];
 }
 
 /**
@@ -119,6 +135,12 @@ function buildContentTypeTaxonomyFilters(
     );
   };
 
+  const schemaObject = getSchemaByName(contentType.name);
+
+  if (!schemaObject) {
+    return [];
+  }
+
   return taxonomiesSettings.map((taxonomy) => {
     const contentTypeTaxonomySetting = getRegisteredTaxonomySetting(
       taxonomy.name,
@@ -139,8 +161,15 @@ function buildContentTypeTaxonomyFilters(
                 .getClient({ apiVersion: API_VERSION })
                 .fetch(groq`*[_id == "${taxonomyId}"][0]{ title }`);
 
+              const defaultLanguage = getDefaultLanguage()?.id;
+              let title = document.title;
+
+              if (canTranslate(Boolean(schemaObject?.translate)) && defaultLanguage) {
+                title = document.title[defaultLanguage];
+              }
+
               return S.documentTypeList(contentType.name)
-                .title(document.title)
+                .title(title)
                 .params({ taxonomyId })
                 .filter(
                   // If the taxonomy setting is multiple, we need to check if the taxonomy ID is in the array.
@@ -196,7 +225,7 @@ function buildContentType(
         ),
         // Hierarchical filter pane.
         ...(contentType.hierarchical
-          ? [buildContentTypeHierarchyFilter(S, contentType)]
+          ? buildContentTypeHierarchyFilter(S, contentType)
           : []),
         // Taxonomy filter panes.
         ...buildContentTypeTaxonomyFilters(S, contentType),

@@ -151,3 +151,17 @@ export function isContentType(name: string): boolean {
 export function canTranslate(translate: boolean): boolean {
   return Boolean(getConfig().languages?.length) && translate;
 }
+
+/**
+ * Retrieves a schema by its name.
+ *
+ * @param name - The name of the schema to retrieve.
+ * @returns The matching Entity, ContentType, Taxonomy, or undefined if no match is found.
+ */
+export function getSchemaByName(name: string): Entity | ContentType | Taxonomy | undefined {
+  return [
+    ...getEntities(),
+    ...getContentTypes(),
+    ...getTaxonomies(),
+  ].find((schema) => schema.name === name);
+}

@@ -177,6 +177,29 @@ function getCollectionDocument(
         }),
       );
     }
+  } else {
+    docPreview = {
+      select: getCollectionPreviewSelect(
+        canTranslate(translate) ? getDefaultLanguage()?.id : undefined,
+      ),
+      prepare({ title, slug, parentSlug, ancestralSlug, unknownSlug }) {
+        const pathSegment = [
+          unknownSlug ? "..." : "",
+          ancestralSlug,
+          parentSlug,
+          slug,
+        ]
+          .filter(Boolean)
+          .join("/");
+
+        return {
+          title,
+          subtitle: slug
+            ? resolveHref(name, { slug: pathSegment })
+            : undefined,
+        };
+      },
+    };
   }
 
   return defineType({
