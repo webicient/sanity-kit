@@ -35,6 +35,6 @@ export async function productionUrl(
   });
 
   return defaultLanguageId
-    ? `/${defaultLanguageId}/${resolveDocumentHref(result)}`
+    ? `/${defaultLanguageId}${resolveDocumentHref(result)}`
     : resolveDocumentHref(result);
 }

@@ -18,8 +18,12 @@ export function getDocumentHierarchyPath(document: LinkablePayload) {
     | undefined = document;
 
   while (currentDoc) {
-    hierarchy.unshift(currentDoc.slug.current);
-    currentDoc = currentDoc?.parent;
+    if (currentDoc?.slug?.current) {
+      hierarchy.unshift(currentDoc.slug.current);
+      currentDoc = currentDoc?.parent;
+    } else {
+      currentDoc = null;
+    }
   }
 
   return hierarchy;
