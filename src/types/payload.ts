@@ -35,7 +35,7 @@ export interface HierarchyPayload {
   parent: HierarchyPayload | null;
 }
 
-export interface SEOPayload extends BasePayload, TitlePayload {
+export interface SEOPayload extends BasePayload, TitlePayload, ExcerptPayload {
   seo?: SEO;
 }
 

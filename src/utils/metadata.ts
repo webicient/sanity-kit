@@ -52,7 +52,7 @@ export function getMetadata(
   metadata.title = seo?.title || document.title;
 
   // Get the description from the SEO data.
-  metadata.description = seo?.description;
+  metadata.description = seo?.description || document.excerpt;
 
   // OpenGraph data.
   metadata.openGraph = {
