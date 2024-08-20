@@ -11,7 +11,7 @@ import {
 } from "../types/definition";
 import { page, post, preset, redirect } from "./schemas/contentTypes";
 import { category } from "./schemas/taxonomies";
-import { home } from "./schemas/entities";
+import { home, page404 } from "./schemas/entities";
 import {
   advancedSettings,
   generalSettings,
@@ -108,7 +108,7 @@ export function kitConfig(_config: KitConfig): KitConfig {
     config = deepmerge(
       {
         schema: {
-          entities: [home],
+          entities: [home, page404],
           contentTypes: defaultContentTypes,
           objects: [seo, richText, kitPreset],
           taxonomies: [category],
