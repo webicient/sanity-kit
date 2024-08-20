@@ -39,6 +39,6 @@ export async function loadContentType<PayloadType>({
   return await loadQuery<PayloadType | null>(
     getContentTypeQuery(name, slug, language, projection),
     {},
-    { next: { tags: [`${name}:${slug[0]}`] } },
+    { next: { tags: slug.map(slugName => `${name}:${slugName}` ) } },
   );
 }
