@@ -59,13 +59,14 @@ export const redirect = defineContentType({
       type: "string",
       description:
         "URLs without including the host (https://example.com/). Examples are: '/old-page' or '/news/old-article'.",
-      validation: (rule) =>
-        rule.required().custom((segment?: string) => {
-          // TODO: i18n
-          return !isValidUrlSegment(segment)
-            ? "Source must be a valid path segment."
-            : true;
-        }),
+      validation: (rule) => rule.required(),
+      // validation: (rule) =>
+      //   rule.required().custom((segment?: string) => {
+      //     // TODO: i18n
+      //     return !isValidUrlSegment(segment)
+      //       ? "Source must be a valid path segment."
+      //       : true;
+      //   }),
     }),
     defineField({
       name: "destination",
