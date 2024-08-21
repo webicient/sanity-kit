@@ -65,6 +65,7 @@ function translateField(
           field.type === "slug"
             ? {
                 ...(field.options as any),
+                isUnique: () => true,
                 source: (doc: { title: Record<string, string> }) => {
                   return doc.title[lang.id];
                 },
