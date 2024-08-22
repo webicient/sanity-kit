@@ -62,6 +62,11 @@
       "import": "./dist/queries/index.js",
       "default": "./dist/queries/index.js"
     },
+    "./i18n": {
+      "source": "./src/i18n/index.ts",
+      "import": "./dist/i18n/index.js",
+      "default": "./dist/i18n/index.js"
+    },
     "./package.json": "./package.json"
   },
   "main": "./dist/index.js",

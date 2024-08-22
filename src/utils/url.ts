@@ -1,4 +1,5 @@
 import { getConfig } from "../config/kitConfig";
+import { getCurrentLanguage } from "../i18n/language";
 import { LinkablePayload } from "../types/globals";
 import {
   getContentTypeByName,
@@ -145,28 +146,44 @@ export function resolveDocumentHref(
   const fromContentType = getContentTypeByName(document._type);
 
   if (fromContentType?.rewrite) {
-    return resolveHref(
+    href = resolveHref(
       document._type,
       {
         slug: getDocumentHierarchyPath(document).join("/"),
       },
       document,
     );
+
+    // Prepend language.
+    if (getCurrentLanguage()) {
+      href = `/${getCurrentLanguage()}${href}`;
+    }
+
+    return href;
   }
 
   const fromEntity = getEntityByName(document._type);
 
   if (fromEntity?.rewrite) {
-    return resolveHref(document._type);
+    href = resolveHref(document._type);
+
+    // Prepend language.
+    if (getCurrentLanguage()) {
+      href = `/${getCurrentLanguage()}${href}`;
+    }
+
+    return href;
   }
 
   const documentHrefResolver = getConfig()?.resolve?.documentHref;
 
-  if (
-    documentHrefResolver &&
-    typeof getConfig()?.resolve?.documentHref === "function"
-  ) {
+  if (documentHrefResolver && typeof documentHrefResolver === "function") {
     return documentHrefResolver(href, document);
+  }
+
+  // Prepend language.
+  if (getCurrentLanguage()) {
+    href = `/${getCurrentLanguage()}${href}`;
   }
 
   return href;
