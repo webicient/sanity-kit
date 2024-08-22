@@ -6,5 +6,9 @@ export function setCurrentLanguage(language: string): string {
 }
 
 export function getCurrentLanguage(): null | string {
-  return LANGUAGE_STORE;
+  if (typeof document === "undefined") {
+    return LANGUAGE_STORE;
+  }
+
+  return document?.documentElement?.lang || LANGUAGE_STORE;
 }
