@@ -158,10 +158,10 @@ export function canTranslate(translate: boolean): boolean {
  * @param name - The name of the schema to retrieve.
  * @returns The matching Entity, ContentType, Taxonomy, or undefined if no match is found.
  */
-export function getSchemaByName(name: string): Entity | ContentType | Taxonomy | undefined {
-  return [
-    ...getEntities(),
-    ...getContentTypes(),
-    ...getTaxonomies(),
-  ].find((schema) => schema.name === name);
+export function getSchemaByName(
+  name: string,
+): Entity | ContentType | Taxonomy | undefined {
+  return [...getEntities(), ...getContentTypes(), ...getTaxonomies()].find(
+    (schema) => schema.name === name,
+  );
 }

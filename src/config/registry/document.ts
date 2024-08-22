@@ -195,9 +195,7 @@ function getCollectionDocument(
 
         return {
           title,
-          subtitle: slug
-            ? resolveHref(name, { slug: pathSegment })
-            : undefined,
+          subtitle: slug ? resolveHref(name, { slug: pathSegment }) : undefined,
         };
       },
     };

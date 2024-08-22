@@ -1,6 +1,7 @@
 import { loadQuery } from "../loadQuery";
 import { getContentTypeQuery } from "../../queries/contentType";
 import { Language } from "@sanity/language-filter";
+import { ResponseQueryOptions } from "next-sanity";
 
 type LoadContentTypeParams = {
   /**
@@ -30,15 +31,27 @@ type LoadContentTypeParams = {
  * @param projection - The projection of the content type.
  * @returns A promise that resolves to the loaded content type payload or null.
  */
-export async function loadContentType<PayloadType>({
-  name,
-  slug,
-  language,
-  projection,
-}: LoadContentTypeParams) {
+export async function loadContentType<PayloadType>(
+  { name, slug, language, projection }: LoadContentTypeParams,
+  options:
+    | Pick<
+        ResponseQueryOptions,
+        "perspective" | "cache" | "next" | "useCdn" | "stega"
+      >
+    | undefined,
+) {
   return await loadQuery<PayloadType | null>(
     getContentTypeQuery(name, slug, language, projection),
     {},
-    { next: { tags: slug.map(slugName => `${name}:${slugName}` ) } },
+    {
+      ...options,
+      next: {
+        ...options?.next,
+        tags: [
+          ...(options?.next?.tags || []),
+          ...slug.map((slugName) => `${name}:${slugName}`),
+        ],
+      },
+    },
   );
 }

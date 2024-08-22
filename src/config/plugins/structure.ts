@@ -104,7 +104,7 @@ function buildContentTypeHierarchyFilter(
       // TODO: i18n
       .title(`${contentType.pluralTitle} by Parent`)
       .icon(FilterIcon)
-      .child(childItem)
+      .child(childItem),
   ];
 }
 
@@ -164,7 +164,10 @@ function buildContentTypeTaxonomyFilters(
               const defaultLanguage = getDefaultLanguage()?.id;
               let title = document.title;
 
-              if (canTranslate(Boolean(schemaObject?.translate)) && defaultLanguage) {
+              if (
+                canTranslate(Boolean(schemaObject?.translate)) &&
+                defaultLanguage
+              ) {
                 title = document.title[defaultLanguage];
               }
 

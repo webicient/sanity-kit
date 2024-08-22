@@ -1,5 +1,6 @@
 import { loadQuery } from "../loadQuery";
 import { getTaxonomyQuery } from "../../queries/taxonomy";
+import { ResponseQueryOptions } from "next-sanity";
 
 type LoadTaxonomyParams = {
   /**
@@ -28,15 +29,24 @@ type LoadTaxonomyParams = {
  * @param projection - The projection for the taxonomy.
  * @returns A promise that resolves to the loaded taxonomy.
  */
-export async function loadTaxonomy<PayloadType>({
-  name,
-  slug,
-  language,
-  projection,
-}: LoadTaxonomyParams) {
+export async function loadTaxonomy<PayloadType>(
+  { name, slug, language, projection }: LoadTaxonomyParams,
+  options:
+    | Pick<
+        ResponseQueryOptions,
+        "perspective" | "cache" | "next" | "useCdn" | "stega"
+      >
+    | undefined,
+) {
   return await loadQuery<PayloadType | null>(
     getTaxonomyQuery(name, slug, language, projection),
     { type: name },
-    { next: { tags: [`${name}:${slug.reverse()[0]}`] } },
+    {
+      ...options,
+      next: {
+        ...options?.next,
+        tags: [...(options?.next?.tags || []), `${name}:${slug.reverse()[0]}`],
+      },
+    },
   );
 }
