@@ -31,7 +31,7 @@ type LoadTaxonomyParams = {
  */
 export async function loadTaxonomy<PayloadType>(
   { name, slug, language, projection }: LoadTaxonomyParams,
-  options:
+  options?:
     | Pick<
         ResponseQueryOptions,
         "perspective" | "cache" | "next" | "useCdn" | "stega"

@@ -33,7 +33,7 @@ type LoadContentTypeParams = {
  */
 export async function loadContentType<PayloadType>(
   { name, slug, language, projection }: LoadContentTypeParams,
-  options:
+  options?:
     | Pick<
         ResponseQueryOptions,
         "perspective" | "cache" | "next" | "useCdn" | "stega"

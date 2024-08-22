@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/webicient/sanity.git"
+    "url": "git+ssh://git@gith ub.com/webicient/sanity.git"
   },
   "license": "MIT",
   "author": "Webicient <dev@webicient.com>",

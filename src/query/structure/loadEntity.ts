@@ -28,7 +28,7 @@ type LoadEntityParams = {
  */
 export async function loadEntity<PayloadType>(
   { name, language, projection }: LoadEntityParams,
-  options:
+  options?:
     | Pick<
         ResponseQueryOptions,
         "perspective" | "cache" | "next" | "useCdn" | "stega"

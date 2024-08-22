@@ -24,7 +24,7 @@ type LoadSettingsParams = {
  */
 export function loadSettings(
   { name, language }: LoadSettingsParams = {},
-  options:
+  options?:
     | Pick<
         ResponseQueryOptions,
         "perspective" | "cache" | "next" | "useCdn" | "stega"
