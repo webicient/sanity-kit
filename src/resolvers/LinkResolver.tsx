@@ -1,8 +1,11 @@
+"use client";
+
 import type { LinkProps as NextLinkProps } from "next/link";
 import Link from "next/link";
 import type { HTMLAttributes, ReactNode } from "react";
 import { LinkPayload } from "../types/object";
 import { resolveDocumentHref } from "../utils/url";
+import { useLocale } from "next-intl";
 
 type LinkResolverProps = NextLinkProps & HTMLAttributes<HTMLAnchorElement>;
 
@@ -15,6 +18,8 @@ export function LinkResolver({
   children: ReactNode;
   defaultToTop?: boolean;
 } & Omit<LinkResolverProps, "href">): JSX.Element {
+  const locale = useLocale();
+
   const linkProps: any = {
     // Defaults to home.
     href: "/",
@@ -26,7 +31,7 @@ export function LinkResolver({
       linkProps.href = link.external;
     }
   } else {
-    linkProps.href = resolveDocumentHref(link?.internal);
+    linkProps.href = resolveDocumentHref(link?.internal, locale);
   }
 
   if (link?.openInNewTab) {

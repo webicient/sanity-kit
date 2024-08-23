@@ -8,7 +8,7 @@ import { Slug } from "sanity";
 type RouteParams = {
   params: {
     slug: string[];
-    language: string;
+    locale: string;
   };
 };
 
@@ -21,11 +21,11 @@ export async function generateStaticParams(): Promise<
 }
 
 export async function generateMetadata({
-  params: { slug, language },
+  params: { slug, locale },
 }: RouteParams): Promise<Metadata> {
   const [{ data: service }, { data: generalSettings }] = await Promise.all([
     loadService({ slug }),
-    loadSettings({ name: "generalSettings", language }),
+    loadSettings({ name: "generalSettings", language: locale }),
   ]);
 
   return getMetadata(service, { slug: slug.join("/") }, generalSettings.domain);

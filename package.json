@@ -62,11 +62,6 @@
       "import": "./dist/queries/index.js",
       "default": "./dist/queries/index.js"
     },
-    "./i18n": {
-      "source": "./src/i18n/index.ts",
-      "import": "./dist/i18n/index.js",
-      "default": "./dist/i18n/index.js"
-    },
     "./package.json": "./package.json"
   },
   "main": "./dist/index.js",
@@ -98,6 +93,7 @@
     "@sanity/language-filter": "^4.0.2",
     "@sanity/react-loader": "^1.10.4",
     "@sanity/vision": "^3.45.0",
+    "cookies-next": "^4.2.1",
     "deepmerge": "^4.3.1",
     "groq": "^3.52.4",
     "lodash": "^4.17.21",
@@ -133,6 +129,7 @@
   "peerDependencies": {
     "next": "14.2.3",
     "next-sanity": "^9.3.10",
+    "next-intl": "^3.17.4",
     "react": "^18",
     "sanity": "^3.45.0"
   },

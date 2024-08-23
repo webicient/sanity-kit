@@ -8,27 +8,27 @@ import { loadHome } from "@/loaders/loadHome";
 interface RouteParams {
   params: {
     slug: string[];
-    language: string;
+    locale: string;
   };
 }
 
 export const dynamicParams = true;
 
 export async function generateMetadata({
-  params: { language },
+  params: { locale },
 }: RouteParams): Promise<Metadata> {
   const [{ data: home }, { data: generalSettings }] = await Promise.all([
-    loadHome({ language }),
-    loadSettings({ name: "generalSettings", language }),
+    loadHome({ language: locale }),
+    loadSettings({ name: "generalSettings", language: locale }),
   ]);
 
   return getMetadata(home, {}, generalSettings.domain);
 }
 
 export default async function Home({
-  params: { language },
+  params: { locale },
 }: RouteParams): Promise<JSX.Element> {
-  const { data: home } = await loadHome({ language });
+  const { data: home } = await loadHome({ language: locale });
 
   if (!home) {
     notFound();

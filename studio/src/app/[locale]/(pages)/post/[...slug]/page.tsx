@@ -8,33 +8,33 @@ import { loadPost } from "@/loaders/loadPost";
 interface RouteParams {
   params: {
     slug: string[];
-    language: string;
+    locale: string;
   };
 }
 
 export const dynamicParams = true;
 
 export async function generateStaticParams(): Promise<
-  { slug: (string | Slug)[]; language?: string }[]
+  { slug: (string | Slug)[]; locale?: string }[]
 > {
   return generateStaticSlugs({ type: "post" });
 }
 
 export async function generateMetadata({
-  params: { slug, language },
+  params: { slug, locale },
 }: RouteParams): Promise<Metadata> {
   const [{ data: post }, { data: generalSettings }] = await Promise.all([
-    loadPost({ slug, language }),
-    loadSettings({ name: "generalSettings", language }),
+    loadPost({ slug, language: locale }),
+    loadSettings({ name: "generalSettings", language: locale }),
   ]);
 
   return getMetadata(post, { slug: slug.join("/") }, generalSettings.domain);
 }
 
 export default async function Post({
-  params: { slug, language },
+  params: { slug, locale },
 }: RouteParams): Promise<JSX.Element> {
-  const { data: post } = await loadPost({ slug, language });
+  const { data: post } = await loadPost({ slug, language: locale });
 
   if (!post) {
     notFound();

@@ -1,5 +1,4 @@
 import { getConfig } from "../config/kitConfig";
-import { getCurrentLanguage } from "../i18n/language";
 import { LinkablePayload } from "../types/globals";
 import {
   getContentTypeByName,
@@ -130,6 +129,7 @@ export function resolveHref(
  */
 export function resolveDocumentHref(
   document: LinkablePayload | null | undefined,
+  locale?: string
 ): string {
   if (!document) {
     return "";
@@ -155,9 +155,11 @@ export function resolveDocumentHref(
     );
 
     // Prepend language.
-    if (getCurrentLanguage()) {
-      href = `/${getCurrentLanguage()}${href}`;
+    if (locale) {
+      href = `/${locale}${href}`;
     }
+
+    console.log("SERVER LOCALE", locale);
 
     return href;
   }
@@ -168,8 +170,8 @@ export function resolveDocumentHref(
     href = resolveHref(document._type);
 
     // Prepend language.
-    if (getCurrentLanguage()) {
-      href = `/${getCurrentLanguage()}${href}`;
+    if (locale) {
+      href = `/${locale}${href}`;
     }
 
     return href;
@@ -182,8 +184,8 @@ export function resolveDocumentHref(
   }
 
   // Prepend language.
-  if (getCurrentLanguage()) {
-    href = `/${getCurrentLanguage()}${href}`;
+  if (locale) {
+    href = `/${locale}${href}`;
   }
 
   return href;

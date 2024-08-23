@@ -5,16 +5,16 @@ import type { Metadata } from "next";
 
 interface RouteParams {
   params: {
-    language: string;
+    locale: string;
   };
 }
 
 export async function generateMetadata({
-  params: { language },
+  params: { locale },
 }: RouteParams): Promise<Metadata> {
   const { data: seoSettings } = await loadSettings({
     name: "seoSettings",
-    language,
+    language: locale,
   });
 
   return {
@@ -27,12 +27,12 @@ export async function generateMetadata({
 
 export default async function RootLayout({
   children,
-  params: { language },
+  params: { locale },
 }: Readonly<{
   children: React.ReactNode;
 }> &
   RouteParams): Promise<JSX.Element> {
-  const { data: settings } = await loadSettings({ language });
+  const { data: settings } = await loadSettings({ language: locale });
 
   return (
     <KitProvider settings={settings}>

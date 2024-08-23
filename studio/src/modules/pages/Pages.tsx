@@ -1,3 +1,5 @@
+"use client";
+
 import Section from "@/components/Section";
 import { PagePayload } from "@/loaders/loadPage";
 import RichTextResolver from "@/resolvers/RichTextResolver";
@@ -5,6 +7,8 @@ import { RichTextPayload, ImagePayload } from "@webicient/sanity-kit";
 import { ImageResolver } from "@webicient/sanity-kit/resolvers";
 import { resolveDocumentHref } from "@webicient/sanity-kit/utils";
 import Link from "next/link";
+import "../../../kit.config";
+import { useLocale } from "next-intl";
 
 type PagesProps = {
   title: string;
@@ -19,6 +23,8 @@ export default function Pages({
   text,
   pages,
 }: PagesProps): JSX.Element {
+  const locale = useLocale();
+
   return (
     <Section className="flex flex-col gap-y-10 my-10">
       <h2 className="text-2xl font-bold">{title}</h2>
@@ -29,7 +35,7 @@ export default function Pages({
       <div className="grid gap-10 lg:grid-cols-3">
         {pages.map((page, index) => (
           <Link
-            href={resolveDocumentHref(page) || ""}
+            href={resolveDocumentHref(page, locale) || ""}
             className="shadow-sm bg-white p-6 rounded-md hover:shadow-lg"
             key={index}
           >

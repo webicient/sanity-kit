@@ -9,33 +9,33 @@ import { loadPage } from "@/loaders/loadPage";
 interface RouteParams {
   params: {
     slug: string[];
-    language: string;
+    locale: string;
   };
 }
 
 export const dynamicParams = true;
 
 export async function generateStaticParams(): Promise<
-  { slug: (string | Slug)[]; language?: string }[]
+  { slug: (string | Slug)[]; locale?: string }[]
 > {
   return generateStaticSlugs({ type: "page" });
 }
 
 export async function generateMetadata({
-  params: { slug, language },
+  params: { slug, locale },
 }: RouteParams): Promise<Metadata> {
   const [{ data: page }, { data: generalSettings }] = await Promise.all([
-    loadPage({ slug, language }),
-    loadSettings({ name: "generalSettings", language }),
+    loadPage({ slug, language: locale }),
+    loadSettings({ name: "generalSettings", language: locale }),
   ]);
 
   return getMetadata(page, { slug: slug.join("/") }, generalSettings.domain);
 }
 
 export default async function Page({
-  params: { slug, language },
+  params: { slug, locale },
 }: RouteParams): Promise<JSX.Element> {
-  const { data: page } = await loadPage({ slug, language });
+  const { data: page } = await loadPage({ slug, language: locale });
 
   if (!page) {
     notFound();
