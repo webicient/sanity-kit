@@ -159,8 +159,6 @@ export function resolveDocumentHref(
       href = `/${locale}${href}`;
     }
 
-    console.log("SERVER LOCALE", locale);
-
     return href;
   }
 
