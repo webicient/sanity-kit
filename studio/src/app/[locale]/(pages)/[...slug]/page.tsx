@@ -1,6 +1,9 @@
 import { generateStaticSlugs, loadSettings } from "@webicient/sanity-kit/query";
 import { ModuleResolver } from "@webicient/sanity-kit/resolvers";
-import { getMetadata } from "@webicient/sanity-kit/utils";
+import {
+  getMetadata,
+  getDocumentTranslationPathname,
+} from "@webicient/sanity-kit/utils";
 import { notFound } from "next/navigation";
 import type { Slug } from "sanity";
 import type { Metadata } from "next";

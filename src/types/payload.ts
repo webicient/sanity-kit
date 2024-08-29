@@ -47,6 +47,10 @@ export interface ModulesPayload {
   modules?: any[];
 }
 
+export interface TranslationPayload {
+  _translation?: HierarchyPayload;
+}
+
 export interface ContentTypePayload
   extends BasePayload,
     TitlePayload,
@@ -56,7 +60,8 @@ export interface ContentTypePayload
     ExcerptPayload,
     BodyPayload,
     ModulesPayload,
-    SEOPayload {
+    SEOPayload,
+    TranslationPayload {
   parent?: HierarchyPayload;
 }
 
@@ -69,4 +74,5 @@ export interface EntityPayload
     ExcerptPayload,
     BodyPayload,
     ModulesPayload,
-    SEOPayload {}
+    SEOPayload,
+    TranslationPayload {}
