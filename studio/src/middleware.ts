@@ -12,7 +12,9 @@ export async function middleware(request: NextRequest): Promise<any> {
     localeDetection: false,
   });
 
-  const detectedLocale = locales.find((locale) => pathname.startsWith(`/${locale}`)) || defaultLocale;
+  const detectedLocale =
+    locales.find((locale) => pathname.startsWith(`/${locale}`)) ||
+    defaultLocale;
 
   const response = handleI18nRouting(request);
   // Always set the locale to the detected locale.

@@ -129,7 +129,7 @@ export function resolveHref(
  */
 export function resolveDocumentHref(
   document: LinkablePayload | null | undefined,
-  locale?: string
+  locale?: string,
 ): string {
   if (!document) {
     return "";

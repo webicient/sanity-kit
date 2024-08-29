@@ -4,6 +4,7 @@ import { supportsQueryField } from "./supports";
 import { appendField, isValidStatement } from "./projection";
 import { getContentTypeByName, isContentType } from "../utils/config";
 import { parentQueryField } from "./hierarchy";
+import { translationQueryField } from "./translation";
 
 export function getSlugQueryFilter(slug: string[], language?: string): string {
   let queryFilter = `slug.current == "${slug[0]}"`;
@@ -53,6 +54,10 @@ export function getContentTypeQuery(
 
   if (isContentType(name)) {
     query = appendField(query, parentQueryField(language));
+  }
+
+  if (getContentTypeByName(name)?.rewrite) {
+    query = appendField(query, translationQueryField(name));
   }
 
   return query;

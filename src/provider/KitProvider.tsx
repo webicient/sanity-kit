@@ -7,6 +7,10 @@ import PageView from "./analytics/PageView";
 
 interface KitContextProps {
   settings: Record<string, any>;
+  translations?: Record<string, any>;
+  setTranslations: React.Dispatch<
+    React.SetStateAction<Record<string, any> | undefined>
+  >;
 }
 
 const KitContext = createContext<KitContextProps | undefined>(undefined);
@@ -20,10 +24,11 @@ export const KitProvider: React.FC<KitProviderProps> = ({
   children,
   settings,
 }) => {
+  const [translations, setTranslations] = React.useState<Record<string, any>>();
   const { scriptsSettings, integrationSettings } = settings;
 
   return (
-    <KitContext.Provider value={{ settings }}>
+    <KitContext.Provider value={{ settings, translations, setTranslations }}>
       {/* Marker */}
       {integrationSettings?.markerId && (
         <Script
