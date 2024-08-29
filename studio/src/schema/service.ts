@@ -8,4 +8,5 @@ export default defineContentType({
   supports: ["title", "slug", "modules"],
   rewrite: "/service/:slug",
   icon: BillIcon,
+  translate: true,
 });

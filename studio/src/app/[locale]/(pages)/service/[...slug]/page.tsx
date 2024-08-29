@@ -24,7 +24,7 @@ export async function generateMetadata({
   params: { slug, locale },
 }: RouteParams): Promise<Metadata> {
   const [{ data: service }, { data: generalSettings }] = await Promise.all([
-    loadService({ slug }),
+    loadService({ slug, language: locale }),
     loadSettings({ name: "generalSettings", language: locale }),
   ]);
 
@@ -32,9 +32,9 @@ export async function generateMetadata({
 }
 
 export default async function Post({
-  params: { slug },
+  params: { locale, slug },
 }: RouteParams): Promise<JSX.Element> {
-  const { data: service } = await loadService({ slug });
+  const { data: service } = await loadService({ slug, language: locale });
 
   if (!service) {
     notFound();

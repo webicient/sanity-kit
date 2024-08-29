@@ -8,13 +8,16 @@ export interface ServicePayload extends ContentTypePayload {
 
 type ServiceParams = {
   slug: string[];
+  language: string;
 };
 
 export async function loadService({
   slug,
+  language
 }: ServiceParams): Promise<QueryResponseInitial<ServicePayload | null>> {
   return await loadContentType<ServicePayload | null>({
     name: "service",
     slug,
+    language,
   });
 }

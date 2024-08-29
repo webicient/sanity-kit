@@ -1,5 +1,7 @@
 import { TranslationPayload } from "../types/payload";
+import { getContentTypeByName } from "./config";
 import { getDocumentHierarchyPath } from "./hierarchy";
+import { resolveHref } from "./url";
 
 function mapObjectByLanguage(obj: any, lang: string) {
   function recursiveMap(currentObj: any) {
@@ -32,10 +34,15 @@ function mapObjectByLanguage(obj: any, lang: string) {
 }
 
 export function getDocumentTranslationPathname(
-  translations: TranslationPayload["_translation"],
+  translation: TranslationPayload["_translation"] | undefined,
   lang: string,
 ) {
-  return getDocumentHierarchyPath(
-    mapObjectByLanguage(translations, lang),
-  )?.join("/");
+  if (
+    !translation?._type ||
+    !getContentTypeByName(translation?._type)?.rewrite
+  ) {
+    return "";
+  }
+
+  return resolveHref(translation._type, { slug: (getDocumentHierarchyPath(mapObjectByLanguage(translation, lang)) || [])?.join("/") })
 }
