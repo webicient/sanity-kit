@@ -9,4 +9,5 @@ export default defineContentType({
   rewrite: "/service/:slug",
   icon: BillIcon,
   translate: true,
+  taxonomies: [{ name: "category" }],
 });

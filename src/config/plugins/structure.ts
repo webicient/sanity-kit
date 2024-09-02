@@ -176,7 +176,7 @@ function buildContentTypeTaxonomyFilters(
                 .params({ taxonomyId })
                 .filter(
                   // If the taxonomy setting is multiple, we need to check if the taxonomy ID is in the array.
-                  `_type == "${contentType.name}" && $taxonomyId in ${contentTypeTaxonomySetting.multiple ? `${contentTypeTaxonomySetting.name}[]` : `${contentTypeTaxonomySetting.name}`}._ref`,
+                  `_type == "${contentType.name}" && ${contentTypeTaxonomySetting.multiple ? `$taxonomyId in ${contentTypeTaxonomySetting.name}[]` : `${contentTypeTaxonomySetting.name}`}._ref == $taxonomyId`,
                 )
                 .initialValueTemplates([
                   S.initialValueTemplateItem(
