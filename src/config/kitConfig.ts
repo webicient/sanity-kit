@@ -78,7 +78,7 @@ export interface KitConfig {
   schema?: Schema;
   languages?: (Language & { isDefault?: boolean })[];
   custom?: Custom;
-  disableDefault?: { schema?: { contentTypes?: string[] } };
+  disableDefault?: { schema?: { contentTypes?: string[], taxonomies?: string[] } };
   resolve?: Resolve;
 }
 
@@ -114,6 +114,15 @@ export function kitConfig(_config: KitConfig): KitConfig {
     );
   }
 
+  let defaultTaxonomies = [category];
+
+  if (_config.disableDefault?.schema?.taxonomies) {
+    defaultTaxonomies = defaultTaxonomies.filter(
+      (taxonomy) =>
+        !_config.disableDefault?.schema?.taxonomies?.includes(taxonomy.name),
+    );
+  }
+
   return once(() => {
     config = deepmerge(
       {
@@ -121,7 +130,7 @@ export function kitConfig(_config: KitConfig): KitConfig {
           entities: [home, page404],
           contentTypes: defaultContentTypes,
           objects: [seo, richText, kitPreset],
-          taxonomies: [category],
+          taxonomies: defaultTaxonomies,
           settings: [
             generalSettings,
             socialSettings,
