@@ -1,6 +1,6 @@
 {
   "name": "@webicient/sanity-kit",
-  "version": "0.2.18",
+  "version": "0.2.19",
   "description": "This plugin provides curated list of pre-built features for the Sanity CMS. It was designed to cater +75% of all the needed tools in development and marketing to any of Webicient projects.",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/@webicient"
