@@ -12,7 +12,7 @@
     "@portabletext/react": "^3.1.0",
     "@sanity/client": "^6.19.1",
     "@webicient/sanity-kit": "file:.yalc/@webicient/sanity-kit",
-    "next": "14.2.3",
+    "next": "^14.2.7",
     "next-intl": "^3.17.4",
     "next-sanity": "^9.3.10",
     "react": "^18",

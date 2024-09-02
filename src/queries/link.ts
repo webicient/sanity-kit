@@ -1,7 +1,7 @@
+import { getConfig } from "../config/kitConfig";
 import {
   canTranslate,
   getContentTypes,
-  getDefaultLanguage,
   getEntities,
 } from "../utils/config";
 import { parentQueryField } from "./hierarchy";
@@ -28,6 +28,12 @@ export function internalLinkQueryFields(language?: string): string {
       `;
       }
     });
+
+  const internalLinkQueryFieldsResolver = getConfig()?.resolve?.internalLinkQueryFields;
+
+  if (internalLinkQueryFieldsResolver && typeof internalLinkQueryFieldsResolver === "function") {
+    queryFields = internalLinkQueryFieldsResolver(queryFields, language);
+  }
 
   return queryFields;
 }

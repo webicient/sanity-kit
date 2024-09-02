@@ -52,15 +52,20 @@ interface Custom {
 }
 
 interface Resolve {
-  href?: (
+  hrefResolver?: (
     prev: string,
     documentType: string | null | undefined,
     params?: Record<string, any>,
     document?: LinkablePayload | null | undefined,
   ) => string;
-  documentHref?: (
+  documentHrefResolver?: (
     prev: string,
     document?: LinkablePayload | null | undefined,
+    locale?: string,
+  ) => string;
+  internalLinkQueryFields?: (
+    prev: string,
+    language?: string,
   ) => string;
 }
 

@@ -103,9 +103,9 @@ export function resolveHref(
     (readType) => readType.name === documentType,
   );
 
-  const hrefResolver = getConfig()?.resolve?.href;
+  const hrefResolver = getConfig()?.resolve?.hrefResolver;
 
-  if (hrefResolver && typeof getConfig()?.resolve?.href === "function") {
+  if (hrefResolver && typeof hrefResolver === "function") {
     return hrefResolver(
       readType?.rewrite
         ? endWithTrailingSlash(transformRewrite(readType.rewrite, params))
@@ -125,6 +125,7 @@ export function resolveHref(
  * Resolves the href for a given document.
  *
  * @param document - The document to resolve the href for.
+ * @param locale - Optional locale to prepend to the href.
  * @returns The resolved href.
  */
 export function resolveDocumentHref(
@@ -153,37 +154,22 @@ export function resolveDocumentHref(
       },
       document,
     );
+  } else {
+    const fromEntity = getEntityByName(document._type);
 
-    // Prepend language.
-    if (locale) {
-      href = `/${locale}${href}`;
+    if (fromEntity?.rewrite) {
+      href = resolveHref(document._type);
     }
-
-    return href;
   }
 
-  const fromEntity = getEntityByName(document._type);
-
-  if (fromEntity?.rewrite) {
-    href = resolveHref(document._type);
-
-    // Prepend language.
-    if (locale) {
-      href = `/${locale}${href}`;
-    }
-
-    return href;
-  }
-
-  const documentHrefResolver = getConfig()?.resolve?.documentHref;
-
-  if (documentHrefResolver && typeof documentHrefResolver === "function") {
-    return documentHrefResolver(href, document);
-  }
-
-  // Prepend language.
   if (locale) {
     href = `/${locale}${href}`;
+  }
+
+  const documentHrefResolver = getConfig()?.resolve?.documentHrefResolver;
+
+  if (documentHrefResolver && typeof documentHrefResolver === "function") {
+    href = documentHrefResolver(href, document, locale);
   }
 
   return href;
