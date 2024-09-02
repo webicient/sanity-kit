@@ -1,3 +1,4 @@
+import { getConfig } from "../config/kitConfig";
 import {
   canTranslate,
   getContentTypes,
@@ -71,6 +72,12 @@ export function hierarchyQueryFields(
           }
         });
     }
+  }
+
+  // Always apply hierarchyQueryFields resolver if it's defined.
+  const hierarchyQueryFieldsResolver = getConfig()?.resolve?.hierarchyQueryFields;
+  if (hierarchyQueryFieldsResolver && typeof hierarchyQueryFieldsResolver === "function") {
+    queryFields = hierarchyQueryFieldsResolver(queryFields, language, schemaName);
   }
 
   return queryFields;

@@ -67,6 +67,11 @@ interface Resolve {
     prev: string,
     language?: string,
   ) => string;
+  hierarchyQueryFields?: (
+    prev: string,
+    language?: string,
+    schemaName?: string,
+  ) => string;
 }
 
 export interface KitConfig {
