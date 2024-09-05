@@ -1,4 +1,5 @@
 import { visionTool } from "@sanity/vision";
+import { assist } from '@sanity/assist'
 import { definePlugin } from "sanity";
 import { structureTool } from "sanity/structure";
 import { media } from "sanity-plugin-media";
@@ -32,6 +33,7 @@ export const sanityKit = definePlugin<KitConfig>((config: KitConfig) => {
   return {
     name: "@webicient/sanity-kit",
     plugins: [
+      assist(),
       structureTool({
         structure: structure(),
       }),
