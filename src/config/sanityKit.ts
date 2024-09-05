@@ -33,7 +33,48 @@ export const sanityKit = definePlugin<KitConfig>((config: KitConfig) => {
   return {
     name: "@webicient/sanity-kit",
     plugins: [
-      assist(),
+      assist({
+        translate: {
+          field: {
+            languages: config?.languages as Language[],
+            documentTypes: [
+              ...(config.schema?.contentTypes
+                ?.filter(({ translate }) => translate)
+                .map(({ name }) => name) || []),
+              ...(config.schema?.entities
+                ?.filter(({ translate }) => translate)
+                .map(({ name }) => name) || []),
+              ...(config.schema?.taxonomies
+                ?.filter(({ translate }) => translate)
+                .map(({ name }) => name) || []),
+              ...(config.schema?.settings
+                ?.filter(({ translate }) => translate)
+                .map(({ name }) => name) || []),
+            ],
+            translationOutputs: (member, enclosingType, fromLanguageId, toLanguageIds) => {
+              console.log('Member',member);
+              console.log('fromLanguageId',fromLanguageId);
+              console.log('enclosingType',enclosingType);
+              // When the document member is named the same as fromLangagueId
+              // and it is a field in a object with a name starting with "language"
+              // then we return the paths to all other sibling language fields (and their langauge id)
+              // It is ok that the member is an object, then all child fields will be translated
+              if (
+                fromLanguageId === member.name &&
+                enclosingType.jsonType === 'object'
+              ) {
+                return toLanguageIds.map((translateToId) => ({
+                  id: translateToId,
+                  //changes path.to.en -> path.to.de (for instance)
+                  outputPath: [...member.path.slice(0, -1), translateToId],
+                }))
+              }
+              // all other member paths are skipped
+              return undefined
+            }
+          },
+        },
+      }),
       structureTool({
         structure: structure(),
       }),
