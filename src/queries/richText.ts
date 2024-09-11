@@ -5,13 +5,13 @@ function richTextImageQueryField(): string {
   return `_type == "image" => { ${imageQueryFields} }`;
 }
 
-function richTextBlockQueryField(): string {
+function richTextBlockQueryField(language?: string): string {
   return `
     _type == "block" => {
       ...,
       markDefs[] {
         ...,
-        _type == "link" => { ${linkQueryFields()} }
+        _type == "link" => { ${linkQueryFields(language)} }
       }
     },
   `;
@@ -21,6 +21,6 @@ export function richTextQueryFields(language?: string): string {
   return `
     ...,
     ${richTextImageQueryField()},
-    ${richTextBlockQueryField()}
+    ${richTextBlockQueryField(language)}
   `;
 }
