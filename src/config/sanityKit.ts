@@ -52,26 +52,27 @@ export const sanityKit = definePlugin<KitConfig>((config: KitConfig) => {
                 .map(({ name }) => name) || []),
             ],
             translationOutputs: (member, enclosingType, fromLanguageId, toLanguageIds) => {
-              console.log('Member',member);
-              console.log('fromLanguageId',fromLanguageId);
-              console.log('enclosingType',enclosingType);
-              // When the document member is named the same as fromLangagueId
-              // and it is a field in a object with a name starting with "language"
-              // then we return the paths to all other sibling language fields (and their langauge id)
-              // It is ok that the member is an object, then all child fields will be translated
-              if (
-                fromLanguageId === member.name &&
-                enclosingType.jsonType === 'object'
-              ) {
+      
+              // Ensure fields like 'slug', 'featuredImage', 'publishedAt' are skipped
+              if (['slug', 'publishedAt', 'featuredImage'].some((skipField) => member.path.includes(skipField))) {
+                return undefined;
+              }
+      
+              // Recursively check if we are inside an array or an object to translate fields like 'cards'
+              const shouldTranslate = (type:any) => ['object','array'].includes(type);
+      
+              // If the member matches the fromLanguageId, and is an object or array type, proceed with translation
+              if (fromLanguageId === member.name && shouldTranslate(enclosingType.jsonType)) {
                 return toLanguageIds.map((translateToId) => ({
                   id: translateToId,
-                  //changes path.to.en -> path.to.de (for instance)
+                  // Change path.to.en -> path.to.sv (or other target languages)
                   outputPath: [...member.path.slice(0, -1), translateToId],
-                }))
+                }));
               }
-              // all other member paths are skipped
-              return undefined
-            }
+            
+              // Skip all other fields
+              return undefined;
+            },
           },
         },
       }),
