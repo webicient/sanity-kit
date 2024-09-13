@@ -168,8 +168,6 @@ export const seo = defineType({
   ],
 });
 
-
-
 export const kitPreset = defineType({
   name: "kit.preset",
   title: "Preset",
@@ -310,9 +308,9 @@ export function getObjectsWithConfigRequired() {
           },
         }),
         IMAGE_FIELD,
-        ...[getConfig().richText?.length ? getConfig().richText : null] as any,
+        ...((getConfig().richText?.length ? getConfig().richText : []) as any),
       ],
-    })
+    }),
   );
 
   return objects;
