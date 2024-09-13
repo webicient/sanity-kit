@@ -13,7 +13,7 @@ type ServiceParams = {
 
 export async function loadService({
   slug,
-  language
+  language,
 }: ServiceParams): Promise<QueryResponseInitial<ServicePayload | null>> {
   return await loadContentType<ServicePayload | null>({
     name: "service",

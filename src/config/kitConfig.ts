@@ -63,10 +63,7 @@ interface Resolve {
     document?: LinkablePayload | null | undefined,
     locale?: string,
   ) => string;
-  internalLinkQueryFields?: (
-    prev: string,
-    language?: string,
-  ) => string;
+  internalLinkQueryFields?: (prev: string, language?: string) => string;
   hierarchyQueryFields?: (
     prev: string,
     language?: string,
@@ -78,7 +75,9 @@ export interface KitConfig {
   schema?: Schema;
   languages?: (Language & { isDefault?: boolean })[];
   custom?: Custom;
-  disableDefault?: { schema?: { contentTypes?: string[], taxonomies?: string[] } };
+  disableDefault?: {
+    schema?: { contentTypes?: string[]; taxonomies?: string[] };
+  };
   resolve?: Resolve;
   richText?: ReturnType<typeof defineType>[];
 }

@@ -44,5 +44,9 @@ export function getDocumentTranslationPathname(
     return "";
   }
 
-  return resolveHref(translation._type, { slug: (getDocumentHierarchyPath(mapObjectByLanguage(translation, lang)) || [])?.join("/") })
+  return resolveHref(translation._type, {
+    slug: (
+      getDocumentHierarchyPath(mapObjectByLanguage(translation, lang)) || []
+    )?.join("/"),
+  });
 }

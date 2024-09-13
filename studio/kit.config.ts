@@ -2,6 +2,7 @@ import { kitConfig } from "@webicient/sanity-kit";
 import cards from "@/modules/cards";
 import pages from "@/modules/pages";
 import service from "@/schema/service";
+import { defineType } from "sanity";
 
 export default kitConfig({
   languages: [
