@@ -5,21 +5,20 @@ import Link from "next/link";
 import type { HTMLAttributes, ReactNode } from "react";
 import { LinkPayload } from "../types/object";
 import { resolveDocumentHref } from "../utils/url";
-import { useLocale } from "next-intl";
 
 type LinkResolverProps = NextLinkProps & HTMLAttributes<HTMLAnchorElement>;
 
 export function LinkResolver({
   children,
   link,
+  locale,
   ...props
 }: {
   link?: LinkPayload;
   children: ReactNode;
   defaultToTop?: boolean;
+  locale?: string;
 } & Omit<LinkResolverProps, "href">): JSX.Element {
-  const locale = useLocale();
-
   const linkProps: any = {
     // Defaults to home.
     href: "/",
