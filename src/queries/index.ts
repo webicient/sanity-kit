@@ -10,3 +10,4 @@ export * from "./settings";
 export * from "./supports";
 export * from "./taxonomy";
 export * from "./translation";
+export * from "./richText";
