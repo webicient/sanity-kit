@@ -6,7 +6,6 @@ export * from "./image";
 export * from "./link";
 export * from "./modules";
 export * from "./projection";
-export * from "./richText";
 export * from "./settings";
 export * from "./supports";
 export * from "./taxonomy";

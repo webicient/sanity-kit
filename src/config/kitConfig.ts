@@ -21,7 +21,7 @@ import {
   socialSettings,
 } from "./schemas/settings";
 import { defineType } from "sanity";
-import { kitPreset, richText, seo } from "./schemas/objects";
+import { kitPreset, seo } from "./schemas/objects";
 import { Language } from "@sanity/language-filter";
 import { LinkablePayload } from "../types/globals";
 
@@ -80,6 +80,7 @@ export interface KitConfig {
   custom?: Custom;
   disableDefault?: { schema?: { contentTypes?: string[], taxonomies?: string[] } };
   resolve?: Resolve;
+  richText?: ReturnType<typeof defineType>[];
 }
 
 let config: KitConfig | null = null;
@@ -129,7 +130,7 @@ export function kitConfig(_config: KitConfig): KitConfig {
         schema: {
           entities: [home, page404],
           contentTypes: defaultContentTypes,
-          objects: [seo, richText, kitPreset],
+          objects: [seo, kitPreset],
           taxonomies: defaultTaxonomies,
           settings: [
             generalSettings,
@@ -141,6 +142,7 @@ export function kitConfig(_config: KitConfig): KitConfig {
           ],
         },
         languages: [],
+        richText: [],
       },
       _config,
     );

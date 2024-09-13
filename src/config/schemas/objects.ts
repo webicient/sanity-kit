@@ -4,6 +4,7 @@ import { ImageIcon } from "@sanity/icons";
 import { getContentTypes, getEntities, getModules } from "../../utils/config";
 import { IMAGE_FIELD, LINK_FIELD } from "../defaults/fields";
 import { preset } from "./contentTypes";
+import { getConfig } from "../kitConfig";
 
 export const seo = defineType({
   name: "kit.seo",
@@ -167,44 +168,7 @@ export const seo = defineType({
   ],
 });
 
-export const richText = defineType({
-  title: "Rich Text",
-  name: "kit.richText",
-  type: "array",
-  of: [
-    defineArrayMember({
-      title: "Block",
-      type: "block",
-      // Styles let you define what blocks can be marked up as. The default
-      // set corresponds with HTML tags, but you can set any title or value
-      // you want, and decide how you want to deal with it where you want to
-      // use your content.
-      styles: [
-        { title: "Normal", value: "normal" },
-        { title: "Heading 1", value: "h1" },
-        { title: "Heading 2", value: "h2" },
-        { title: "Heading 3", value: "h3" },
-        { title: "Heading 4", value: "h4" },
-        { title: "Heading 5", value: "h5" },
-        { title: "Heading 6", value: "h5" },
-        { title: "Quote", value: "blockquote" },
-      ],
-      lists: [{ title: "Bullet", value: "bullet" }],
-      // Marks let you mark up inline text in the Portable Text Editor
-      marks: {
-        // Decorators usually describe a single property – e.g. a typographic
-        // preference or highlighting
-        decorators: [
-          { title: "Strong", value: "strong" },
-          { title: "Emphasis", value: "em" },
-        ],
-        // Annotations can be any object structure – e.g. a link or a footnote.
-        annotations: [LINK_FIELD],
-      },
-    }),
-    IMAGE_FIELD,
-  ],
-});
+
 
 export const kitPreset = defineType({
   name: "kit.preset",
@@ -307,6 +271,48 @@ export function getObjectsWithConfigRequired() {
         }),
       ],
     }),
+  );
+
+  objects.push(
+    defineType({
+      title: "Rich Text",
+      name: "kit.richText",
+      type: "array",
+      of: [
+        defineArrayMember({
+          title: "Block",
+          type: "block",
+          // Styles let you define what blocks can be marked up as. The default
+          // set corresponds with HTML tags, but you can set any title or value
+          // you want, and decide how you want to deal with it where you want to
+          // use your content.
+          styles: [
+            { title: "Normal", value: "normal" },
+            { title: "Heading 1", value: "h1" },
+            { title: "Heading 2", value: "h2" },
+            { title: "Heading 3", value: "h3" },
+            { title: "Heading 4", value: "h4" },
+            { title: "Heading 5", value: "h5" },
+            { title: "Heading 6", value: "h5" },
+            { title: "Quote", value: "blockquote" },
+          ],
+          lists: [{ title: "Bullet", value: "bullet" }],
+          // Marks let you mark up inline text in the Portable Text Editor
+          marks: {
+            // Decorators usually describe a single property – e.g. a typographic
+            // preference or highlighting
+            decorators: [
+              { title: "Strong", value: "strong" },
+              { title: "Emphasis", value: "em" },
+            ],
+            // Annotations can be any object structure – e.g. a link or a footnote.
+            annotations: [LINK_FIELD],
+          },
+        }),
+        IMAGE_FIELD,
+        ...[getConfig().richText?.length ? getConfig().richText : null] as any,
+      ],
+    })
   );
 
   return objects;
