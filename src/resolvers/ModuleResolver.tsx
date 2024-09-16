@@ -16,24 +16,18 @@ export const getBlock = (type: string): ComponentType<any> | null => {
 
 export function ModuleResolver({
   data,
-}: ModuleResolverProps): JSX.Element | null {
+}: ModuleResolverProps): (JSX.Element | null)[] | null {
   if (!data || !Boolean(data.length)) {
     return null;
   }
 
-  return (
-    <Fragment>
-      {data.map(({ _key, ...block }) => {
-        const Block = getBlock(block._type);
+  return data.map(({ _key, ...block }) => {
+    const Block = getBlock(block._type);
 
-        return (
-          Block && (
-            <ModuleErrorBoundary moduleName={block._type}>
-              <Block {...block} />
-            </ModuleErrorBoundary>
-          )
-        );
-      })}
-    </Fragment>
-  );
+    return Block ? (
+      <ModuleErrorBoundary key={_key} moduleName={block._type}>
+        <Block {...block} />
+      </ModuleErrorBoundary>
+    ) : null;
+  });
 }
