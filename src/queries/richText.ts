@@ -1,3 +1,4 @@
+import { getConfig } from "../config/kitConfig";
 import { imageQueryFields } from "./image";
 import { linkQueryFields } from "./link";
 
@@ -18,9 +19,13 @@ function richTextBlockQueryField(language?: string): string {
 }
 
 export function richTextQueryFields(language?: string): string {
+  const richTextQueryFieldsResolver =
+    getConfig()?.resolve?.richTextQueryFields;
+
   return `
     ...,
     ${richTextImageQueryField()},
+    ${richTextQueryFieldsResolver ? `${richTextQueryFieldsResolver(language)},` : ""}
     ${richTextBlockQueryField(language)}
   `;
 }

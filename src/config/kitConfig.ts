@@ -69,6 +69,7 @@ interface Resolve {
     language?: string,
     schemaName?: string,
   ) => string;
+  richTextQueryFields?: (language?: string) => string;
 }
 
 export interface KitConfig {
