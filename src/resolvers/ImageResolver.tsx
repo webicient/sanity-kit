@@ -1,7 +1,6 @@
 import Image, { ImageProps } from "next/image";
 import { urlForImage, urlForImageWithDimensions } from "../utils/image";
 import { ImagePayload } from "../types/object";
-import { getImageDimensions } from "@sanity/asset-utils";
 
 type ImageResolverProps = Omit<ImageProps, "src" | "alt"> & {
   image?: ImagePayload;
@@ -9,6 +8,8 @@ type ImageResolverProps = Omit<ImageProps, "src" | "alt"> & {
   width: number;
   height: number;
 };
+
+const IMAGE_QUALITY = 85;
 
 export function ImageResolver({
   image,
@@ -24,6 +25,9 @@ export function ImageResolver({
   const passProps: ImageProps = {
     src: urlForImage(image) || "",
     alt: alt || image?.asset?.altText || image?.asset?.title || "",
+    width: width,
+    height: height,
+    quality: IMAGE_QUALITY,
   };
 
   // If the image has no source, return null.
@@ -31,22 +35,17 @@ export function ImageResolver({
     return null;
   }
 
-  const croppedImage = urlForImageWithDimensions(image, width, height);
-  // Use the image with the specified dimensions for better performance.
-  if (croppedImage) {
-    passProps.src = croppedImage;
-    passProps.width = width;
-    passProps.height = height;
-  } else {
-    const dimensions = getImageDimensions(passProps.src as string);
-    passProps.width = dimensions?.width || width;
-    passProps.height = dimensions?.height || height;
-  }
-
   // Force resizing of the image if the fill prop is set.
   if (props.fill) {
     delete passProps.width;
     delete passProps.height;
+
+    // Use the image with the specified dimensions for better performance.
+    // Can adjust the multiplier to get a better quality image.
+    const croppedImage = urlForImageWithDimensions(image, width * 2, height * 2);
+    if (croppedImage) {
+      passProps.src = croppedImage;
+    }
   }
 
   return <Image {...passProps} {...props} />;

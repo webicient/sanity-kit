@@ -31,7 +31,11 @@ export default function Pages({
       <div className="prose">
         <RichTextResolver value={text} />
       </div>
-      {image && <ImageResolver image={image} width={1024} height={768} />}
+      {image && (
+        <div className="relative w-[1024px] h-[768px]">
+          <ImageResolver image={image} width={1024} height={768} />
+        </div>
+      )}
       <div className="grid gap-10 lg:grid-cols-3">
         {pages.map((page, index) => (
           <Link
