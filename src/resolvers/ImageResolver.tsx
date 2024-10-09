@@ -42,7 +42,11 @@ export function ImageResolver({
 
     // Use the image with the specified dimensions for better performance.
     // Can adjust the multiplier to get a better quality image.
-    const croppedImage = urlForImageWithDimensions(image, width * 2, height * 2);
+    const croppedImage = urlForImageWithDimensions(
+      image,
+      width * 2,
+      height * 2,
+    );
     if (croppedImage) {
       passProps.src = croppedImage;
     }

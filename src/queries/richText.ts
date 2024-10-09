@@ -19,8 +19,7 @@ function richTextBlockQueryField(language?: string): string {
 }
 
 export function richTextQueryFields(language?: string): string {
-  const richTextQueryFieldsResolver =
-    getConfig()?.resolve?.richTextQueryFields;
+  const richTextQueryFieldsResolver = getConfig()?.resolve?.richTextQueryFields;
 
   return `
     ...,

@@ -215,6 +215,10 @@ export function getObjectsWithConfigRequired() {
           type: "url",
           title: "URL",
           hidden: ({ parent }) => !parent?.isExternal,
+          validation: (Rule) =>
+            Rule.uri({
+              scheme: ["http", "https", "mailto", "tel"],
+            }),
         }),
         defineField({
           name: "internal",
