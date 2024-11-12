@@ -14,12 +14,14 @@ import {
   getEntities,
   getSchemaByName,
   getSettings,
+  getStructures,
   getTaxonomies,
 } from "../../utils/config";
 import {
   ContentType,
   ContentTypeTaxonomy,
   Entity,
+  Structure,
 } from "../../types/definition";
 import { CogIcon, FilterIcon } from "@sanity/icons";
 import { groq } from "next-sanity";
@@ -39,10 +41,10 @@ const LEVEL_5 = 5;
  * @returns The array of items with the type added.
  */
 function prepareBuild(
-  items: Entity[] | ContentType[],
-  type: "entity" | "contentType",
+  items: Entity[] | ContentType[] | Structure[],
+  type: "entity" | "contentType" | "structure",
   defaultLevel: number,
-): Entity[] | ContentType[] {
+): Entity[] | ContentType[] | Structure[] {
   return items.map((item) => {
     return {
       type: type,
@@ -294,16 +296,27 @@ function buildEntity(S: StructureBuilder, entity: Entity): ListItemBuilder {
 }
 
 /**
+ * Builds a custom list item structure.
+ *
+ * @param {StructureBuilder} S - The StructureBuilder instance.
+ * @param {Structure} structure - The structure to build.
+ * @returns The built structure.
+ */
+function buildStructure(S: StructureBuilder, structure: Structure): any {
+  return structure.builder ? structure.builder(S) : null;
+}
+
+/**
  * Builds an entity or content type based on the provided item.
  *
  * @param {StructureBuilder} S - The StructureBuilder instance.
- * @param {Entity & WithType | ContentType & WithType} item - The item to build.
+ * @param {Entity & WithType | ContentType & WithType | Structure} item - The item to build.
  * @returns {ListItemBuilder | null} The built entity or content type as a ListItemBuilder, or null if the item type is not recognized.
  */
 function maybeBuildEntitiesOrContentTypes(
   S: StructureBuilder,
   group: number,
-  items: ContentType[] | Entity[],
+  items: ContentType[] | Entity[] | Structure[],
 ): ListItemBuilder[] {
   return items
     .filter(({ menu }) => menu?.level === group)
@@ -313,6 +326,8 @@ function maybeBuildEntitiesOrContentTypes(
           return buildEntity(S, schema);
         case "contentType":
           return buildContentType(S, schema);
+        case "structure":
+          return buildStructure(S, schema);
         default:
           return null;
       }
@@ -345,6 +360,7 @@ export const structure = (): StructureResolver => {
     const moveableSchema = [
       ...prepareBuild(getEntities(), "entity", LEVEL_1),
       ...prepareBuild(getContentTypes(), "contentType", LEVEL_2),
+      ...prepareBuild(getStructures(), "structure", LEVEL_2),
     ];
 
     let child: (ListItemBuilder | ListItem | Divider)[] = [];

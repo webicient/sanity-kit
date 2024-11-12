@@ -4,6 +4,7 @@ import {
   type ContentType,
   type Setting,
   type Module,
+  type Structure,
 } from "../../types/definition";
 
 /**
@@ -51,4 +52,14 @@ export function defineTaxonomy(taxonomy: Taxonomy): Taxonomy {
  */
 export function defineModule(module: Module): Module {
   return module;
+}
+
+/**
+ * Defines a structure.
+ *
+ * @param structure Defined structure.
+ * @returns The defined structure.
+ */
+export function defineStructure(structure: Structure): Structure {
+  return structure;
 }

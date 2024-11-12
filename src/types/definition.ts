@@ -1,6 +1,7 @@
 import { DocumentDefinition, type FieldDefinition } from "sanity";
 import { CoreFields } from "../config/defaults/fields";
 import { ComponentType } from "react";
+import { ListItemBuilder, StructureBuilder } from "sanity/structure";
 
 export type Supports = keyof CoreFields;
 
@@ -62,4 +63,9 @@ export interface Module extends Omit<DocumentDefinition, "type" | "fields"> {
   query?: (language?: string) => string;
   fields?: FieldDefinition[];
   imageUrl: string;
+}
+
+export interface Structure {
+  menu?: StructureMenu;
+  builder?: (S: StructureBuilder) => ListItemBuilder;
 }

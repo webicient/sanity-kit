@@ -3,6 +3,7 @@ import { CustomProjectionType, getConfig } from "../config/kitConfig";
 import {
   Module,
   Setting,
+  Structure,
   type ContentType,
   type Entity,
   type Taxonomy,
@@ -51,6 +52,15 @@ export function getSettings(): Setting[] {
  */
 export function getModules(): Module[] {
   return getConfig().schema?.modules ?? [];
+}
+
+/**
+ * Retrieves the structures from the configuration.
+ *
+ * @returns An array of structures.
+ */
+export function getStructures(): Structure[] {
+  return getConfig().schema?.structures ?? [];
 }
 
 /**

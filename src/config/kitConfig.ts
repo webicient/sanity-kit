@@ -8,6 +8,7 @@ import {
   type ContentType,
   type Setting,
   Module,
+  Structure,
 } from "../types/definition";
 import { page, post, preset, redirect } from "./schemas/contentTypes";
 import { category } from "./schemas/taxonomies";
@@ -32,6 +33,7 @@ interface Schema {
   entities?: Entity[];
   settings?: Setting[];
   modules?: Module[];
+  structures?: Structure[];
 }
 
 export type CustomProjectionType =

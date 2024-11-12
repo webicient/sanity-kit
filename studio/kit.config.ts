@@ -3,6 +3,7 @@ import cards from "@/modules/cards";
 import pages from "@/modules/pages";
 import service from "@/schema/service";
 import { defineType } from "sanity";
+import { customStructure } from "@/schema/structure";
 
 export default kitConfig({
   languages: [
@@ -12,5 +13,6 @@ export default kitConfig({
   schema: {
     modules: [cards, pages],
     contentTypes: [service],
+    structures: [customStructure],
   },
 });
