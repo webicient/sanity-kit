@@ -10,4 +10,5 @@ export default defineContentType({
   icon: BillIcon,
   translate: true,
   taxonomies: [{ name: "category" }],
+  hidden: true,
 });

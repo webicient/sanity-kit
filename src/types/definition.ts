@@ -35,6 +35,7 @@ export interface ContentType extends Collection {
   taxonomies?: ContentTypeTaxonomy[];
   hierarchical?: Hierarchical;
   menu?: StructureMenu;
+  hidden?: boolean;
 }
 
 export interface Taxonomy extends Collection {

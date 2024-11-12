@@ -325,7 +325,7 @@ function maybeBuildEntitiesOrContentTypes(
         case "entity":
           return buildEntity(S, schema);
         case "contentType":
-          return buildContentType(S, schema);
+          return schema?.hidden ? null : buildContentType(S, schema);
         case "structure":
           return buildStructure(S, schema);
         default:
