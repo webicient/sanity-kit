@@ -323,7 +323,7 @@ function maybeBuildEntitiesOrContentTypes(
     .map((schema: any) => {
       switch (schema.type) {
         case "entity":
-          return buildEntity(S, schema);
+          return schema?.hidden ? null : buildEntity(S, schema);
         case "contentType":
           return schema?.hidden ? null : buildContentType(S, schema);
         case "structure":

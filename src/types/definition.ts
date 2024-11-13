@@ -53,6 +53,7 @@ export interface Entity extends Singleton {
   menu?: StructureMenu;
   rewrite?: Rewrite;
   supports?: Supports[];
+  hidden?: boolean;
 }
 
 export interface Setting extends Singleton {
