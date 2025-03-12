@@ -59,14 +59,36 @@ export const redirect = defineContentType({
       type: "string",
       description:
         "URLs without including the host (https://example.com/). Examples are: '/old-page' or '/news/old-article'.",
-      validation: (rule) => rule.required(),
-      // validation: (rule) =>
-      //   rule.required().custom((segment?: string) => {
-      //     // TODO: i18n
-      //     return !isValidUrlSegment(segment)
-      //       ? "Source must be a valid path segment."
-      //       : true;
-      //   }),
+      validation: (rule) =>
+        rule.required().custom(async (source, context) => {
+          if (!source) {
+            return true;
+          }
+
+          // Check that source starts with a forward slash
+          if (!source.startsWith('/')) {
+            return 'Source path must start with a forward slash (/)';
+          }
+
+          // Find all redirect documents with the same source path
+          // But exclude the current document being edited
+          const { document, getClient } = context;
+
+          const docId = document?._id.split('.').pop() ?? null;
+          if (docId === null) {
+            return true;
+          }
+
+          // Query for documents of type 'redirect' with the same source
+          const query = `*[_type == "redirect" && source == $source && (_id != $docId && _id != $draftId)][0]`;
+          const params = { source, docId, draftId: document?._id };
+          const existingDoc = await getClient({ apiVersion: '2023-01-01' }).fetch(query, params);
+
+          // If we found a document with the same source, return an error
+          return existingDoc
+            ? 'This redirect source path is already in use. Source paths must be unique.'
+            : true;
+        }),
     }),
     defineField({
       name: "destination",
@@ -96,8 +118,8 @@ export const redirect = defineContentType({
     },
     prepare({ name, source, destination }) {
       return {
-        title: name,
-        subtitle: `${source} → ${destination}`,
+        title: source,
+        subtitle: destination,
       };
     },
   },
