@@ -1,5 +1,3 @@
-"use client";
-
 import { VisualEditing } from "next-sanity";
 import { draftMode } from "next/headers";
 import { DisablePreviewMode } from "./DisablePreviewMode";
