@@ -79,7 +79,8 @@
     "lint": "eslint .",
     "prepublishOnly": "npm run build",
     "watch": "pkg-utils watch --strict",
-    "test": "vitest"
+    "test": "vitest",
+    "clean": "rm -rf dist clean && cd studio && rm -rf node_modules .next .yalc node_modules"
   },
   "dependencies": {
     "@next/third-parties": "^14.2.5",

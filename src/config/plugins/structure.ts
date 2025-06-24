@@ -363,7 +363,7 @@ export const structure = (): StructureResolver => {
       ...prepareBuild(getStructures(), "structure", LEVEL_2),
     ];
 
-    let child: (ListItemBuilder | ListItem | Divider)[] = [];
+    let child: (ListItemBuilder | ListItem | Divider | any)[] = [];
 
     // Level 1 is reserved for the entities.
     child = [

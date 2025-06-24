@@ -17,7 +17,7 @@ const loadQueryClient = serverClient.withConfig({
  * Live mode in `sanity/presentation` still works, as it uses the `useLiveMode` hook to update `useQuery` instances with
  * live draft content using `postMessage`.
  */
-queryStore.setServerClient(loadQueryClient);
+queryStore.setServerClient(loadQueryClient as any);
 
 const usingCdn = loadQueryClient.config().useCdn;
 
@@ -31,7 +31,7 @@ const usingCdn = loadQueryClient.config().useCdn;
  * @param options - The options for the query
  * @returns The result of the query
  */
-export const loadQuery = ((query, params = {}, options = {}) => {
+export const loadQuery: typeof queryStore.loadQuery = ((query, params = {}, options = {}) => {
   const {
     perspective = draftMode().isEnabled ? "previewDrafts" : "published",
   } = options;
@@ -55,4 +55,4 @@ export const loadQuery = ((query, params = {}, options = {}) => {
     perspective,
     stega: { enabled: draftMode().isEnabled },
   });
-}) satisfies typeof queryStore.loadQuery;
+});

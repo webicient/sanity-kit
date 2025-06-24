@@ -11,13 +11,13 @@ The `@sanity/plugin-kit` already provides a set of CLI commands for verifying an
 ### Verify your plugin package.
 
 ```
-npx @sanity/plugin-kit@latest verify-package
+pnpx @sanity/plugin-kit@latest verify-package
 ```
 
 ### Get help upgrading from Sanity Studio v2 → v3.
 
 ```
-npx @sanity/plugin-kit@latest verify-studio
+pnpx @sanity/plugin-kit@latest verify-studio
 ```
 
 ## Requirements
@@ -29,39 +29,39 @@ npx @sanity/plugin-kit@latest verify-studio
 First, install the project dependencies:
 
 ```
-npx install && npx i yalc -g
+pnpm install
 ```
 
 Make the plugin linkable, and compile an initial version:
 
 ```
-npx run dev
+pnpm run dev
 ```
 
 In another shell, run the command:
 
 ```
 # The `studio` folder in this project is dedicated for live testing the Sanity Studio.
-cd studio && npx yalc add @webicient/sanity-kit && npx yalc link @webicient/sanity-kit && npx install && npm run dev
+cd studio && pnpx yalc add @webicient/sanity-kit && pnpx yalc link @webicient/sanity-kit && pnpm install && pnpm run dev
 ```
 
 ## Features (WIP)
 
 - [x] Organized structure of Sanity Structure Tool
-- [ ] Translation ready
+- [x] Translation ready
 - [x] Media library
 - [x] Redirections
 - [ ] Forms
-- [ ] Modules content builder (section block)
-- [ ] Modules presets
+- [x] Modules content builder (section block)
+- [x] Modules presets
 - [x] General settings
 - [ ] Sitemap viewer
 - [x] GTM ready
 - [ ] Embedded video with bunny.net
-- [ ] SEO ready
-  - [ ] OpenGraph
-  - [ ] Canonical URLs
-  - [ ] Common tags such as title, description and etc.
+- [x] SEO ready
+  - [x] OpenGraph
+  - [x] Canonical URLs
+  - [x] Common tags such as title, description and etc.
   - [ ] Structured schema
 
 ## API
