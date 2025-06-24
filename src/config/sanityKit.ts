@@ -2,7 +2,7 @@ import { visionTool } from "@sanity/vision";
 import { definePlugin } from "sanity";
 import { structureTool } from "sanity/structure";
 import { media } from "sanity-plugin-media";
-import { type KitConfig } from "./kitConfig";
+import { type KitConfig, kitConfig } from "./kitConfig";
 import {
   normalizeCollections,
   normalizeModules,
@@ -28,7 +28,9 @@ import { Language, languageFilter } from "@sanity/language-filter";
  * })
  * ```
  */
-export const sanityKit = definePlugin<KitConfig>((config: KitConfig) => {
+export const sanityKit = definePlugin(async () => {
+  const config: KitConfig = await kitConfig();
+
   return {
     name: "@webicient/sanity-kit",
     plugins: [

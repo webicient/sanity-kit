@@ -1,11 +1,10 @@
-import { kitConfig } from "@webicient/sanity-kit";
+import { type KitConfig } from "@webicient/sanity-kit";
 import cards from "@/modules/cards";
 import pages from "@/modules/pages";
 import service from "@/schema/service";
-import { defineType } from "sanity";
 import { customStructure } from "@/schema/structure";
 
-export default kitConfig({
+const config: KitConfig = {
   languages: [
     { id: "sv", title: "Swedish", isDefault: true },
     { id: "en", title: "English" },
@@ -15,4 +14,6 @@ export default kitConfig({
     contentTypes: [service],
     structures: [customStructure],
   },
-});
+};
+
+export default config;
