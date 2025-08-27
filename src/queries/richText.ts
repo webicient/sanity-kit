@@ -8,9 +8,9 @@ function richTextImageQueryField(): string {
 
 function richTextBlockQueryField(language?: string): string {
   return `
-    _type == "block" => {
+_type == "block" => {
       ...,
-      markDefs[] {
+      "markDefs": coalesce(markDefs, [])[]{
         ...,
         _type == "link" => { ${linkQueryFields(language)} }
       }
