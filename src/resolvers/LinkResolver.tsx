@@ -2,23 +2,21 @@
 
 import type { LinkProps as NextLinkProps } from "next/link";
 import Link from "next/link";
-import type { HTMLAttributes, ReactNode } from "react";
+import { forwardRef, type HTMLAttributes, type ReactNode } from "react";
 import { LinkPayload } from "../types/object";
 import { resolveDocumentHref } from "../utils/url";
 
 type LinkResolverProps = NextLinkProps & HTMLAttributes<HTMLAnchorElement>;
 
-export function LinkResolver({
-  children,
-  link,
-  locale,
-  ...props
-}: {
-  link?: LinkPayload;
-  children: ReactNode;
-  defaultToTop?: boolean;
-  locale?: string;
-} & Omit<LinkResolverProps, "href">): JSX.Element {
+export const LinkResolver = forwardRef<
+  HTMLAnchorElement,
+  {
+    link?: LinkPayload;
+    children: ReactNode;
+    defaultToTop?: boolean;
+    locale?: string;
+  } & Omit<LinkResolverProps, "href">
+>(({ children, link, locale, ...props }, ref) => {
   const linkProps: any = {
     // Defaults to home.
     href: "/",
@@ -42,8 +40,10 @@ export function LinkResolver({
   }
 
   return (
-    <Link {...linkProps} {...props}>
+    <Link ref={ref} {...linkProps} {...props}>
       {children}
     </Link>
   );
-}
+});
+
+LinkResolver.displayName = "LinkResolver";
