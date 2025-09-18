@@ -59,7 +59,7 @@ const moduleData = [
   "_type": "kit.preset",
   "_key": "preset-key",
   "preset": {
-    "_type": "reference", 
+    "_type": "reference",
     "_ref": "preset-document-id"
   }
 }
@@ -90,13 +90,13 @@ interface ImageResolverProps {
   hotspot?: any;
   crop?: any;
   alt?: string;
-  
+
   // HTML img attributes
   className?: string;
   sizes?: string;
   loading?: 'lazy' | 'eager';
   priority?: boolean;
-  
+
   // Image processing options
   width?: number;
   height?: number;
@@ -176,7 +176,7 @@ interface LinkResolverProps {
   slug?: { current: string };
   url?: string;
   text?: string;
-  
+
   // HTML attributes
   className?: string;
   target?: string;
@@ -224,17 +224,17 @@ export default kitConfig({
   resolve: {
     hrefResolver: (prev, documentType, params, document) => {
       switch (documentType) {
-        case 'page':
+        case "page":
           return `/${params?.slug}`;
-        case 'post':
+        case "post":
           return `/blog/${params?.slug}`;
-        case 'product':
+        case "product":
           return `/products/${params?.slug}`;
         default:
           return prev;
       }
-    }
-  }
+    },
+  },
 });
 ```
 
@@ -252,7 +252,7 @@ export default async function RootLayout({ children }: {
   children: React.ReactNode;
 }) {
   const settings = await loadSettings();
-  
+
   return (
     <html>
       <body>
@@ -270,7 +270,7 @@ export default async function RootLayout({ children }: {
 The provider automatically handles:
 
 - **Google Tag Manager**: Integration when `gtmId` is configured
-- **Marker.io**: Feedback widget when `markerId` is configured  
+- **Marker.io**: Feedback widget when `markerId` is configured
 - **Custom Scripts**: Head, pre-body, and post-body script injection
 - **Analytics**: Page view tracking
 - **Settings Context**: Global access to all settings
@@ -303,11 +303,11 @@ import { useKit } from '@webicient/sanity-kit/provider';
 
 function SiteHeader() {
   const { settings, translations, setTranslations } = useKit();
-  
+
   return (
     <header>
       <h1>{settings.generalSettings?.siteTitle}</h1>
-      
+
       <nav>
         {settings.socialMediaSettings?.facebook && (
           <a href={settings.socialMediaSettings.facebook}>
@@ -334,7 +334,7 @@ export default async function Layout({ children }: {
   children: React.ReactNode;
 }) {
   const { isEnabled } = draftMode();
-  
+
   return (
     <html>
       <body>
@@ -377,7 +377,7 @@ function CustomModuleRenderer({ modules }: { modules: any[] }) {
     <div>
       {modules?.map(({ _key, ...module }) => {
         const ModuleComponent = getModuleComponent(module._type);
-        
+
         return (
           <ModuleErrorBoundary key={_key} moduleName={module._type}>
             <ModuleComponent {...module} />
@@ -418,11 +418,11 @@ export default function HeroModule({
           priority
         />
       )}
-      
+
       <div className="hero-content">
         <h1>{heading}</h1>
         {subheading && <p>{subheading}</p>}
-        
+
         {cta && (
           <LinkResolver {...cta} className="btn btn-primary">
             {cta.text}
@@ -438,42 +438,42 @@ export default function HeroModule({
 
 ```typescript
 // kit.config.ts
-import HeroModule from '@/components/modules/Hero';
+import HeroModule from "@/components/modules/Hero";
 
 export default kitConfig({
   schema: {
     modules: [
       defineModule({
-        name: 'module.hero',
-        title: 'Hero Section',
+        name: "module.hero",
+        title: "Hero Section",
         fields: [
           defineField({
-            name: 'heading',
-            title: 'Heading',
-            type: 'string',
-            validation: Rule => Rule.required()
+            name: "heading",
+            title: "Heading",
+            type: "string",
+            validation: (Rule) => Rule.required(),
           }),
           defineField({
-            name: 'subheading',
-            title: 'Subheading',
-            type: 'text'
+            name: "subheading",
+            title: "Subheading",
+            type: "text",
           }),
           defineField({
-            name: 'backgroundImage',
-            title: 'Background Image',
-            type: 'image'
+            name: "backgroundImage",
+            title: "Background Image",
+            type: "image",
           }),
           defineField({
-            name: 'cta',
-            title: 'Call to Action',
-            type: 'kit.link'
-          })
+            name: "cta",
+            title: "Call to Action",
+            type: "kit.link",
+          }),
         ],
         renderer: HeroModule,
-        imageUrl: '/modules/hero.png'
-      })
-    ]
-  }
+        imageUrl: "/modules/hero.png",
+      }),
+    ],
+  },
 });
 ```
 
@@ -489,7 +489,7 @@ function ConditionalModule({ module }: { module: any }) {
       </section>
     );
   }
-  
+
   if (module.layout === 'contained') {
     return (
       <div className="container">
@@ -497,7 +497,7 @@ function ConditionalModule({ module }: { module: any }) {
       </div>
     );
   }
-  
+
   return <ModuleResolver data={[module]} />;
 }
 ```
@@ -521,7 +521,7 @@ export default function PageTemplate({ page }: PageProps) {
     <>
       {/* SEO Head */}
       <PageSEO seo={page.seo} title={page.title} />
-      
+
       {/* Page Header */}
       <PageHeader>
         {page.featuredImage && (
@@ -533,7 +533,7 @@ export default function PageTemplate({ page }: PageProps) {
         )}
         <h1>{page.title}</h1>
       </PageHeader>
-      
+
       {/* Page Content */}
       <main>
         {page.modules && page.modules.length > 0 ? (
@@ -570,7 +570,7 @@ function WrappedModuleResolver({ data }: { data: any[] }) {
     <>
       {data?.map(({ _key, ...module }) => {
         const ModuleComponent = getModuleComponent(module._type);
-        
+
         return (
           <ModuleWrapper key={_key} module={module}>
             <ModuleErrorBoundary moduleName={module._type}>
@@ -600,7 +600,7 @@ function LazyModuleResolver({ data }: { data: any[] }) {
     <>
       {data?.map(({ _key, _type, ...module }) => {
         let ModuleComponent;
-        
+
         switch (_type) {
           case 'module.heavy':
             ModuleComponent = HeavyModule;
@@ -611,7 +611,7 @@ function LazyModuleResolver({ data }: { data: any[] }) {
           default:
             ModuleComponent = DefaultModule;
         }
-        
+
         return (
           <Suspense key={_key} fallback={<ModuleSkeleton />}>
             <ModuleComponent {...module} />
@@ -632,7 +632,7 @@ import { useEffect, useRef, useState } from 'react';
 function LazyModule({ module }: { module: any }) {
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -643,14 +643,14 @@ function LazyModule({ module }: { module: any }) {
       },
       { threshold: 0.1 }
     );
-    
+
     if (ref.current) {
       observer.observe(ref.current);
     }
-    
+
     return () => observer.disconnect();
   }, []);
-  
+
   return (
     <div ref={ref}>
       {isVisible ? (
@@ -683,20 +683,20 @@ const mockModules = [
 describe('ModuleResolver', () => {
   test('renders modules correctly', () => {
     render(<ModuleResolver data={mockModules} />);
-    
+
     expect(screen.getByText('Test Heading')).toBeInTheDocument();
   });
-  
+
   test('handles empty modules array', () => {
     render(<ModuleResolver data={[]} />);
-    
+
     // Should render nothing without errors
     expect(screen.queryByText('Test Heading')).not.toBeInTheDocument();
   });
-  
+
   test('handles missing modules', () => {
     render(<ModuleResolver data={undefined} />);
-    
+
     // Should render nothing without errors
     expect(document.body.firstChild).toBeEmptyDOMElement();
   });
@@ -755,14 +755,14 @@ import { useMemo } from 'react';
 
 function OptimizedHeader() {
   const { settings } = useKit();
-  
+
   // Memoize expensive calculations
   const socialLinks = useMemo(() => {
     return Object.entries(settings.socialMediaSettings || {})
       .filter(([key, value]) => value)
       .map(([platform, url]) => ({ platform, url }));
   }, [settings.socialMediaSettings]);
-  
+
   return (
     <header>
       <h1>{settings.generalSettings?.siteTitle}</h1>
@@ -796,10 +796,10 @@ function OptimizedHeader() {
 ```typescript
 function ComponentWithData() {
   const { data, loading } = useQuery(query);
-  
+
   if (loading) return <Skeleton />;
   if (!data) return <EmptyState />;
-  
+
   return <DataDisplay data={data} />;
 }
 ```
@@ -833,5 +833,5 @@ function TypedModule({ title, description, image }: ModuleProps) {
 ## Related Documentation
 
 - [Modules](./modules.md) - Creating content modules
-- [Visual Editing](./visual-editing.md) - Preview and editing setup  
+- [Visual Editing](./visual-editing.md) - Preview and editing setup
 - [API Reference](./api-reference.md) - Component API reference

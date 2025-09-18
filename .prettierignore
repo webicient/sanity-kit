@@ -1,3 +1,6 @@
 dist
 yarn.lock
 package-lock.json
+.next
+.yalc
+node_modules

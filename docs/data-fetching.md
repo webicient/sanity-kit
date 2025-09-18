@@ -22,11 +22,11 @@ export default async function Page({ params }: { params: { slug: string } }) {
       }
     }
   );
-  
+
   if (!page) {
     notFound();
   }
-  
+
   return (
     <main>
       <h1>{page.title}</h1>
@@ -42,7 +42,7 @@ export async function generateStaticParams() {
       "slug": slug.current
     }
   `);
-  
+
   return pages.map((page) => ({
     slug: page.slug.split('/').filter(Boolean)
   }));
@@ -66,7 +66,7 @@ export default async function StaticPage({ params }: PageProps) {
       }
     }
   );
-  
+
   return <PageComponent page={page} />;
 }
 
@@ -95,7 +95,7 @@ export default async function ISRPage({ params }: PageProps) {
       }
     }
   );
-  
+
   return <PageComponent page={page} />;
 }
 ```
@@ -118,7 +118,7 @@ export default async function DynamicPage({ searchParams }: {
       next: { revalidate: 0 } // Always fresh data
     }
   );
-  
+
   return <SearchResults results={results} />;
 }
 
@@ -130,33 +130,36 @@ export const dynamic = 'force-dynamic';
 
 ```typescript
 // API route for webhook revalidation
-import { revalidateTag } from 'next/cache';
-import { NextRequest, NextResponse } from 'next/server';
+import { revalidateTag } from "next/cache";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
-  
+
   // Validate webhook (implementation depends on your setup)
   const isValid = validateWebhook(body, request.headers);
   if (!isValid) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  
+
   try {
     // Revalidate based on document type
-    if (body._type === 'page') {
+    if (body._type === "page") {
       revalidateTag(`page:${body.slug.current}`);
-      revalidateTag('pages'); // Revalidate page lists
-    } else if (body._type === 'post') {
+      revalidateTag("pages"); // Revalidate page lists
+    } else if (body._type === "post") {
       revalidateTag(`post:${body.slug.current}`);
-      revalidateTag('posts');
-    } else if (body._type.endsWith('Settings')) {
-      revalidateTag('settings');
+      revalidateTag("posts");
+    } else if (body._type.endsWith("Settings")) {
+      revalidateTag("settings");
     }
-    
+
     return NextResponse.json({ revalidated: true });
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to revalidate' }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to revalidate" },
+      { status: 500 },
+    );
   }
 }
 ```
@@ -166,18 +169,18 @@ export async function POST(request: NextRequest) {
 Convenient methods for common document types:
 
 ```typescript
-import { 
-  loadEntity, 
-  loadSettings, 
+import {
+  loadEntity,
+  loadSettings,
   loadContentType,
-  loadTaxonomy 
+  loadTaxonomy
 } from '@webicient/sanity-kit/query';
 
 // Load homepage entity
 export default async function Homepage() {
   const home = await loadEntity('home');
   const settings = await loadSettings();
-  
+
   return (
     <div>
       <h1>{home?.title}</h1>
@@ -189,9 +192,9 @@ export default async function Homepage() {
 // Load blog post
 export default async function BlogPost({ params }: { params: { slug: string } }) {
   const post = await loadContentType('post', params.slug);
-  
+
   if (!post) notFound();
-  
+
   return <ArticleComponent post={post} />;
 }
 ```
@@ -207,7 +210,7 @@ import { useState } from 'react';
 
 function SearchComponent() {
   const [searchTerm, setSearchTerm] = useState('');
-  
+
   const { data: results, loading, error } = useQuery(
     searchTerm ? `
       *[_type in ["post", "page"] && title match $searchQuery] {
@@ -219,18 +222,18 @@ function SearchComponent() {
     ` : null, // Only query when there's a search term
     { searchQuery: `${searchTerm}*` }
   );
-  
+
   return (
     <div>
-      <input 
+      <input
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         placeholder="Search..."
       />
-      
+
       {loading && <div>Searching...</div>}
       {error && <div>Error: {error.message}</div>}
-      
+
       {results && (
         <div>
           {results.map((result) => (
@@ -255,14 +258,14 @@ function ConditionalDataComponent({ userId }: { userId?: string }) {
     userId ? `*[_type == "user" && _id == $userId][0]` : null,
     { userId }
   );
-  
+
   const { data: publicData } = useQuery(`
     *[_type == "public"] {
       title,
       content
     }
   `);
-  
+
   return (
     <div>
       <PublicContent data={publicData} />
@@ -284,7 +287,7 @@ import { useState, useTransition } from 'react';
 function CommentsList({ postId }: { postId: string }) {
   const [isPending, startTransition] = useTransition();
   const [optimisticComments, setOptimisticComments] = useState([]);
-  
+
   const { data: comments, loading } = useQuery(`
     *[_type == "comment" && post._ref == $postId] | order(_createdAt desc) {
       _id,
@@ -293,7 +296,7 @@ function CommentsList({ postId }: { postId: string }) {
       _createdAt
     }
   `, { postId });
-  
+
   const addComment = (text: string) => {
     const optimisticComment = {
       _id: `temp-${Date.now()}`,
@@ -301,9 +304,9 @@ function CommentsList({ postId }: { postId: string }) {
       author: 'You',
       _createdAt: new Date().toISOString()
     };
-    
+
     setOptimisticComments(prev => [optimisticComment, ...prev]);
-    
+
     startTransition(async () => {
       try {
         await submitComment(postId, text);
@@ -315,9 +318,9 @@ function CommentsList({ postId }: { postId: string }) {
       }
     });
   };
-  
+
   const displayComments = [...optimisticComments, ...(comments || [])];
-  
+
   return (
     <div>
       {displayComments.map((comment) => (
@@ -346,7 +349,7 @@ export default async function HybridPage() {
       publishedAt
     }
   `);
-  
+
   return (
     <div>
       <h1>Latest Posts</h1>
@@ -360,7 +363,7 @@ export default async function HybridPage() {
 function PostsList({ initialPosts }: { initialPosts: any[] }) {
   const [offset, setOffset] = useState(5);
   const [allPosts, setAllPosts] = useState(initialPosts);
-  
+
   const { data: morePosts, loading } = useQuery(
     offset > 5 ? `
       *[_type == "post"] | order(publishedAt desc) [${offset}...${offset + 5}] {
@@ -370,23 +373,23 @@ function PostsList({ initialPosts }: { initialPosts: any[] }) {
       }
     ` : null
   );
-  
+
   useEffect(() => {
     if (morePosts) {
       setAllPosts(prev => [...prev, ...morePosts]);
     }
   }, [morePosts]);
-  
+
   const loadMore = () => {
     setOffset(prev => prev + 5);
   };
-  
+
   return (
     <div>
       {allPosts.map((post) => (
         <PostItem key={post.slug} post={post} />
       ))}
-      
+
       <button onClick={loadMore} disabled={loading}>
         {loading ? 'Loading...' : 'Load More'}
       </button>
@@ -411,19 +414,19 @@ function DataComponent() {
       "slug": slug.current
     }
   `);
-  
+
   if (loading) {
     return <LoadingSkeleton />;
   }
-  
+
   if (error) {
     return <ErrorFallback error={error} />;
   }
-  
+
   if (!data || data.length === 0) {
     return <EmptyState />;
   }
-  
+
   return (
     <div>
       {data.map((post) => (
@@ -486,7 +489,7 @@ function Header() {
       logo
     }
   `);
-  
+
   return <header>{settings?.siteTitle}</header>;
 }
 
@@ -497,7 +500,7 @@ function Footer() {
       logo
     }
   `);
-  
+
   return <footer>{settings?.siteTitle}</footer>;
 }
 ```
@@ -508,7 +511,7 @@ function Footer() {
 function PaginatedPosts() {
   const [page, setPage] = useState(0);
   const limit = 10;
-  
+
   const { data: posts, loading } = useQuery(`
     *[_type == "post"] | order(publishedAt desc) [${page * limit}...${(page + 1) * limit - 1}] {
       title,
@@ -517,15 +520,15 @@ function PaginatedPosts() {
       excerpt
     }
   `);
-  
+
   const { data: total } = useQuery(`count(*[_type == "post"])`);
-  
+
   const totalPages = Math.ceil((total || 0) / limit);
-  
+
   return (
     <div>
       <PostGrid posts={posts} loading={loading} />
-      
+
       <Pagination
         currentPage={page}
         totalPages={totalPages}
@@ -547,7 +550,7 @@ function InfinitePostsList() {
   const [posts, setPosts] = useState([]);
   const [offset, setOffset] = useState(0);
   const limit = 20;
-  
+
   const { data: newPosts, loading } = useQuery(
     `*[_type == "post"] | order(publishedAt desc) [${offset}...${offset + limit - 1}] {
       title,
@@ -556,21 +559,21 @@ function InfinitePostsList() {
       excerpt
     }`
   );
-  
+
   useEffect(() => {
     if (newPosts) {
       setPosts(prev => offset === 0 ? newPosts : [...prev, ...newPosts]);
     }
   }, [newPosts, offset]);
-  
+
   const loadMore = useCallback(() => {
     if (!loading) {
       setOffset(prev => prev + limit);
     }
   }, [loading, limit]);
-  
+
   useInfiniteScroll(loadMore);
-  
+
   return (
     <div>
       {posts.map((post) => (
@@ -599,21 +602,21 @@ function RealTimeComponent() {
       _updatedAt
     }
   `);
-  
+
   useEffect(() => {
     // Set up real-time updates (WebSocket, Server-Sent Events, etc.)
     const eventSource = new EventSource('/api/live-updates');
-    
+
     eventSource.onmessage = (event) => {
       const update = JSON.parse(event.data);
       if (update.type === 'liveData') {
         refetch();
       }
     };
-    
+
     return () => eventSource.close();
   }, [refetch]);
-  
+
   return (
     <div>
       {data?.map((item) => (
@@ -643,14 +646,14 @@ function BackgroundSyncComponent() {
       lastSync
     }
   `);
-  
+
   // Sync every 30 seconds in the background
   useInterval(() => {
     if (!loading) {
       refetch();
     }
   }, 30000);
-  
+
   return (
     <div>
       {data?.map((item) => (

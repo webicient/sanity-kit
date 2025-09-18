@@ -22,6 +22,7 @@ A comprehensive Sanity plugin that provides curated pre-built features for Sanit
 ### What is Sanity Kit?
 
 Sanity Kit is a plugin that extends Sanity Studio with:
+
 - **Pre-built content schemas** for common use cases (pages, posts, settings)
 - **Configuration-driven architecture** for rapid customization
 - **Query utilities** for efficient data fetching
@@ -34,6 +35,7 @@ Sanity Kit is a plugin that extends Sanity Studio with:
 ### Who is it for?
 
 This plugin is designed for:
+
 - Development teams building content-driven websites
 - Agencies working on multiple Sanity projects
 - Developers who want production-ready Sanity configurations
@@ -99,18 +101,18 @@ yarn add @webicient/sanity-kit
 Create or update your `sanity.config.ts`:
 
 ```typescript
-import { defineConfig } from 'sanity';
-import { sanityKit } from '@webicient/sanity-kit';
-import { kitConfig } from '@webicient/sanity-kit';
+import { defineConfig } from "sanity";
+import { sanityKit } from "@webicient/sanity-kit";
+import { kitConfig } from "@webicient/sanity-kit";
 
 // Create your kit configuration
 const config = kitConfig({
   // Optional: Add languages for multi-language support
   languages: [
-    { id: 'en', title: 'English', isDefault: true },
-    { id: 'es', title: 'Spanish' }
+    { id: "en", title: "English", isDefault: true },
+    { id: "es", title: "Spanish" },
   ],
-  
+
   // Optional: Add custom schemas
   schema: {
     contentTypes: [
@@ -118,16 +120,14 @@ const config = kitConfig({
     ],
     modules: [
       // Your custom modules
-    ]
-  }
+    ],
+  },
 });
 
 export default defineConfig({
-  projectId: 'your-project-id',
-  dataset: 'production',
-  plugins: [
-    sanityKit(config)
-  ]
+  projectId: "your-project-id",
+  dataset: "production",
+  plugins: [sanityKit(config)],
 });
 ```
 
@@ -136,40 +136,44 @@ export default defineConfig({
 For better organization, create a separate `kit.config.ts`:
 
 ```typescript
-import { kitConfig, defineContentType, defineModule } from '@webicient/sanity-kit';
+import {
+  kitConfig,
+  defineContentType,
+  defineModule,
+} from "@webicient/sanity-kit";
 
 export default kitConfig({
   languages: [
-    { id: 'en', title: 'English', isDefault: true },
-    { id: 'fr', title: 'French' }
+    { id: "en", title: "English", isDefault: true },
+    { id: "fr", title: "French" },
   ],
-  
+
   schema: {
     // Add custom content types
     contentTypes: [
       defineContentType({
-        name: 'product',
-        title: 'Product',
-        pluralTitle: 'Products',
-        supports: ['title', 'slug', 'seo', 'modules'],
-        rewrite: '/products/:slug',
-        translate: true
-      })
+        name: "product",
+        title: "Product",
+        pluralTitle: "Products",
+        supports: ["title", "slug", "seo", "modules"],
+        rewrite: "/products/:slug",
+        translate: true,
+      }),
     ],
-    
+
     // Add custom modules for content builder
     modules: [
       defineModule({
-        name: 'module.hero',
-        title: 'Hero Section',
+        name: "module.hero",
+        title: "Hero Section",
         fields: [
           // Module fields
         ],
         renderer: HeroModule, // React component
-        imageUrl: '/module-hero.png'
-      })
-    ]
-  }
+        imageUrl: "/module-hero.png",
+      }),
+    ],
+  },
 });
 ```
 
@@ -188,7 +192,7 @@ export default async function RootLayout({
   children: React.ReactNode
 }) {
   const settings = await loadSettings();
-  
+
   return (
     <html>
       <body>
@@ -211,7 +215,7 @@ export default async function HomePage() {
   const { data: page } = await loadQuery(
     pageQuery('home', 'en')
   );
-  
+
   return (
     <main>
       <h1>{page.title}</h1>
@@ -235,23 +239,23 @@ interface KitConfig {
     title: string;
     isDefault?: boolean;
   }>;
-  
+
   // Schema definitions
   schema?: {
-    objects?: SchemaType[];        // Custom object types
-    contentTypes?: ContentType[];  // Custom content types
-    taxonomies?: Taxonomy[];       // Custom taxonomies
-    entities?: Entity[];           // Custom entities
-    settings?: Setting[];          // Custom settings
-    modules?: Module[];            // Content builder modules
-    structures?: Structure[];      // Custom studio structures
+    objects?: SchemaType[]; // Custom object types
+    contentTypes?: ContentType[]; // Custom content types
+    taxonomies?: Taxonomy[]; // Custom taxonomies
+    entities?: Entity[]; // Custom entities
+    settings?: Setting[]; // Custom settings
+    modules?: Module[]; // Content builder modules
+    structures?: Structure[]; // Custom studio structures
   };
-  
+
   // Customization options
   custom?: {
     projection?: (type: string, defaultProjection: string) => string;
   };
-  
+
   // Disable default schemas
   disableDefault?: {
     schema?: {
@@ -259,7 +263,7 @@ interface KitConfig {
       taxonomies?: string[];
     };
   };
-  
+
   // Resolver functions
   resolve?: {
     hrefResolver?: Function;
@@ -268,7 +272,7 @@ interface KitConfig {
     hierarchyQueryFields?: Function;
     richTextQueryFields?: Function;
   };
-  
+
   // Rich text configuration
   richText?: SchemaType[];
 }
@@ -308,57 +312,57 @@ interface KitConfig {
 
 ```typescript
 // Configuration
-export { kitConfig } from './config/kitConfig';
-export { sanityKit } from './config/sanityKit';
+export { kitConfig } from "./config/kitConfig";
+export { sanityKit } from "./config/sanityKit";
 
 // Schema Definitions
-export { defineContentType } from './config/registry/define';
-export { defineEntity } from './config/registry/define';
-export { defineSetting } from './config/registry/define';
-export { defineTaxonomy } from './config/registry/define';
-export { defineModule } from './config/registry/define';
-export { defineStructure } from './config/registry/define';
+export { defineContentType } from "./config/registry/define";
+export { defineEntity } from "./config/registry/define";
+export { defineSetting } from "./config/registry/define";
+export { defineTaxonomy } from "./config/registry/define";
+export { defineModule } from "./config/registry/define";
+export { defineStructure } from "./config/registry/define";
 
 // Types
-export * from './types/definition';
-export * from './types/seo';
-export * from './types/validity';
-export * from './types/payload';
-export * from './types/object';
+export * from "./types/definition";
+export * from "./types/seo";
+export * from "./types/validity";
+export * from "./types/payload";
+export * from "./types/object";
 ```
 
 ### Query Exports (`/query`)
 
 ```typescript
 // Query utilities
-export { loadQuery } from './query/loadQuery';
-export { serverClient } from './query/serverClient';
+export { loadQuery } from "./query/loadQuery";
+export { serverClient } from "./query/serverClient";
 
 // React hooks
-export { useQuery } from './query/useQuery';
+export { useQuery } from "./query/useQuery";
 
 // Structure loaders
-export { loadContentType } from './query/structure/loadContentType';
-export { loadEntity } from './query/structure/loadEntity';
-export { loadSettings } from './query/structure/loadSettings';
-export { loadTaxonomy } from './query/structure/loadTaxonomy';
+export { loadContentType } from "./query/structure/loadContentType";
+export { loadEntity } from "./query/structure/loadEntity";
+export { loadSettings } from "./query/structure/loadSettings";
+export { loadTaxonomy } from "./query/structure/loadTaxonomy";
 ```
 
 ### Component Exports (`/resolvers`)
 
 ```typescript
 // Resolvers
-export { ImageResolver } from './resolvers/ImageResolver';
-export { LinkResolver } from './resolvers/LinkResolver';
-export { ModuleResolver } from './resolvers/ModuleResolver';
+export { ImageResolver } from "./resolvers/ImageResolver";
+export { LinkResolver } from "./resolvers/LinkResolver";
+export { ModuleResolver } from "./resolvers/ModuleResolver";
 ```
 
 ### Provider Exports (`/provider`)
 
 ```typescript
 // Provider and hooks
-export { KitProvider } from './provider/KitProvider';
-export { useKit } from './provider/KitProvider';
+export { KitProvider } from "./provider/KitProvider";
+export { useKit } from "./provider/KitProvider";
 ```
 
 ## Examples
@@ -366,86 +370,86 @@ export { useKit } from './provider/KitProvider';
 ### Creating a Custom Content Type
 
 ```typescript
-import { defineContentType } from '@webicient/sanity-kit';
-import { defineField } from 'sanity';
+import { defineContentType } from "@webicient/sanity-kit";
+import { defineField } from "sanity";
 
 const product = defineContentType({
-  name: 'product',
-  title: 'Product',
-  pluralTitle: 'Products',
-  supports: ['title', 'slug', 'seo', 'featuredImage'],
+  name: "product",
+  title: "Product",
+  pluralTitle: "Products",
+  supports: ["title", "slug", "seo", "featuredImage"],
   hierarchical: false,
-  rewrite: '/shop/:slug',
+  rewrite: "/shop/:slug",
   translate: true,
   fields: [
     defineField({
-      name: 'price',
-      title: 'Price',
-      type: 'number',
-      validation: Rule => Rule.required().positive()
+      name: "price",
+      title: "Price",
+      type: "number",
+      validation: (Rule) => Rule.required().positive(),
     }),
     defineField({
-      name: 'inStock',
-      title: 'In Stock',
-      type: 'boolean',
-      initialValue: true
-    })
-  ]
+      name: "inStock",
+      title: "In Stock",
+      type: "boolean",
+      initialValue: true,
+    }),
+  ],
 });
 ```
 
 ### Creating a Custom Module
 
 ```typescript
-import { defineModule } from '@webicient/sanity-kit';
-import { defineField } from 'sanity';
+import { defineModule } from "@webicient/sanity-kit";
+import { defineField } from "sanity";
 
 const heroModule = defineModule({
-  name: 'module.hero',
-  title: 'Hero Section',
+  name: "module.hero",
+  title: "Hero Section",
   fields: [
     defineField({
-      name: 'heading',
-      title: 'Heading',
-      type: 'string',
-      validation: Rule => Rule.required()
+      name: "heading",
+      title: "Heading",
+      type: "string",
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'subheading',
-      title: 'Subheading',
-      type: 'text',
-      rows: 3
+      name: "subheading",
+      title: "Subheading",
+      type: "text",
+      rows: 3,
     }),
     defineField({
-      name: 'backgroundImage',
-      title: 'Background Image',
-      type: 'image',
-      options: { hotspot: true }
-    })
+      name: "backgroundImage",
+      title: "Background Image",
+      type: "image",
+      options: { hotspot: true },
+    }),
   ],
   renderer: HeroComponent,
-  imageUrl: '/modules/hero.png',
+  imageUrl: "/modules/hero.png",
   query: (language) => `
     heading,
     subheading,
     backgroundImage
-  `
+  `,
 });
 ```
 
 ### Fetching Data with Type Safety
 
 ```typescript
-import { loadQuery } from '@webicient/sanity-kit/query';
-import { pageQuery } from '@webicient/sanity-kit/queries';
-import type { Page } from '@webicient/sanity-kit';
+import { loadQuery } from "@webicient/sanity-kit/query";
+import { pageQuery } from "@webicient/sanity-kit/queries";
+import type { Page } from "@webicient/sanity-kit";
 
-export async function getPage(slug: string, language: string = 'en') {
-  const { data } = await loadQuery<Page>(
-    pageQuery(slug, language),
-    { slug, language }
-  );
-  
+export async function getPage(slug: string, language: string = "en") {
+  const { data } = await loadQuery<Page>(pageQuery(slug, language), {
+    slug,
+    language,
+  });
+
   return data;
 }
 ```
@@ -455,22 +459,26 @@ export async function getPage(slug: string, language: string = 'en') {
 ### Local Development Setup
 
 1. Clone the repository:
+
 ```bash
 git clone https://github.com/webicient/sanity-kit.git
 cd sanity-kit
 ```
 
 2. Install dependencies:
+
 ```bash
 npm install
 ```
 
 3. Link for local development:
+
 ```bash
 npm run dev
 ```
 
 4. Test in the studio:
+
 ```bash
 cd studio
 npx yalc add @webicient/sanity-kit

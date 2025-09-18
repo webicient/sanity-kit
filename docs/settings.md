@@ -20,7 +20,7 @@ export const generalSettings = defineSetting({
   fields: [
     {
       name: "siteTitle",
-      title: "Site Title", 
+      title: "Site Title",
       type: "string",
       validation: (rule) => rule.required(),
     },
@@ -28,23 +28,25 @@ export const generalSettings = defineSetting({
       name: "domain",
       title: "Domain",
       type: "string",
-      validation: (rule) => rule.custom((value?: string) => {
-        return isValidDomain(value) ? true : "Invalid domain";
-      }),
+      validation: (rule) =>
+        rule.custom((value?: string) => {
+          return isValidDomain(value) ? true : "Invalid domain";
+        }),
     },
     {
       name: "searchEngineVisibility",
       title: "Search Engine Visibility",
       type: "boolean",
       description: "Discourage search engines from indexing this site.",
-    }
-  ]
+    },
+  ],
 });
 ```
 
 **Fields:**
+
 - `siteTitle` (string, required): The main site title
-- `domain` (string): Site domain with validation  
+- `domain` (string): Site domain with validation
 - `searchEngineVisibility` (boolean): Search engine indexing preference
 
 ### Social Media Settings
@@ -61,14 +63,15 @@ export const socialSettings = defineSetting({
     { name: "twitter", title: "Twitter", type: "url" },
     { name: "instagram", title: "Instagram", type: "url" },
     { name: "linkedin", title: "LinkedIn", type: "url" },
-    { name: "youtube", title: "YouTube", type: "url" }
-  ]
+    { name: "youtube", title: "YouTube", type: "url" },
+  ],
 });
 ```
 
 **Supported Platforms:**
+
 - Facebook
-- Twitter  
+- Twitter
 - Instagram
 - LinkedIn
 - YouTube
@@ -79,19 +82,20 @@ Default SEO metadata and configuration.
 
 ```typescript
 export const seoSettings = defineSetting({
-  name: "seoSettings", 
+  name: "seoSettings",
   title: "SEO",
   icon: SearchIcon,
   translate: true, // Supports multiple languages
   fields: [
     { name: "title", title: "Title", type: "string" },
     { name: "description", title: "Description", type: "text" },
-    { name: "image", title: "Image", type: "image" }
-  ]
+    { name: "image", title: "Image", type: "image" },
+  ],
 });
 ```
 
 **Fields:**
+
 - `title` (string): Default site title for meta tags
 - `description` (text): Default meta description
 - `image` (image): Default social sharing image
@@ -103,26 +107,28 @@ Third-party service integrations.
 ```typescript
 export const integrationSettings = defineSetting({
   name: "integrationSettings",
-  title: "Integrations", 
+  title: "Integrations",
   icon: PackageIcon,
   fields: [
     {
       name: "gtmId",
       title: "Google Tag Manager ID",
       type: "string",
-      description: "The tag manager ID for Google Tag Manager. Formatted as `GTM-XXXXXX`"
+      description:
+        "The tag manager ID for Google Tag Manager. Formatted as `GTM-XXXXXX`",
     },
     {
-      name: "markerId", 
+      name: "markerId",
       title: "Marker ID",
       type: "string",
-      description: "Integration ID for marker.io"
-    }
-  ]
+      description: "Integration ID for marker.io",
+    },
+  ],
 });
 ```
 
 **Supported Integrations:**
+
 - **Google Tag Manager**: For analytics and tracking
 - **Marker.io**: For user feedback and bug reporting
 
@@ -134,33 +140,34 @@ Custom script injection for different page sections.
 export const scriptsSettings = defineSetting({
   name: "scriptsSettings",
   title: "Scripts",
-  icon: CodeBlockIcon, 
+  icon: CodeBlockIcon,
   fields: [
     {
       name: "head",
       title: "Head",
       type: "text",
-      description: "Scripts to include in the head of the document."
+      description: "Scripts to include in the head of the document.",
     },
     {
-      name: "preBody", 
+      name: "preBody",
       title: "Pre Body",
       type: "text",
-      description: "Scripts to include at the beginning of the body."
+      description: "Scripts to include at the beginning of the body.",
     },
     {
       name: "postBody",
-      title: "Post Body", 
+      title: "Post Body",
       type: "text",
-      description: "Scripts to include at the end of the body."
-    }
-  ]
+      description: "Scripts to include at the end of the body.",
+    },
+  ],
 });
 ```
 
 **Script Locations:**
+
 - `head`: Scripts in the `<head>` section
-- `preBody`: Scripts at the start of `<body>`  
+- `preBody`: Scripts at the start of `<body>`
 - `postBody`: Scripts before closing `</body>`
 
 ### Advanced Settings
@@ -174,7 +181,7 @@ export const advancedSettings = defineSetting({
   icon: JoystickIcon,
   fields: [
     // Advanced configuration fields
-  ]
+  ],
 });
 ```
 
@@ -183,7 +190,7 @@ export const advancedSettings = defineSetting({
 ### Loading All Settings
 
 ```typescript
-import { loadSettings } from '@webicient/sanity-kit/query';
+import { loadSettings } from "@webicient/sanity-kit/query";
 
 // Load all settings
 const settings = await loadSettings();
@@ -205,7 +212,7 @@ import { loadSettings } from '@webicient/sanity-kit/query';
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const settings = await loadSettings();
-  
+
   return (
     <html>
       <body>
@@ -226,11 +233,11 @@ import { useKit } from '@webicient/sanity-kit/provider';
 
 export default function Header() {
   const { settings } = useKit();
-  
+
   return (
     <header>
       <h1>{settings.generalSettings?.siteTitle}</h1>
-      
+
       <nav>
         {settings.socialMediaSettings?.facebook && (
           <a href={settings.socialMediaSettings.facebook}>Facebook</a>
@@ -270,7 +277,7 @@ Scripts settings are automatically injected by KitProvider:
   />
 )}
 
-// Pre-body scripts  
+// Pre-body scripts
 {scriptsSettings?.preBody && (
   <script
     id="preBodyScript"
@@ -281,7 +288,7 @@ Scripts settings are automatically injected by KitProvider:
 // Post-body scripts
 {scriptsSettings?.postBody && (
   <script
-    id="postBodyScript" 
+    id="postBodyScript"
     dangerouslySetInnerHTML={{ __html: scriptsSettings.postBody }}
   />
 )}
@@ -310,56 +317,56 @@ Feedback widget automatically loads when marker ID is configured:
 ### Define Custom Setting Schema
 
 ```typescript
-import { defineSetting } from '@webicient/sanity-kit';
-import { defineField } from 'sanity';
+import { defineSetting } from "@webicient/sanity-kit";
+import { defineField } from "sanity";
 
 const shopSettings = defineSetting({
-  name: 'shopSettings',
-  title: 'Shop Settings',
+  name: "shopSettings",
+  title: "Shop Settings",
   fields: [
     defineField({
-      name: 'currency',
-      title: 'Currency',
-      type: 'string',
+      name: "currency",
+      title: "Currency",
+      type: "string",
       options: {
         list: [
-          { title: 'US Dollar', value: 'USD' },
-          { title: 'Euro', value: 'EUR' },
-          { title: 'British Pound', value: 'GBP' }
-        ]
+          { title: "US Dollar", value: "USD" },
+          { title: "Euro", value: "EUR" },
+          { title: "British Pound", value: "GBP" },
+        ],
       },
-      initialValue: 'USD'
+      initialValue: "USD",
     }),
     defineField({
-      name: 'taxRate',
-      title: 'Tax Rate (%)',
-      type: 'number',
-      validation: Rule => Rule.min(0).max(100)
+      name: "taxRate",
+      title: "Tax Rate (%)",
+      type: "number",
+      validation: (Rule) => Rule.min(0).max(100),
     }),
     defineField({
-      name: 'shippingRates',
-      title: 'Shipping Rates',
-      type: 'array',
+      name: "shippingRates",
+      title: "Shipping Rates",
+      type: "array",
       of: [
         defineField({
-          name: 'rate',
-          type: 'object',
+          name: "rate",
+          type: "object",
           fields: [
             defineField({
-              name: 'region',
-              title: 'Region',
-              type: 'string'
+              name: "region",
+              title: "Region",
+              type: "string",
             }),
             defineField({
-              name: 'cost',
-              title: 'Cost',
-              type: 'number'
-            })
-          ]
-        })
-      ]
-    })
-  ]
+              name: "cost",
+              title: "Cost",
+              type: "number",
+            }),
+          ],
+        }),
+      ],
+    }),
+  ],
 });
 ```
 
@@ -370,9 +377,9 @@ const shopSettings = defineSetting({
 export default kitConfig({
   schema: {
     settings: [
-      shopSettings // Add your custom setting
-    ]
-  }
+      shopSettings, // Add your custom setting
+    ],
+  },
 });
 ```
 
@@ -390,25 +397,25 @@ Settings can be translated by setting `translate: true`:
 
 ```typescript
 const multiLangSettings = defineSetting({
-  name: 'websiteContent',
-  title: 'Website Content',
+  name: "websiteContent",
+  title: "Website Content",
   translate: true, // Enable translation
   fields: [
     defineField({
-      name: 'welcomeMessage',
-      title: 'Welcome Message',
-      type: 'string'
+      name: "welcomeMessage",
+      title: "Welcome Message",
+      type: "string",
     }),
     defineField({
-      name: 'contactInfo',
-      title: 'Contact Information', 
-      type: 'text'
-    })
-  ]
+      name: "contactInfo",
+      title: "Contact Information",
+      type: "text",
+    }),
+  ],
 });
 
 // Load with specific language
-const settings = await loadSettings('es'); // Spanish
+const settings = await loadSettings("es"); // Spanish
 const welcomeMessage = settings.websiteContent?.welcomeMessage;
 ```
 
@@ -418,30 +425,28 @@ const welcomeMessage = settings.websiteContent?.welcomeMessage;
 
 ```typescript
 const emailSettings = defineSetting({
-  name: 'emailSettings',
-  title: 'Email Settings',
+  name: "emailSettings",
+  title: "Email Settings",
   fields: [
     defineField({
-      name: 'fromEmail',
-      title: 'From Email',
-      type: 'string',
-      validation: Rule => 
-        Rule.required()
-          .email()
-          .error('Please enter a valid email address')
+      name: "fromEmail",
+      title: "From Email",
+      type: "string",
+      validation: (Rule) =>
+        Rule.required().email().error("Please enter a valid email address"),
     }),
     defineField({
-      name: 'smtpPort',
-      title: 'SMTP Port',
-      type: 'number',
-      validation: Rule => 
+      name: "smtpPort",
+      title: "SMTP Port",
+      type: "number",
+      validation: (Rule) =>
         Rule.required()
           .integer()
           .min(1)
           .max(65535)
-          .error('Port must be between 1 and 65535')
-    })
-  ]
+          .error("Port must be between 1 and 65535"),
+    }),
+  ],
 });
 ```
 
@@ -449,29 +454,29 @@ const emailSettings = defineSetting({
 
 ```typescript
 const apiSettings = defineSetting({
-  name: 'apiSettings', 
-  title: 'API Settings',
+  name: "apiSettings",
+  title: "API Settings",
   fields: [
     defineField({
-      name: 'apiEnabled',
-      title: 'Enable API',
-      type: 'boolean',
-      initialValue: false
+      name: "apiEnabled",
+      title: "Enable API",
+      type: "boolean",
+      initialValue: false,
     }),
     defineField({
-      name: 'apiKey',
-      title: 'API Key',
-      type: 'string',
+      name: "apiKey",
+      title: "API Key",
+      type: "string",
       hidden: ({ parent }) => !parent?.apiEnabled, // Hide if API disabled
-      validation: Rule => 
+      validation: (Rule) =>
         Rule.custom((value, context) => {
           if (context.parent?.apiEnabled && !value) {
-            return 'API Key is required when API is enabled';
+            return "API Key is required when API is enabled";
           }
           return true;
-        })
-    })
-  ]
+        }),
+    }),
+  ],
 });
 ```
 
@@ -509,11 +514,11 @@ const settingsWithFallbacks = await loadQuery(`{
 ```typescript
 // Good: Group related settings together
 const ecommerceSettings = defineSetting({
-  name: 'ecommerce',
-  title: 'E-commerce',
+  name: "ecommerce",
+  title: "E-commerce",
   fields: [
     // All e-commerce related settings
-  ]
+  ],
 });
 
 // Avoid: Scattered individual settings
@@ -523,11 +528,11 @@ const ecommerceSettings = defineSetting({
 
 ```typescript
 defineField({
-  name: 'gtmId',
-  title: 'Google Tag Manager ID',
-  type: 'string',
-  description: 'Find this in your GTM dashboard. Format: GTM-XXXXXXX',
-  placeholder: 'GTM-XXXXXXX'
+  name: "gtmId",
+  title: "Google Tag Manager ID",
+  type: "string",
+  description: "Find this in your GTM dashboard. Format: GTM-XXXXXXX",
+  placeholder: "GTM-XXXXXXX",
 });
 ```
 
@@ -535,13 +540,11 @@ defineField({
 
 ```typescript
 defineField({
-  name: 'apiKey',
-  title: 'API Key',
-  type: 'string',
-  validation: Rule => 
-    Rule.required()
-      .min(32)
-      .error('API key must be at least 32 characters')
+  name: "apiKey",
+  title: "API Key",
+  type: "string",
+  validation: (Rule) =>
+    Rule.required().min(32).error("API key must be at least 32 characters"),
 });
 ```
 
@@ -549,11 +552,11 @@ defineField({
 
 ```typescript
 defineField({
-  name: 'itemsPerPage',
-  title: 'Items Per Page',
-  type: 'number',
+  name: "itemsPerPage",
+  title: "Items Per Page",
+  type: "number",
   initialValue: 10,
-  validation: Rule => Rule.min(1).max(100)
+  validation: (Rule) => Rule.min(1).max(100),
 });
 ```
 
@@ -561,24 +564,24 @@ defineField({
 
 ```typescript
 // Different settings for different environments
-const isDev = process.env.NODE_ENV === 'development';
+const isDev = process.env.NODE_ENV === "development";
 
 const analyticsSettings = defineSetting({
-  name: 'analytics',
+  name: "analytics",
   fields: [
     defineField({
-      name: 'debugMode',
-      title: 'Debug Mode',
-      type: 'boolean',
+      name: "debugMode",
+      title: "Debug Mode",
+      type: "boolean",
       initialValue: isDev,
-      readOnly: !isDev
-    })
-  ]
+      readOnly: !isDev,
+    }),
+  ],
 });
 ```
 
 ## Related Documentation
 
 - [Configuration](./configuration.md) - Adding custom settings
-- [Components](./components.md) - Using settings in components  
+- [Components](./components.md) - Using settings in components
 - [API Reference](./api-reference.md) - Settings API documentation

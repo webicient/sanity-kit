@@ -11,18 +11,18 @@ Complete API documentation for all @webicient/sanity-kit exports.
 Creates and validates a kit configuration object.
 
 **Parameters:**
+
 - `config` (KitConfig): Configuration object
 
 **Returns:** Validated KitConfig object
 
 **Example:**
+
 ```typescript
-import { kitConfig } from '@webicient/sanity-kit';
+import { kitConfig } from "@webicient/sanity-kit";
 
 const config = kitConfig({
-  languages: [
-    { id: 'en', title: 'English', isDefault: true }
-  ]
+  languages: [{ id: "en", title: "English", isDefault: true }],
 });
 ```
 
@@ -31,17 +31,19 @@ const config = kitConfig({
 Sanity plugin factory function.
 
 **Parameters:**
+
 - `config` (KitConfig): Kit configuration
 
 **Returns:** Sanity plugin instance
 
 **Example:**
+
 ```typescript
-import { sanityKit } from '@webicient/sanity-kit';
-import { defineConfig } from 'sanity';
+import { sanityKit } from "@webicient/sanity-kit";
+import { defineConfig } from "sanity";
 
 export default defineConfig({
-  plugins: [sanityKit(config)]
+  plugins: [sanityKit(config)],
 });
 ```
 
@@ -52,6 +54,7 @@ export default defineConfig({
 Defines a content type (collection) schema.
 
 **Parameters:**
+
 - `contentType` (ContentType): Content type definition
   - `name` (string, required): Schema name
   - `title` (string, required): Display title
@@ -68,17 +71,16 @@ Defines a content type (collection) schema.
 **Returns:** ContentType object
 
 **Example:**
+
 ```typescript
 const product = defineContentType({
-  name: 'product',
-  title: 'Product',
-  pluralTitle: 'Products',
-  supports: ['title', 'slug', 'seo'],
-  rewrite: '/products/:slug',
+  name: "product",
+  title: "Product",
+  pluralTitle: "Products",
+  supports: ["title", "slug", "seo"],
+  rewrite: "/products/:slug",
   translate: true,
-  taxonomies: [
-    { name: 'category', multiple: true }
-  ]
+  taxonomies: [{ name: "category", multiple: true }],
 });
 ```
 
@@ -87,6 +89,7 @@ const product = defineContentType({
 Defines an entity (singleton) schema.
 
 **Parameters:**
+
 - `entity` (Entity): Entity definition
   - `name` (string, required): Schema name
   - `title` (string, required): Display title
@@ -100,12 +103,13 @@ Defines an entity (singleton) schema.
 **Returns:** Entity object
 
 **Example:**
+
 ```typescript
 const about = defineEntity({
-  name: 'about',
-  title: 'About Page',
-  supports: ['seo', 'modules'],
-  rewrite: '/about'
+  name: "about",
+  title: "About Page",
+  supports: ["seo", "modules"],
+  rewrite: "/about",
 });
 ```
 
@@ -114,6 +118,7 @@ const about = defineEntity({
 Defines a settings schema.
 
 **Parameters:**
+
 - `setting` (Setting): Setting definition
   - `name` (string, required): Schema name
   - `title` (string, required): Display title
@@ -123,17 +128,18 @@ Defines a settings schema.
 **Returns:** Setting object
 
 **Example:**
+
 ```typescript
 const shopSettings = defineSetting({
-  name: 'shop',
-  title: 'Shop Settings',
+  name: "shop",
+  title: "Shop Settings",
   fields: [
     defineField({
-      name: 'currency',
-      type: 'string',
-      title: 'Currency'
-    })
-  ]
+      name: "currency",
+      type: "string",
+      title: "Currency",
+    }),
+  ],
 });
 ```
 
@@ -142,6 +148,7 @@ const shopSettings = defineSetting({
 Defines a taxonomy schema.
 
 **Parameters:**
+
 - `taxonomy` (Taxonomy): Taxonomy definition
   - `name` (string, required): Schema name
   - `title` (string, required): Display title
@@ -153,12 +160,13 @@ Defines a taxonomy schema.
 **Returns:** Taxonomy object
 
 **Example:**
+
 ```typescript
 const brand = defineTaxonomy({
-  name: 'brand',
-  title: 'Brand',
-  pluralTitle: 'Brands',
-  supports: ['title', 'slug', 'description']
+  name: "brand",
+  title: "Brand",
+  pluralTitle: "Brands",
+  supports: ["title", "slug", "description"],
 });
 ```
 
@@ -167,6 +175,7 @@ const brand = defineTaxonomy({
 Defines a content builder module.
 
 **Parameters:**
+
 - `module` (Module): Module definition
   - `name` (string, required): Module name (must start with 'module.')
   - `title` (string, required): Display title
@@ -178,23 +187,24 @@ Defines a content builder module.
 **Returns:** Module object
 
 **Example:**
+
 ```typescript
 const hero = defineModule({
-  name: 'module.hero',
-  title: 'Hero Section',
+  name: "module.hero",
+  title: "Hero Section",
   fields: [
     defineField({
-      name: 'heading',
-      type: 'string',
-      title: 'Heading'
-    })
+      name: "heading",
+      type: "string",
+      title: "Heading",
+    }),
   ],
   renderer: HeroComponent,
-  imageUrl: '/modules/hero.png',
+  imageUrl: "/modules/hero.png",
   query: (language) => `
     heading,
     subheading
-  `
+  `,
 });
 ```
 
@@ -203,6 +213,7 @@ const hero = defineModule({
 Defines a custom studio structure.
 
 **Parameters:**
+
 - `structure` (Structure): Structure definition
   - `menu?` (StructureMenu): Menu configuration
   - `builder?` (function): Structure builder function
@@ -218,6 +229,7 @@ Defines a custom studio structure.
 Loads data using GROQ query with appropriate caching.
 
 **Parameters:**
+
 - `query` (string): GROQ query string
 - `params` (QueryParams, optional): Query parameters
 - `options` (QueryOptions, optional): Query options
@@ -227,13 +239,14 @@ Loads data using GROQ query with appropriate caching.
 **Returns:** Promise resolving to QueryResult with data and metadata
 
 **Example:**
+
 ```typescript
-import { loadQuery } from '@webicient/sanity-kit/query';
+import { loadQuery } from "@webicient/sanity-kit/query";
 
 const { data } = await loadQuery(
   `*[_type == "page" && slug.current == $slug][0]`,
-  { slug: 'home' },
-  { next: { tags: ['page:home'] } }
+  { slug: "home" },
+  { next: { tags: ["page:home"] } },
 );
 ```
 
@@ -244,6 +257,7 @@ const { data } = await loadQuery(
 Loads a content type document by slug.
 
 **Parameters:**
+
 - `name` (string): Content type name
 - `slug` (string): Document slug
 - `language` (string, optional): Language code
@@ -255,6 +269,7 @@ Loads a content type document by slug.
 Loads an entity (singleton) document.
 
 **Parameters:**
+
 - `name` (string): Entity name
 - `language` (string, optional): Language code
 
@@ -265,6 +280,7 @@ Loads an entity (singleton) document.
 Loads all settings documents.
 
 **Parameters:**
+
 - `language` (string, optional): Language code
 
 **Returns:** Promise resolving to settings object
@@ -274,6 +290,7 @@ Loads all settings documents.
 Loads a taxonomy document by slug.
 
 **Parameters:**
+
 - `name` (string): Taxonomy name
 - `slug` (string): Document slug
 - `language` (string, optional): Language code
@@ -287,12 +304,11 @@ Loads a taxonomy document by slug.
 Pre-configured Sanity client for server-side queries.
 
 **Example:**
-```typescript
-import { serverClient } from '@webicient/sanity-kit/query';
 
-const data = await serverClient.fetch(
-  `*[_type == "page"][0...10]`
-);
+```typescript
+import { serverClient } from "@webicient/sanity-kit/query";
+
+const data = await serverClient.fetch(`*[_type == "page"][0...10]`);
 ```
 
 ### React Hooks
@@ -302,12 +318,14 @@ const data = await serverClient.fetch(
 React hook for client-side data fetching.
 
 **Parameters:**
+
 - `query` (string): GROQ query string
 - `params` (QueryParams, optional): Query parameters
 
 **Returns:** QueryResult with data and loading state
 
 **Example:**
+
 ```typescript
 import { useQuery } from '@webicient/sanity-kit/query';
 
@@ -315,10 +333,10 @@ function Component() {
   const { data, loading, error } = useQuery(
     `*[_type == "post"][0...10]`
   );
-  
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
-  
+
   return <div>{/* Render data */}</div>;
 }
 ```
@@ -332,9 +350,11 @@ function Component() {
 Renders an array of content modules.
 
 **Props:**
+
 - `data` (array): Array of module objects
 
 **Example:**
+
 ```typescript
 import { ModuleResolver } from '@webicient/sanity-kit/resolvers';
 
@@ -346,16 +366,18 @@ import { ModuleResolver } from '@webicient/sanity-kit/resolvers';
 Renders responsive images with Sanity image optimization.
 
 **Props:**
+
 - Image data from Sanity
 - `alt?` (string): Alt text
 - `className?` (string): CSS classes
 - `sizes?` (string): Responsive sizes
 
 **Example:**
+
 ```typescript
 import { ImageResolver } from '@webicient/sanity-kit/resolvers';
 
-<ImageResolver 
+<ImageResolver
   {...page.featuredImage}
   alt="Featured image"
   className="w-full h-auto"
@@ -367,15 +389,17 @@ import { ImageResolver } from '@webicient/sanity-kit/resolvers';
 Renders internal or external links.
 
 **Props:**
+
 - Link data from Sanity
 - `className?` (string): CSS classes
 - `children` (ReactNode): Link content
 
 **Example:**
+
 ```typescript
 import { LinkResolver } from '@webicient/sanity-kit/resolvers';
 
-<LinkResolver 
+<LinkResolver
   {...page.cta}
   className="btn btn-primary"
 >
@@ -392,10 +416,12 @@ import { LinkResolver } from '@webicient/sanity-kit/resolvers';
 Provides kit context to child components.
 
 **Props:**
+
 - `settings` (object): Settings from Sanity
 - `children` (ReactNode): Child components
 
 **Example:**
+
 ```typescript
 import { KitProvider } from '@webicient/sanity-kit/provider';
 
@@ -411,17 +437,19 @@ import { KitProvider } from '@webicient/sanity-kit/provider';
 Access kit context values.
 
 **Returns:**
+
 - `settings` (object): Global settings
 - `translations` (object): Translation data
 - `setTranslations` (function): Update translations
 
 **Example:**
+
 ```typescript
 import { useKit } from '@webicient/sanity-kit/provider';
 
 function Component() {
   const { settings } = useKit();
-  
+
   return <div>{settings.generalSettings?.siteName}</div>;
 }
 ```
@@ -435,13 +463,14 @@ function Component() {
 Enables visual editing in preview mode.
 
 **Example:**
+
 ```typescript
 import { KitVisualEditing } from '@webicient/sanity-kit/visual-editing';
 import { draftMode } from 'next/headers';
 
 export default function Layout({ children }) {
   const { isEnabled } = draftMode();
-  
+
   return (
     <>
       {children}
@@ -456,6 +485,7 @@ export default function Layout({ children }) {
 Provides UI to disable preview mode.
 
 **Example:**
+
 ```typescript
 import { DisablePreviewMode } from '@webicient/sanity-kit/visual-editing';
 
@@ -493,12 +523,13 @@ Generates GROQ query for taxonomy documents.
 Generates static paths for content types.
 
 **Example:**
+
 ```typescript
-import { generateStaticSlugs } from '@webicient/sanity-kit/queries';
+import { generateStaticSlugs } from "@webicient/sanity-kit/queries";
 
 export async function generateStaticParams() {
-  const slugs = await generateStaticSlugs('page');
-  return slugs.map(slug => ({ slug }));
+  const slugs = await generateStaticSlugs("page");
+  return slugs.map((slug) => ({ slug }));
 }
 ```
 
@@ -531,13 +562,14 @@ Resolves document href.
 Generates Next.js metadata object.
 
 **Example:**
+
 ```typescript
-import { generateMetadata } from '@webicient/sanity-kit/utils';
+import { generateMetadata } from "@webicient/sanity-kit/utils";
 
 export async function generateMetadata({ params }) {
   const page = await loadPage(params.slug);
   const settings = await loadSettings();
-  
+
   return generateMetadata(page, settings);
 }
 ```
@@ -585,15 +617,15 @@ interface Module {
 }
 
 // Supported fields
-type Supports = 
-  | 'title'
-  | 'slug'
-  | 'seo'
-  | 'modules'
-  | 'body'
-  | 'excerpt'
-  | 'featuredImage'
-  | 'publishedAt';
+type Supports =
+  | "title"
+  | "slug"
+  | "seo"
+  | "modules"
+  | "body"
+  | "excerpt"
+  | "featuredImage"
+  | "publishedAt";
 ```
 
 ## Environment Variables
@@ -621,9 +653,9 @@ try {
   const { data } = await loadQuery(query);
   // Handle data
 } catch (error) {
-  if (error.code === 'QUERY_ERROR') {
+  if (error.code === "QUERY_ERROR") {
     // Handle query error
-  } else if (error.code === 'NETWORK_ERROR') {
+  } else if (error.code === "NETWORK_ERROR") {
     // Handle network error
   }
 }

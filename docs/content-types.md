@@ -81,7 +81,7 @@ export const post = defineContentType({
   taxonomies: [{ name: "category", multiple: true, required: true }],
   supports: [
     "title",
-    "slug", 
+    "slug",
     "publishedAt",
     "featuredImage",
     "excerpt",
@@ -157,7 +157,7 @@ URL redirect management for SEO and migration.
 ```typescript
 export const redirect = defineContentType({
   name: "redirect",
-  title: "Redirect", 
+  title: "Redirect",
   pluralTitle: "Redirects",
   icon: LinkIcon,
   supports: [],
@@ -167,7 +167,7 @@ export const redirect = defineContentType({
   },
   fields: [
     // Custom fields for redirect management
-  ]
+  ],
 });
 ```
 
@@ -201,8 +201,8 @@ const redirectsQuery = `
 // In Next.js middleware for redirect handling
 export function middleware(request: NextRequest) {
   const { data: redirects } = await loadQuery(redirectsQuery);
-  
-  const redirect = redirects.find(r => r.source === request.nextUrl.pathname);
+
+  const redirect = redirects.find((r) => r.source === request.nextUrl.pathname);
   if (redirect) {
     return NextResponse.redirect(redirect.destination, redirect.statusCode);
   }
@@ -219,12 +219,12 @@ Reusable content modules for consistent branding.
 export const preset = defineContentType({
   name: "preset",
   title: "Preset",
-  pluralTitle: "Presets", 
+  pluralTitle: "Presets",
   icon: StackIcon,
   supports: ["title", "modules"],
   menu: {
     level: 3,
-  }
+  },
 });
 ```
 
@@ -278,7 +278,7 @@ export const category = defineTaxonomy({
   title: "Category",
   pluralTitle: "Categories",
   supports: ["title", "slug", "description"],
-  translate: true
+  translate: true,
 });
 ```
 
@@ -329,24 +329,24 @@ export default kitConfig({
   schema: {
     contentTypes: [
       defineContentType({
-        name: 'post',
+        name: "post",
         // Inherits all default post configuration
         fields: [
           defineField({
-            name: 'author',
-            title: 'Author',
-            type: 'reference',
-            to: [{ type: 'author' }]
+            name: "author",
+            title: "Author",
+            type: "reference",
+            to: [{ type: "author" }],
           }),
           defineField({
-            name: 'readingTime',
-            title: 'Reading Time (minutes)',
-            type: 'number'
-          })
-        ]
-      })
-    ]
-  }
+            name: "readingTime",
+            title: "Reading Time (minutes)",
+            type: "number",
+          }),
+        ],
+      }),
+    ],
+  },
 });
 ```
 
@@ -357,9 +357,9 @@ export default kitConfig({
 export default kitConfig({
   disableDefault: {
     schema: {
-      contentTypes: ['redirect', 'preset'] // Disable these
-    }
-  }
+      contentTypes: ["redirect", "preset"], // Disable these
+    },
+  },
 });
 ```
 
@@ -368,14 +368,14 @@ export default kitConfig({
 ```typescript
 // Custom URL patterns
 const customPost = defineContentType({
-  name: 'post',
-  rewrite: '/blog/:slug', // Custom blog path
+  name: "post",
+  rewrite: "/blog/:slug", // Custom blog path
   // ... other configuration
 });
 
 const customPage = defineContentType({
-  name: 'page', 
-  rewrite: '/pages/:slug', // Custom page path
+  name: "page",
+  rewrite: "/pages/:slug", // Custom page path
   // ... other configuration
 });
 ```
@@ -393,32 +393,30 @@ const customPage = defineContentType({
 
 ```typescript
 // Good: Use required categories for better content organization
-taxonomies: [
-  { name: "category", multiple: true, required: true }
-]
+taxonomies: [{ name: "category", multiple: true, required: true }];
 ```
 
 ### 3. Optimize for SEO
 
 ```typescript
 // Always include SEO support for public content
-supports: ["title", "slug", "seo"]
+supports: ["title", "slug", "seo"];
 ```
 
 ### 4. Consider Translation Needs
 
 ```typescript
 // Enable translation for global content
-translate: true
+translate: true;
 ```
 
 ### 5. Plan URL Structure
 
 ```typescript
 // Consistent URL patterns
-rewrite: "/blog/:slug"     // For posts
-rewrite: "/:slug"          // For pages (hierarchical)
-rewrite: "/products/:slug" // For products
+rewrite: "/blog/:slug"; // For posts
+rewrite: "/:slug"; // For pages (hierarchical)
+rewrite: "/products/:slug"; // For products
 ```
 
 ## Integration with Next.js
@@ -433,9 +431,9 @@ export async function generateStaticParams() {
       "slug": slug.current
     }
   `);
-  
-  return pages.map(page => ({
-    slug: page.slug.split('/').filter(Boolean)
+
+  return pages.map((page) => ({
+    slug: page.slug.split("/").filter(Boolean),
   }));
 }
 ```
@@ -446,9 +444,9 @@ export async function generateStaticParams() {
 // app/blog/[slug]/page.tsx
 export default async function BlogPost({ params }: { params: { slug: string } }) {
   const { data: post } = await loadQuery(postQuery, { slug: params.slug });
-  
+
   if (!post) notFound();
-  
+
   return (
     <article>
       <h1>{post.title}</h1>

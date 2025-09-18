@@ -67,18 +67,18 @@ Or update your package.json to match the required versions:
 
 ```typescript
 // ❌ Incorrect
-import { sanityKit } from '@webicient/sanity-kit';
+import { sanityKit } from "@webicient/sanity-kit";
 
 export default defineConfig({
-  plugins: [sanityKit] // Missing function call
+  plugins: [sanityKit], // Missing function call
 });
 
 // ✅ Correct
-import { sanityKit } from '@webicient/sanity-kit';
-import kitConfig from './kit.config';
+import { sanityKit } from "@webicient/sanity-kit";
+import kitConfig from "./kit.config";
 
 export default defineConfig({
-  plugins: [sanityKit(kitConfig)] // Pass configuration
+  plugins: [sanityKit(kitConfig)], // Pass configuration
 });
 ```
 
@@ -90,17 +90,17 @@ export default defineConfig({
 
 ```typescript
 // kit.config.ts
-import { kitConfig } from '@webicient/sanity-kit';
+import { kitConfig } from "@webicient/sanity-kit";
 
 export default kitConfig({
   // Your configuration
 });
 
 // sanity.config.ts
-import kitConfig from './kit.config'; // Import your config
+import kitConfig from "./kit.config"; // Import your config
 
 export default defineConfig({
-  plugins: [sanityKit(kitConfig)]
+  plugins: [sanityKit(kitConfig)],
 });
 ```
 
@@ -113,15 +113,15 @@ export default defineConfig({
 ```typescript
 // ❌ Incorrect
 defineModule({
-  name: 'hero',
+  name: "hero",
   // ...
-})
+});
 
 // ✅ Correct
 defineModule({
-  name: 'module.hero',
+  name: "module.hero",
   // ...
-})
+});
 ```
 
 ### Rewrite Path Error
@@ -133,17 +133,17 @@ defineModule({
 ```typescript
 // ❌ Incorrect
 defineContentType({
-  name: 'product',
-  rewrite: '/products',
+  name: "product",
+  rewrite: "/products",
   // ...
-})
+});
 
 // ✅ Correct
 defineContentType({
-  name: 'product',
-  rewrite: '/products/:slug',
+  name: "product",
+  rewrite: "/products/:slug",
   // ...
-})
+});
 ```
 
 ## Schema Issues
@@ -157,25 +157,25 @@ defineContentType({
 ```typescript
 // Option 1: Use unique names
 defineContentType({
-  name: 'customPage', // Different from default 'page'
+  name: "customPage", // Different from default 'page'
   // ...
-})
+});
 
 // Option 2: Disable default and replace
 export default kitConfig({
   disableDefault: {
     schema: {
-      contentTypes: ['page']
-    }
+      contentTypes: ["page"],
+    },
   },
   schema: {
     contentTypes: [
       defineContentType({
-        name: 'page', // Now you can use 'page'
+        name: "page", // Now you can use 'page'
         // ...
-      })
-    ]
-  }
+      }),
+    ],
+  },
 });
 ```
 
@@ -188,17 +188,17 @@ export default kitConfig({
 ```typescript
 // ❌ Incorrect
 defineField({
-  name: 'price',
-  type: 'number',
-  validation: Rule => Rule.required() && Rule.positive() // Wrong syntax
-})
+  name: "price",
+  type: "number",
+  validation: (Rule) => Rule.required() && Rule.positive(), // Wrong syntax
+});
 
 // ✅ Correct
 defineField({
-  name: 'price',
-  type: 'number',
-  validation: Rule => Rule.required().positive()
-})
+  name: "price",
+  type: "number",
+  validation: (Rule) => Rule.required().positive(),
+});
 ```
 
 ### Translation Fields Not Showing
@@ -211,18 +211,18 @@ defineField({
 // Ensure languages are configured
 export default kitConfig({
   languages: [
-    { id: 'en', title: 'English', isDefault: true },
-    { id: 'es', title: 'Spanish' }
+    { id: "en", title: "English", isDefault: true },
+    { id: "es", title: "Spanish" },
   ],
   schema: {
     contentTypes: [
       defineContentType({
-        name: 'page',
+        name: "page",
         translate: true, // Enable translation
         // ...
-      })
-    ]
-  }
+      }),
+    ],
+  },
 });
 ```
 
@@ -240,10 +240,10 @@ const query = `*[_type == \"page\" && slug.current == $slug][0]`;
 
 // Add error handling
 try {
-  const { data } = await loadQuery(query, { slug: 'home' });
+  const { data } = await loadQuery(query, { slug: "home" });
   console.log(data);
 } catch (error) {
-  console.error('Query failed:', error);
+  console.error("Query failed:", error);
 }
 ```
 
@@ -257,12 +257,12 @@ try {
 // Debug the query
 const debugQuery = `*[_type == \"page\"]`; // List all pages first
 const { data: allPages } = await loadQuery(debugQuery);
-console.log('All pages:', allPages);
+console.log("All pages:", allPages);
 
 // Then test specific query
 const specificQuery = `*[_type == \"page\" && slug.current == $slug][0]`;
-const { data: page } = await loadQuery(specificQuery, { slug: 'home' });
-console.log('Specific page:', page);
+const { data: page } = await loadQuery(specificQuery, { slug: "home" });
+console.log("Specific page:", page);
 ```
 
 ### Missing Query Fields
@@ -303,13 +303,13 @@ export default kitConfig({
     modules: [
       heroModule, // Ensure module is included
       // ... other modules
-    ]
-  }
+    ],
+  },
 });
 
 // Verify renderer is properly assigned
 defineModule({
-  name: 'module.hero',
+  name: "module.hero",
   renderer: HeroComponent, // Component must be imported
   // ...
 });
@@ -354,15 +354,15 @@ export default kitConfig({
   resolve: {
     hrefResolver: (prev, documentType, params, document) => {
       switch (documentType) {
-        case 'page':
+        case "page":
           return `/${params?.slug}`;
-        case 'post':
+        case "post":
           return `/blog/${params?.slug}`;
         default:
           return prev;
       }
-    }
-  }
+    },
+  },
 });
 ```
 
@@ -392,16 +392,16 @@ npm run dev
 
 ```typescript
 // app/api/draft/enable/route.ts
-import { validatePreviewUrl } from '@sanity/preview-url-secret';
-import { draftMode } from 'next/headers';
+import { validatePreviewUrl } from "@sanity/preview-url-secret";
+import { draftMode } from "next/headers";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  
+
   if (!process.env.SANITY_API_TOKEN) {
-    return new Response('Missing SANITY_API_TOKEN', { status: 500 });
+    return new Response("Missing SANITY_API_TOKEN", { status: 500 });
   }
-  
+
   // ... rest of implementation
 }
 ```
@@ -451,9 +451,9 @@ const { data } = await loadQuery(
   {
     next: {
       revalidate: 3600, // Cache for 1 hour
-      tags: ['pages']
-    }
-  }
+      tags: ["pages"],
+    },
+  },
 );
 ```
 
@@ -535,10 +535,8 @@ npm run build -- --verbose
 export default defineConfig({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!, // Required
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET!, // Required
-  
-  plugins: [
-    sanityKit(kitConfig)
-  ]
+
+  plugins: [sanityKit(kitConfig)],
 });
 ```
 
@@ -564,10 +562,10 @@ export default defineConfig({
 export default defineConfig({
   plugins: [
     structureTool({
-      structure: customStructure // Make sure this is defined
+      structure: customStructure, // Make sure this is defined
     }),
-    sanityKit(kitConfig) // Kit will override structure
-  ]
+    sanityKit(kitConfig), // Kit will override structure
+  ],
 });
 ```
 

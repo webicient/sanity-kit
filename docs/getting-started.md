@@ -44,13 +44,13 @@ Create a `kit.config.ts` file in your project root:
 
 ```typescript
 // kit.config.ts
-import { kitConfig } from '@webicient/sanity-kit';
+import { kitConfig } from "@webicient/sanity-kit";
 
 export default kitConfig({
   // Basic configuration - no languages means single language mode
   schema: {
     // Your custom schemas will be merged with defaults
-  }
+  },
 });
 ```
 
@@ -60,17 +60,15 @@ Update your `sanity.config.ts` to use the plugin:
 
 ```typescript
 // sanity.config.ts
-import { defineConfig } from 'sanity';
-import { sanityKit } from '@webicient/sanity-kit';
-import kitConfig from './kit.config';
+import { defineConfig } from "sanity";
+import { sanityKit } from "@webicient/sanity-kit";
+import kitConfig from "./kit.config";
 
 export default defineConfig({
   projectId: process.env.SANITY_PROJECT_ID!,
-  dataset: process.env.SANITY_DATASET || 'production',
-  
-  plugins: [
-    sanityKit(kitConfig)
-  ]
+  dataset: process.env.SANITY_DATASET || "production",
+
+  plugins: [sanityKit(kitConfig)],
 });
 ```
 
@@ -94,21 +92,21 @@ To enable multi-language support, update your kit configuration:
 
 ```typescript
 // kit.config.ts
-import { kitConfig } from '@webicient/sanity-kit';
+import { kitConfig } from "@webicient/sanity-kit";
 
 export default kitConfig({
   languages: [
-    { id: 'en', title: 'English', isDefault: true },
-    { id: 'es', title: 'Spanish' },
-    { id: 'fr', title: 'French' }
+    { id: "en", title: "English", isDefault: true },
+    { id: "es", title: "Spanish" },
+    { id: "fr", title: "French" },
   ],
-  
+
   schema: {
     // Schemas that support translation
     contentTypes: [
       // Your translatable content types
-    ]
-  }
+    ],
+  },
 });
 ```
 
@@ -155,7 +153,7 @@ export default async function RootLayout({
 }) {
   // Load all settings from Sanity
   const settings = await loadSettings();
-  
+
   return (
     <html lang="en">
       <body className={inter.className}>
@@ -184,11 +182,11 @@ export default async function HomePage() {
     {},
     { next: { tags: ['home'] } }
   );
-  
+
   if (!home) {
     return <div>Home page not configured</div>;
   }
-  
+
   return (
     <main>
       <h1>{home.title}</h1>
@@ -222,17 +220,17 @@ export async function generateStaticParams() {
 
 export default async function Page({ params }: PageProps) {
   const slug = params.slug.join('/');
-  
+
   const { data: page } = await loadQuery(
     pageQuery(slug),
     { slug },
     { next: { tags: [`page:${slug}`] } }
   );
-  
+
   if (!page) {
     notFound();
   }
-  
+
   return (
     <main>
       <h1>{page.title}</h1>
@@ -250,23 +248,23 @@ Create API routes for draft mode:
 
 ```typescript
 // app/api/draft/enable/route.ts
-import { validatePreviewUrl } from '@sanity/preview-url-secret';
-import { draftMode } from 'next/headers';
-import { redirect } from 'next/navigation';
-import { serverClient } from '@webicient/sanity-kit/query';
+import { validatePreviewUrl } from "@sanity/preview-url-secret";
+import { draftMode } from "next/headers";
+import { redirect } from "next/navigation";
+import { serverClient } from "@webicient/sanity-kit/query";
 
 const token = process.env.SANITY_API_TOKEN!;
 
 export async function GET(request: Request) {
-  const { isValid, redirectTo = '/' } = await validatePreviewUrl(
+  const { isValid, redirectTo = "/" } = await validatePreviewUrl(
     serverClient.withConfig({ token }),
-    request.url
+    request.url,
   );
-  
+
   if (!isValid) {
-    return new Response('Invalid secret', { status: 401 });
+    return new Response("Invalid secret", { status: 401 });
   }
-  
+
   draftMode().enable();
   redirect(redirectTo);
 }
@@ -274,12 +272,12 @@ export async function GET(request: Request) {
 
 ```typescript
 // app/api/draft/disable/route.ts
-import { draftMode } from 'next/headers';
-import { redirect } from 'next/navigation';
+import { draftMode } from "next/headers";
+import { redirect } from "next/navigation";
 
 export async function GET() {
   draftMode().disable();
-  redirect('/');
+  redirect("/");
 }
 ```
 
@@ -299,7 +297,7 @@ export default async function RootLayout({
 }) {
   const settings = await loadSettings();
   const { isEnabled } = draftMode();
-  
+
   return (
     <html lang="en">
       <body>
@@ -318,6 +316,7 @@ export default async function RootLayout({
 ### Step 1: Check Studio
 
 1. Start your development server:
+
    ```bash
    npm run dev
    ```
@@ -333,6 +332,7 @@ export default async function RootLayout({
 ### Step 2: Create Test Content
 
 1. Create a new Page:
+
    - Click on "Pages" → "Create new"
    - Fill in Title and Slug
    - Add some modules if configured
@@ -345,6 +345,7 @@ export default async function RootLayout({
 ### Step 3: Test Frontend
 
 Visit your Next.js application and verify:
+
 - Home page loads with content from Sanity
 - Dynamic pages work with your test page
 - Visual editing works in draft mode

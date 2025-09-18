@@ -4,6 +4,7 @@ import { getDefaultLanguage } from "../../utils/config";
 import { hierarchyQueryFields } from "../../queries/hierarchy";
 import groq from "groq";
 import { resolveDocumentHref } from "../../utils/url";
+import { getConfig } from "../kitConfig";
 
 /**
  * Resolves the production URL for a document.
@@ -33,6 +34,12 @@ export async function productionUrl(
   const result = await getClient({ apiVersion: API_VERSION }).fetch(query, {
     id: document._id,
   });
+
+  if (getConfig().draftPreview) {
+    return defaultLanguageId
+      ? `/api/draft/enable?slug=/${defaultLanguageId}${resolveDocumentHref(result)}`
+      : `/api/draft/enable?slug=${resolveDocumentHref(result)}`;
+  }
 
   return defaultLanguageId
     ? `/${defaultLanguageId}${resolveDocumentHref(result)}`

@@ -2,7 +2,6 @@ import { kitConfig } from "@webicient/sanity-kit";
 import cards from "@/modules/cards";
 import pages from "@/modules/pages";
 import service from "@/schema/service";
-import { defineType } from "sanity";
 import { customStructure } from "@/schema/structure";
 
 export default kitConfig({
@@ -15,4 +14,5 @@ export default kitConfig({
     contentTypes: [service],
     structures: [customStructure],
   },
+  draftPreview: true,
 });

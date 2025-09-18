@@ -13,35 +13,35 @@ Complete guide to querying data with @webicient/sanity-kit using GROQ and React 
 The plugin provides pre-built query functions for common content types:
 
 ```typescript
-import { 
+import {
   pageQuery,
-  postQuery, 
+  postQuery,
   entityQuery,
   settingsQuery,
-  taxonomyQuery
-} from '@webicient/sanity-kit/queries';
+  taxonomyQuery,
+} from "@webicient/sanity-kit/queries";
 
 // Query a page by slug
-const query = pageQuery('home', 'en');
+const query = pageQuery("home", "en");
 
-// Query a post by slug  
-const query = postQuery('my-post', 'en');
+// Query a post by slug
+const query = postQuery("my-post", "en");
 
 // Query an entity (singleton)
-const query = entityQuery('home', 'en');
+const query = entityQuery("home", "en");
 
 // Query all settings
-const query = settingsQuery('en');
+const query = settingsQuery("en");
 
 // Query taxonomy by slug
-const query = taxonomyQuery('category', 'tech', 'en');
+const query = taxonomyQuery("category", "tech", "en");
 ```
 
 ### Page Queries
 
 ```typescript
 // Basic page query
-const basicPageQuery = pageQuery('about');
+const basicPageQuery = pageQuery("about");
 
 // Generates:
 `*[_type == "page" && slug.current == "about"][0] {
@@ -53,10 +53,10 @@ const basicPageQuery = pageQuery('about');
     _key,
     ...
   }
-}`
+}`;
 
 // With language support
-const localizedPageQuery = pageQuery('about', 'es');
+const localizedPageQuery = pageQuery("about", "es");
 
 // Generates language-aware query with coalesce
 `*[_type == "page" && slug.current == "about"][0] {
@@ -68,7 +68,7 @@ const localizedPageQuery = pageQuery('about', 'es');
     _key,
     ...coalesce(es, @)
   }
-}`
+}`;
 ```
 
 ### Post Queries
@@ -122,10 +122,10 @@ const postsByCategoryQuery = `
 
 ```typescript
 // Home page entity
-const homeQuery = entityQuery('home');
+const homeQuery = entityQuery("home");
 
-// About page entity  
-const aboutQuery = entityQuery('about');
+// About page entity
+const aboutQuery = entityQuery("about");
 
 // Custom entity query
 const customEntityQuery = `
@@ -181,7 +181,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
     pageQuery(params.slug),
     { slug: params.slug }
   );
-  
+
   return <div>{page?.title}</div>;
 }
 
@@ -197,7 +197,7 @@ export default async function BlogPost({ params }: { params: { slug: string } })
       }
     }
   );
-  
+
   return <article>{/* Render post */}</article>;
 }
 ```
@@ -207,46 +207,46 @@ export default async function BlogPost({ params }: { params: { slug: string } })
 Convenient functions for loading common document types:
 
 ```typescript
-import { 
+import {
   loadContentType,
   loadEntity,
   loadSettings,
-  loadTaxonomy
-} from '@webicient/sanity-kit/query';
+  loadTaxonomy,
+} from "@webicient/sanity-kit/query";
 
 // Load a content type document
-const page = await loadContentType('page', 'home', 'en');
+const page = await loadContentType("page", "home", "en");
 
-// Load an entity (singleton) 
-const home = await loadEntity('home', 'en');
+// Load an entity (singleton)
+const home = await loadEntity("home", "en");
 
 // Load all settings
-const settings = await loadSettings('en');
+const settings = await loadSettings("en");
 
 // Load a taxonomy document
-const category = await loadTaxonomy('category', 'technology', 'en');
+const category = await loadTaxonomy("category", "technology", "en");
 ```
 
 ### Static Path Generation
 
 ```typescript
-import { generateStaticSlugs } from '@webicient/sanity-kit/queries';
+import { generateStaticSlugs } from "@webicient/sanity-kit/queries";
 
 // Generate static paths for pages
 export async function generateStaticParams() {
-  const slugs = await generateStaticSlugs('page');
-  
+  const slugs = await generateStaticSlugs("page");
+
   return slugs.map((slug) => ({
-    slug: slug.split('/').filter(Boolean)
+    slug: slug.split("/").filter(Boolean),
   }));
 }
 
 // Generate paths for posts
 export async function generateStaticParams() {
-  const slugs = await generateStaticSlugs('post');
-  
+  const slugs = await generateStaticSlugs("post");
+
   return slugs.map((slug) => ({
-    slug
+    slug,
   }));
 }
 
@@ -258,10 +258,10 @@ const customStaticParams = async () => {
       "locale": language
     }
   `);
-  
-  return pages.map(page => ({
-    slug: page.slug.split('/').filter(Boolean),
-    locale: page.locale
+
+  return pages.map((page) => ({
+    slug: page.slug.split("/").filter(Boolean),
+    locale: page.locale,
   }));
 };
 ```
@@ -284,10 +284,10 @@ function BlogPostList() {
       featuredImage
     }
   `);
-  
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
-  
+
   return (
     <div>
       {posts?.map((post: any) => (
@@ -314,9 +314,9 @@ function SearchResults({ query }: { query: string }) {
     }`,
     { searchQuery: `${query}*` }
   );
-  
+
   if (loading) return <div>Searching...</div>;
-  
+
   return (
     <div>
       {results?.map((result: any) => (
@@ -531,10 +531,10 @@ const paginatedQuery = `
 `;
 
 // Usage
-const { data: posts } = await loadQuery(
-  paginatedQuery,
-  { start: page * limit, end: (page + 1) * limit - 1 }
-);
+const { data: posts } = await loadQuery(paginatedQuery, {
+  start: page * limit,
+  end: (page + 1) * limit - 1,
+});
 ```
 
 ### Caching Strategies
@@ -542,23 +542,23 @@ const { data: posts } = await loadQuery(
 ```typescript
 // Static content - cache for 24 hours
 const staticContent = await loadQuery(
-  pageQuery('about'),
-  { slug: 'about' },
-  { next: { revalidate: 86400 } }
+  pageQuery("about"),
+  { slug: "about" },
+  { next: { revalidate: 86400 } },
 );
 
 // Dynamic content - cache for 5 minutes
 const dynamicContent = await loadQuery(
   postsQuery,
   {},
-  { next: { revalidate: 300 } }
+  { next: { revalidate: 300 } },
 );
 
 // Real-time content - no cache
 const realTimeContent = await loadQuery(
   liveDataQuery,
   {},
-  { next: { revalidate: 0 } }
+  { next: { revalidate: 0 } },
 );
 ```
 
@@ -571,7 +571,7 @@ const realTimeContent = await loadQuery(
 export function buildContentQuery(
   type: string,
   slug: string,
-  language?: string
+  language?: string,
 ) {
   const baseProjection = `
     title,
@@ -579,8 +579,9 @@ export function buildContentQuery(
     seo,
     modules
   `;
-  
-  const localizedProjection = language ? `
+
+  const localizedProjection = language
+    ? `
     "title": coalesce(${language}.title, title),
     "slug": slug.current,
     "seo": coalesce(${language}.seo, seo),
@@ -589,8 +590,9 @@ export function buildContentQuery(
       _key,
       ...coalesce(${language}, @)
     }
-  ` : baseProjection;
-  
+  `
+    : baseProjection;
+
   return `
     *[_type == "${type}" && slug.current == "${slug}"][0] {
       ${localizedProjection}
@@ -681,9 +683,9 @@ if (error) {
 ```typescript
 function DataComponent() {
   const { data, loading, error } = useQuery(queryString);
-  
+
   if (loading) return <LoadingSpinner />;
-  
+
   if (error) {
     return (
       <ErrorBoundary>
@@ -691,11 +693,11 @@ function DataComponent() {
       </ErrorBoundary>
     );
   }
-  
+
   if (!data) {
     return <EmptyState />;
   }
-  
+
   return <DataDisplay data={data} />;
 }
 ```
@@ -722,18 +724,14 @@ const broadQuery = `*[_type == "post"]`;
 
 ```typescript
 // Cache static content longer
-const staticPage = await loadQuery(
-  pageQuery,
-  params,
-  { next: { revalidate: 3600, tags: ['page'] } }
-);
+const staticPage = await loadQuery(pageQuery, params, {
+  next: { revalidate: 3600, tags: ["page"] },
+});
 
 // Cache dynamic content shorter
-const dynamicList = await loadQuery(
-  listQuery,
-  params,
-  { next: { revalidate: 300, tags: ['posts'] } }
-);
+const dynamicList = await loadQuery(listQuery, params, {
+  next: { revalidate: 300, tags: ["posts"] },
+});
 ```
 
 ### 3. Handle Loading States
@@ -741,11 +739,11 @@ const dynamicList = await loadQuery(
 ```typescript
 function AsyncComponent() {
   const { data, loading, error } = useQuery(query);
-  
+
   if (loading) return <Skeleton />;
   if (error) return <ErrorState error={error} />;
   if (!data) return <EmptyState />;
-  
+
   return <DataComponent data={data} />;
 }
 ```
@@ -763,7 +761,7 @@ interface Post {
 const { data: posts } = await loadQuery<Post[]>(
   postsQuery,
   {},
-  { next: { tags: ['posts'] } }
+  { next: { tags: ["posts"] } },
 );
 ```
 

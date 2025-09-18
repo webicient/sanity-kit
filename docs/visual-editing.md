@@ -14,32 +14,32 @@ Create API routes to enable and disable draft mode:
 
 ```typescript
 // app/api/draft/enable/route.ts
-import { validatePreviewUrl } from '@sanity/preview-url-secret';
-import { draftMode } from 'next/headers';
-import { redirect } from 'next/navigation';
-import { serverClient } from '@webicient/sanity-kit/query';
+import { validatePreviewUrl } from "@sanity/preview-url-secret";
+import { draftMode } from "next/headers";
+import { redirect } from "next/navigation";
+import { serverClient } from "@webicient/sanity-kit/query";
 
 const token = process.env.SANITY_API_TOKEN!;
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  
+
   if (!token) {
-    return new Response('Missing SANITY_API_TOKEN', { status: 500 });
+    return new Response("Missing SANITY_API_TOKEN", { status: 500 });
   }
-  
-  const { isValid, redirectTo = '/' } = await validatePreviewUrl(
+
+  const { isValid, redirectTo = "/" } = await validatePreviewUrl(
     serverClient.withConfig({ token }),
-    request.url
+    request.url,
   );
-  
+
   if (!isValid) {
-    return new Response('Invalid secret', { status: 401 });
+    return new Response("Invalid secret", { status: 401 });
   }
-  
+
   // Enable draft mode
   draftMode().enable();
-  
+
   // Redirect to the path from the search params or fallback to '/'
   redirect(redirectTo);
 }
@@ -47,15 +47,15 @@ export async function GET(request: Request) {
 
 ```typescript
 // app/api/draft/disable/route.ts
-import { draftMode } from 'next/headers';
-import { redirect } from 'next/navigation';
+import { draftMode } from "next/headers";
+import { redirect } from "next/navigation";
 
 export async function GET() {
   // Disable draft mode
   draftMode().disable();
-  
+
   // Redirect to the homepage
-  redirect('/');
+  redirect("/");
 }
 ```
 
@@ -95,12 +95,12 @@ export default async function RootLayout({
   children: React.ReactNode
 }) {
   const { isEnabled } = draftMode();
-  
+
   return (
     <html>
       <body>
         {children}
-        
+
         {/* Only load in draft mode */}
         {isEnabled && <KitVisualEditing />}
       </body>
@@ -120,9 +120,9 @@ import { draftMode } from 'next/headers';
 
 export default async function PreviewBanner() {
   const { isEnabled } = draftMode();
-  
+
   if (!isEnabled) return null;
-  
+
   return (
     <div className="fixed top-0 left-0 right-0 bg-blue-600 text-white px-4 py-2 z-50">
       <div className="container mx-auto flex items-center justify-between">
@@ -133,7 +133,7 @@ export default async function PreviewBanner() {
             You are viewing unpublished content
           </span>
         </div>
-        
+
         <DisablePreviewMode />
       </div>
     </div>
@@ -154,10 +154,10 @@ export default async function Page({ params }: { params: { slug: string } }) {
     pageQuery(params.slug),
     { slug: params.slug }
   );
-  
+
   // Automatically fetches draft content when draftMode().isEnabled is true
   // Falls back to published content in production
-  
+
   return <PageComponent page={page} />;
 }
 ```
@@ -172,14 +172,14 @@ import { serverClient } from '@webicient/sanity-kit/query';
 
 export default async function CustomPage() {
   const { isEnabled } = draftMode();
-  
-  const client = isEnabled 
-    ? serverClient.withConfig({ 
+
+  const client = isEnabled
+    ? serverClient.withConfig({
         token: process.env.SANITY_API_TOKEN,
         perspective: 'previewDrafts'
       })
     : serverClient;
-  
+
   const data = await client.fetch(`
     *[_type == "page"] {
       title,
@@ -187,7 +187,7 @@ export default async function CustomPage() {
       _updatedAt
     }
   `);
-  
+
   return (
     <div>
       {isEnabled && (
@@ -195,7 +195,7 @@ export default async function CustomPage() {
           Draft mode enabled - showing unpublished changes
         </p>
       )}
-      
+
       {/* Render content */}
     </div>
   );
@@ -210,56 +210,56 @@ Configure the presentation tool in your Sanity Studio:
 
 ```typescript
 // sanity.config.ts
-import { defineConfig } from 'sanity';
-import { presentationTool } from 'sanity/presentation';
-import { sanityKit } from '@webicient/sanity-kit';
+import { defineConfig } from "sanity";
+import { presentationTool } from "sanity/presentation";
+import { sanityKit } from "@webicient/sanity-kit";
 
 export default defineConfig({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET!,
-  
+
   plugins: [
     sanityKit(kitConfig),
-    
+
     presentationTool({
       previewUrl: {
-        origin: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
+        origin: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
         draftMode: {
-          enable: '/api/draft/enable',
-          disable: '/api/draft/disable'
-        }
+          enable: "/api/draft/enable",
+          disable: "/api/draft/disable",
+        },
       },
-      
+
       // Optional: Custom locate function
       locate: (params, context) => {
-        if (params.type === 'page') {
+        if (params.type === "page") {
           return {
             message: `Open page "${params.slug}"`,
             locations: [
               {
-                title: params.title || 'Page',
-                href: `/${params.slug}`
-              }
-            ]
+                title: params.title || "Page",
+                href: `/${params.slug}`,
+              },
+            ],
           };
         }
-        
-        if (params.type === 'post') {
+
+        if (params.type === "post") {
           return {
             message: `Open post "${params.slug}"`,
             locations: [
               {
-                title: params.title || 'Post',
-                href: `/blog/${params.slug}`
-              }
-            ]
+                title: params.title || "Post",
+                href: `/blog/${params.slug}`,
+              },
+            ],
           };
         }
-        
+
         return null;
-      }
-    })
-  ]
+      },
+    }),
+  ],
 });
 ```
 
@@ -269,29 +269,30 @@ Set up custom preview URLs for different content types:
 
 ```typescript
 // plugins/productionUrl.ts
-import { definePlugin } from 'sanity';
+import { definePlugin } from "sanity";
 
 export const productionUrl = definePlugin({
-  name: 'production-url',
+  name: "production-url",
   document: {
     productionUrl: async (prev, { document }) => {
-      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-      
+      const baseUrl =
+        process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+
       switch (document._type) {
-        case 'page':
+        case "page":
           return `${baseUrl}/${document.slug?.current}`;
-          
-        case 'post':
+
+        case "post":
           return `${baseUrl}/blog/${document.slug?.current}`;
-          
-        case 'product':
+
+        case "product":
           return `${baseUrl}/products/${document.slug?.current}`;
-          
+
         default:
           return prev;
       }
-    }
-  }
+    },
+  },
 });
 ```
 
@@ -312,13 +313,13 @@ interface LivePreviewProps {
   params?: any;
 }
 
-export default function LivePreview({ 
-  initialData, 
-  query, 
-  params = {} 
+export default function LivePreview({
+  initialData,
+  query,
+  params = {}
 }: LivePreviewProps) {
   const [data, loading] = useLiveQuery(initialData, query, params);
-  
+
   if (loading) {
     return (
       <div className="animate-pulse">
@@ -327,14 +328,14 @@ export default function LivePreview({
       </div>
     );
   }
-  
+
   return <ContentComponent data={data} />;
 }
 
 // Usage in page component
 export default async function Page({ params }: { params: { slug: string } }) {
   const initialData = await loadQuery(pageQuery(params.slug));
-  
+
   return (
     <LivePreview
       initialData={initialData}
@@ -360,21 +361,21 @@ interface EditableSectionProps {
   children: React.ReactNode;
 }
 
-export function EditableSection({ 
-  documentId, 
-  documentType, 
-  children 
+export function EditableSection({
+  documentId,
+  documentType,
+  children
 }: EditableSectionProps) {
   const { isEnabled, openInStudio } = useEditMode();
-  
+
   if (!isEnabled) {
     return <>{children}</>;
   }
-  
+
   return (
     <div className="relative group">
       {children}
-      
+
       {/* Edit overlay */}
       <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
         <button
@@ -398,46 +399,46 @@ export function EditableSection({
 
 ```typescript
 // hooks/useEditMode.ts
-'use client';
-import { useEffect, useState } from 'react';
+"use client";
+import { useEffect, useState } from "react";
 
 export function useEditMode() {
   const [isEnabled, setIsEnabled] = useState(false);
-  
+
   useEffect(() => {
     // Check if we're in draft mode
     const checkDraftMode = async () => {
       try {
-        const response = await fetch('/api/draft/check');
+        const response = await fetch("/api/draft/check");
         const { isEnabled } = await response.json();
         setIsEnabled(isEnabled);
       } catch (error) {
         setIsEnabled(false);
       }
     };
-    
+
     checkDraftMode();
   }, []);
-  
+
   const openInStudio = (type: string, id: string) => {
-    const studioUrl = process.env.NEXT_PUBLIC_SANITY_STUDIO_URL || '/studio';
+    const studioUrl = process.env.NEXT_PUBLIC_SANITY_STUDIO_URL || "/studio";
     const editUrl = `${studioUrl}/intent/edit/id=${id};type=${type}`;
-    window.open(editUrl, '_blank');
+    window.open(editUrl, "_blank");
   };
-  
+
   const enablePreview = () => {
-    window.location.href = '/api/draft/enable';
+    window.location.href = "/api/draft/enable";
   };
-  
+
   const disablePreview = () => {
-    window.location.href = '/api/draft/disable';
+    window.location.href = "/api/draft/disable";
   };
-  
+
   return {
     isEnabled,
     openInStudio,
     enablePreview,
-    disablePreview
+    disablePreview,
   };
 }
 ```
@@ -450,65 +451,64 @@ Set up webhooks for real-time content updates:
 
 ```typescript
 // app/api/revalidate/route.ts
-import { revalidateTag, revalidatePath } from 'next/cache';
-import { NextRequest, NextResponse } from 'next/server';
+import { revalidateTag, revalidatePath } from "next/cache";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
-  
+
   // Validate webhook (implement your security here)
   const isValid = validateWebhookSignature(body, request.headers);
   if (!isValid) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  
+
   try {
     const { _type, slug, _id } = body;
-    
+
     // Revalidate specific pages
     switch (_type) {
-      case 'page':
+      case "page":
         revalidateTag(`page:${slug?.current}`);
         revalidatePath(`/${slug?.current}`);
         break;
-        
-      case 'post':
+
+      case "post":
         revalidateTag(`post:${slug?.current}`);
         revalidatePath(`/blog/${slug?.current}`);
         break;
-        
-      case 'generalSettings':
-        revalidateTag('settings');
-        revalidatePath('/');
+
+      case "generalSettings":
+        revalidateTag("settings");
+        revalidatePath("/");
         break;
-        
+
       default:
         // Revalidate homepage for any other changes
-        revalidatePath('/');
+        revalidatePath("/");
     }
-    
-    return NextResponse.json({ 
-      revalidated: true, 
+
+    return NextResponse.json({
+      revalidated: true,
       type: _type,
-      timestamp: new Date().toISOString() 
+      timestamp: new Date().toISOString(),
     });
-    
   } catch (error) {
-    console.error('Revalidation error:', error);
+    console.error("Revalidation error:", error);
     return NextResponse.json(
-      { error: 'Failed to revalidate' }, 
-      { status: 500 }
+      { error: "Failed to revalidate" },
+      { status: 500 },
     );
   }
 }
 
 function validateWebhookSignature(body: any, headers: Headers): boolean {
   // Implement signature validation
-  const signature = headers.get('sanity-webhook-signature');
+  const signature = headers.get("sanity-webhook-signature");
   const secret = process.env.SANITY_WEBHOOK_SECRET;
-  
+
   if (!signature || !secret) return false;
-  
+
   // Validate signature against body and secret
   // Implementation depends on your security requirements
   return true;
@@ -538,21 +538,21 @@ const nextConfig = {
   experimental: {
     taint: true, // Enable for better debugging
   },
-  
+
   // Allow Sanity Studio embedding
   async headers() {
     return [
       {
-        source: '/studio/:path*',
+        source: "/studio/:path*",
         headers: [
           {
-            key: 'X-Frame-Options',
-            value: 'SAMEORIGIN',
+            key: "X-Frame-Options",
+            value: "SAMEORIGIN",
           },
         ],
       },
     ];
-  }
+  },
 };
 
 module.exports = nextConfig;
@@ -564,12 +564,12 @@ module.exports = nextConfig;
 // Development helper component
 export function DevelopmentTools() {
   if (process.env.NODE_ENV !== 'development') return null;
-  
+
   return (
     <div className="fixed bottom-4 right-4 z-50">
       <div className="bg-gray-900 text-white p-4 rounded-lg shadow-lg">
         <h3 className="font-bold mb-2">Dev Tools</h3>
-        
+
         <div className="space-y-2">
           <a
             href="/api/draft/enable"
@@ -577,14 +577,14 @@ export function DevelopmentTools() {
           >
             Enable Preview
           </a>
-          
+
           <a
-            href="/api/draft/disable"  
+            href="/api/draft/disable"
             className="block bg-red-600 px-3 py-1 rounded text-sm hover:bg-red-700"
           >
             Disable Preview
           </a>
-          
+
           <a
             href="/studio"
             target="_blank"
@@ -604,11 +604,13 @@ export function DevelopmentTools() {
 ### Common Issues
 
 1. **Preview not working**
+
    - Check SANITY_API_TOKEN is set
    - Verify token has read permissions
    - Ensure draft mode routes are properly configured
 
 2. **Visual editing not loading**
+
    - Check that KitVisualEditing is only loaded in draft mode
    - Verify presentation tool configuration in Studio
    - Check for console errors related to CORS
@@ -622,16 +624,16 @@ export function DevelopmentTools() {
 
 ```typescript
 // app/api/draft/check/route.ts
-import { draftMode } from 'next/headers';
-import { NextResponse } from 'next/server';
+import { draftMode } from "next/headers";
+import { NextResponse } from "next/server";
 
 export async function GET() {
   const { isEnabled } = draftMode();
-  
-  return NextResponse.json({ 
+
+  return NextResponse.json({
     isEnabled,
     timestamp: new Date().toISOString(),
-    hasToken: !!process.env.SANITY_API_TOKEN
+    hasToken: !!process.env.SANITY_API_TOKEN,
   });
 }
 ```
@@ -642,18 +644,18 @@ export async function GET() {
 // Optimize for visual editing performance
 export default async function Page({ params }: PageProps) {
   const { isEnabled } = draftMode();
-  
+
   // Different caching strategy for draft mode
   const cacheOptions = isEnabled
     ? { next: { revalidate: 0 } } // No cache in draft
     : { next: { revalidate: 3600, tags: [`page:${params.slug}`] } };
-  
+
   const { data: page } = await loadQuery(
     pageQuery(params.slug),
     { slug: params.slug },
     cacheOptions
   );
-  
+
   return <PageComponent page={page} />;
 }
 ```
@@ -690,13 +692,14 @@ revalidatePath('/'); // Broader when needed
 ```typescript
 // Environment-specific configuration
 const previewUrl = {
-  origin: process.env.NODE_ENV === 'development'
-    ? 'http://localhost:3000'
-    : process.env.NEXT_PUBLIC_SITE_URL,
+  origin:
+    process.env.NODE_ENV === "development"
+      ? "http://localhost:3000"
+      : process.env.NEXT_PUBLIC_SITE_URL,
   draftMode: {
-    enable: '/api/draft/enable',
-    disable: '/api/draft/disable'
-  }
+    enable: "/api/draft/enable",
+    disable: "/api/draft/disable",
+  },
 };
 ```
 

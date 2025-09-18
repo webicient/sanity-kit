@@ -11,34 +11,35 @@ The module system in @webicient/sanity-kit provides a flexible way to create reu
 ### Basic Module Structure
 
 ```typescript
-import { defineModule } from '@webicient/sanity-kit';
-import { defineField } from 'sanity';
-import HeroComponent from '@/components/modules/Hero';
+import { defineModule } from "@webicient/sanity-kit";
+import { defineField } from "sanity";
+import HeroComponent from "@/components/modules/Hero";
 
 export const heroModule = defineModule({
-  name: 'module.hero',           // Must start with 'module.'
-  title: 'Hero Section',         // Display name in Studio
-  fields: [                      // Module-specific fields
+  name: "module.hero", // Must start with 'module.'
+  title: "Hero Section", // Display name in Studio
+  fields: [
+    // Module-specific fields
     defineField({
-      name: 'heading',
-      title: 'Heading',
-      type: 'string',
-      validation: Rule => Rule.required()
+      name: "heading",
+      title: "Heading",
+      type: "string",
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'subheading', 
-      title: 'Subheading',
-      type: 'text',
-      rows: 2
-    })
+      name: "subheading",
+      title: "Subheading",
+      type: "text",
+      rows: 2,
+    }),
   ],
-  renderer: HeroComponent,       // React component
-  imageUrl: '/modules/hero.png', // Preview image
+  renderer: HeroComponent, // React component
+  imageUrl: "/modules/hero.png", // Preview image
   query: (language) => `         // Optional GROQ projection
     heading,
     subheading,
     backgroundImage
-  `
+  `,
 });
 ```
 
@@ -86,19 +87,19 @@ export default function HeroModule({
           priority
         />
       )}
-      
+
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-4xl">
           <h1 className="text-5xl font-bold mb-6 text-white">
             {heading}
           </h1>
-          
+
           {subheading && (
             <p className="text-xl mb-8 text-white/90">
               {subheading}
             </p>
           )}
-          
+
           {cta && (
             <LinkResolver {...cta} className="btn btn-primary">
               {cta.text}
@@ -138,14 +139,14 @@ export default function ContentGridModule({
     masonry: 'masonry-grid',
     carousel: 'flex space-x-6 overflow-x-auto'
   };
-  
+
   return (
     <section className="py-16">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl font-bold mb-12 text-center">
           {title}
         </h2>
-        
+
         <div className={gridClasses[layout]}>
           {items.map((item, index) => (
             <div key={index} className="content-item">
@@ -156,20 +157,20 @@ export default function ContentGridModule({
                   className="w-full h-48 object-cover rounded-lg mb-4"
                 />
               )}
-              
+
               <h3 className="text-xl font-semibold mb-2">
                 {item.title}
               </h3>
-              
+
               {item.description && (
                 <p className="text-gray-600 mb-4">
                   {item.description}
                 </p>
               )}
-              
+
               {item.link && (
-                <LinkResolver 
-                  {...item.link} 
+                <LinkResolver
+                  {...item.link}
                   className="btn btn-outline"
                 >
                   {item.link.text}
@@ -264,15 +265,15 @@ export const galleryModule = defineModule({
 });
 
 // components/modules/Gallery.tsx
-export default function GalleryModule({ 
-  title, 
-  layout, 
-  columns, 
-  images 
+export default function GalleryModule({
+  title,
+  layout,
+  columns,
+  images
 }: GalleryModuleProps) {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState(0);
-  
+
   return (
     <section className="py-16">
       <div className="container mx-auto px-4">
@@ -281,7 +282,7 @@ export default function GalleryModule({
             {title}
           </h2>
         )}
-        
+
         {layout === 'grid' && (
           <div className={`grid grid-cols-${columns} gap-4`}>
             {images?.map((image, index) => (
@@ -307,7 +308,7 @@ export default function GalleryModule({
             ))}
           </div>
         )}
-        
+
         {/* Lightbox implementation */}
         {lightboxOpen && (
           <Lightbox
@@ -440,18 +441,18 @@ export default function ContactFormModule({
   const [formData, setFormData] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
-  
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    
+
     try {
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
       });
-      
+
       if (response.ok) {
         setSubmitted(true);
         setFormData({});
@@ -462,7 +463,7 @@ export default function ContactFormModule({
       setLoading(false);
     }
   };
-  
+
   if (submitted) {
     return (
       <section className="py-16">
@@ -474,28 +475,28 @@ export default function ContactFormModule({
       </section>
     );
   }
-  
+
   return (
     <section className="py-16">
       <div className="container mx-auto px-4 max-w-2xl">
         <h2 className="text-3xl font-bold mb-6">{title}</h2>
-        
+
         {description && (
           <p className="text-gray-600 mb-8">{description}</p>
         )}
-        
+
         <form onSubmit={handleSubmit} className="space-y-6">
           {fields?.map((field, index) => (
             <FormField
               key={index}
               field={field}
               value={formData[field.name as keyof typeof formData]}
-              onChange={(value) => 
+              onChange={(value) =>
                 setFormData(prev => ({ ...prev, [field.name]: value }))
               }
             />
           ))}
-          
+
           <button
             type="submit"
             disabled={loading}
@@ -516,19 +517,15 @@ export default function ContactFormModule({
 
 ```typescript
 // kit.config.ts
-import { kitConfig } from '@webicient/sanity-kit';
-import { heroModule } from './modules/hero';
-import { galleryModule } from './modules/gallery';
-import { contactFormModule } from './modules/contactForm';
+import { kitConfig } from "@webicient/sanity-kit";
+import { heroModule } from "./modules/hero";
+import { galleryModule } from "./modules/gallery";
+import { contactFormModule } from "./modules/contactForm";
 
 export default kitConfig({
   schema: {
-    modules: [
-      heroModule,
-      galleryModule,
-      contactFormModule
-    ]
-  }
+    modules: [heroModule, galleryModule, contactFormModule],
+  },
 });
 ```
 
@@ -536,19 +533,19 @@ export default kitConfig({
 
 ```typescript
 // modules/index.ts - Organize modules
-export { heroModule } from './hero';
-export { galleryModule } from './gallery';
-export { contactFormModule } from './contactForm';
-export { testimonialsModule } from './testimonials';
-export { pricingModule } from './pricing';
+export { heroModule } from "./hero";
+export { galleryModule } from "./gallery";
+export { contactFormModule } from "./contactForm";
+export { testimonialsModule } from "./testimonials";
+export { pricingModule } from "./pricing";
 
 // kit.config.ts - Import all at once
-import * as modules from './modules';
+import * as modules from "./modules";
 
 export default kitConfig({
   schema: {
-    modules: Object.values(modules)
-  }
+    modules: Object.values(modules),
+  },
 });
 ```
 
@@ -581,12 +578,12 @@ function CustomModuleResolver({ modules }: { modules: any[] }) {
     <>
       {modules?.map(({ _key, _type, ...module }) => {
         const ModuleComponent = getModuleComponent(_type);
-        
+
         if (!ModuleComponent) {
           console.warn(`No component found for module type: ${_type}`);
           return null;
         }
-        
+
         return (
           <div key={_key} data-module={_type}>
             <ModuleErrorBoundary moduleName={_type}>
@@ -641,39 +638,39 @@ Built-in support for reusable module collections:
 
 ```typescript
 export const advancedModule = defineModule({
-  name: 'module.advanced',
-  title: 'Advanced Module',
+  name: "module.advanced",
+  title: "Advanced Module",
   fields: [
     defineField({
-      name: 'layout',
-      title: 'Layout',
-      type: 'string',
+      name: "layout",
+      title: "Layout",
+      type: "string",
       options: {
-        list: ['standard', 'featured', 'minimal']
-      }
+        list: ["standard", "featured", "minimal"],
+      },
     }),
     defineField({
-      name: 'featuredContent',
-      title: 'Featured Content',
-      type: 'text',
-      hidden: ({ parent }) => parent?.layout !== 'featured'
+      name: "featuredContent",
+      title: "Featured Content",
+      type: "text",
+      hidden: ({ parent }) => parent?.layout !== "featured",
     }),
     defineField({
-      name: 'backgroundColor',
-      title: 'Background Color',
-      type: 'string',
-      hidden: ({ parent }) => parent?.layout === 'minimal',
+      name: "backgroundColor",
+      title: "Background Color",
+      type: "string",
+      hidden: ({ parent }) => parent?.layout === "minimal",
       options: {
         list: [
-          { title: 'White', value: 'white' },
-          { title: 'Gray', value: 'gray' },
-          { title: 'Blue', value: 'blue' }
-        ]
-      }
-    })
+          { title: "White", value: "white" },
+          { title: "Gray", value: "gray" },
+          { title: "Blue", value: "blue" },
+        ],
+      },
+    }),
   ],
   renderer: AdvancedModule,
-  imageUrl: '/modules/advanced.png'
+  imageUrl: "/modules/advanced.png",
 });
 ```
 
@@ -681,39 +678,38 @@ export const advancedModule = defineModule({
 
 ```typescript
 export const validatedModule = defineModule({
-  name: 'module.validated',
-  title: 'Validated Module',
+  name: "module.validated",
+  title: "Validated Module",
   fields: [
     defineField({
-      name: 'items',
-      title: 'Items',
-      type: 'array',
-      of: [{ type: 'string' }],
-      validation: Rule => 
+      name: "items",
+      title: "Items",
+      type: "array",
+      of: [{ type: "string" }],
+      validation: (Rule) =>
         Rule.required()
-          .min(1).error('At least one item required')
-          .max(10).error('Maximum 10 items allowed')
+          .min(1)
+          .error("At least one item required")
+          .max(10)
+          .error("Maximum 10 items allowed"),
     }),
     defineField({
-      name: 'email',
-      title: 'Contact Email',
-      type: 'string',
-      validation: Rule => 
-        Rule.required()
-          .email()
-          .error('Valid email required')
+      name: "email",
+      title: "Contact Email",
+      type: "string",
+      validation: (Rule) =>
+        Rule.required().email().error("Valid email required"),
     }),
     defineField({
-      name: 'url',
-      title: 'Website URL',
-      type: 'url',
-      validation: Rule => 
-        Rule.uri({ scheme: ['https'] })
-          .error('HTTPS URL required')
-    })
+      name: "url",
+      title: "Website URL",
+      type: "url",
+      validation: (Rule) =>
+        Rule.uri({ scheme: ["https"] }).error("HTTPS URL required"),
+    }),
   ],
   renderer: ValidatedModule,
-  imageUrl: '/modules/validated.png'
+  imageUrl: "/modules/validated.png",
 });
 ```
 
@@ -787,14 +783,14 @@ const mockProps = {
 describe('HeroModule', () => {
   test('renders heading and subheading', () => {
     render(<HeroModule {...mockProps} />);
-    
+
     expect(screen.getByText('Test Heading')).toBeInTheDocument();
     expect(screen.getByText('Test Subheading')).toBeInTheDocument();
   });
-  
+
   test('renders without optional props', () => {
     render(<HeroModule heading="Test" />);
-    
+
     expect(screen.getByText('Test')).toBeInTheDocument();
   });
 });
@@ -822,7 +818,7 @@ const mockModules = [
 
 test('renders multiple modules', () => {
   render(<ModuleResolver data={mockModules} />);
-  
+
   expect(screen.getByText('Hero Title')).toBeInTheDocument();
   expect(screen.getByText('Gallery Title')).toBeInTheDocument();
 });
@@ -834,15 +830,15 @@ test('renders multiple modules', () => {
 
 ```typescript
 // Good: Descriptive, consistent names
-module.hero
-module.textAndImage
-module.testimonialGrid
-module.contactForm
+module.hero;
+module.textAndImage;
+module.testimonialGrid;
+module.contactForm;
 
 // Avoid: Generic or unclear names
-module.section
-module.content
-module.block
+module.section;
+module.content;
+module.block;
 ```
 
 ### 2. Modular Design
@@ -850,12 +846,12 @@ module.block
 ```typescript
 // Good: Focused, single-purpose modules
 export const heroModule = defineModule({
-  name: 'module.hero',
+  name: "module.hero",
   // Specific to hero functionality
 });
 
 export const ctaModule = defineModule({
-  name: 'module.cta',
+  name: "module.cta",
   // Specific to call-to-action
 });
 
@@ -874,7 +870,7 @@ defineField({
 // Handle missing data gracefully
 function Module({ title, items = [] }) {
   if (!title) return null;
-  
+
   return (
     <section>
       <h2>{title}</h2>

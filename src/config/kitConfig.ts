@@ -83,6 +83,7 @@ export interface KitConfig {
   };
   resolve?: Resolve;
   richText?: ReturnType<typeof defineType>[];
+  draftPreview?: boolean;
 }
 
 let config: KitConfig | null = null;
@@ -145,6 +146,7 @@ export function kitConfig(_config: KitConfig): KitConfig {
         },
         languages: [],
         richText: [],
+        draftPreview: false,
       },
       _config,
     );

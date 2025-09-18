@@ -12,15 +12,15 @@ Complete guide to using TypeScript with @webicient/sanity-kit for type-safe deve
 
 ```typescript
 // Import core types
-import type { 
-  ContentType, 
-  Entity, 
-  Setting, 
-  Taxonomy, 
+import type {
+  ContentType,
+  Entity,
+  Setting,
+  Taxonomy,
   Module,
   KitConfig,
-  Supports
-} from '@webicient/sanity-kit';
+  Supports,
+} from "@webicient/sanity-kit";
 
 // Schema definition types
 interface ContentType {
@@ -61,20 +61,20 @@ interface Module {
 ### Supported Field Types
 
 ```typescript
-type Supports = 
-  | 'title'
-  | 'slug'
-  | 'seo'
-  | 'modules'
-  | 'body'
-  | 'excerpt'
-  | 'featuredImage'
-  | 'publishedAt';
+type Supports =
+  | "title"
+  | "slug"
+  | "seo"
+  | "modules"
+  | "body"
+  | "excerpt"
+  | "featuredImage"
+  | "publishedAt";
 
 // Usage in schema definitions
 const blogPost = defineContentType({
-  name: 'post',
-  supports: ['title', 'slug', 'publishedAt', 'body'] as Supports[]
+  name: "post",
+  supports: ["title", "slug", "publishedAt", "body"] as Supports[],
 });
 ```
 
@@ -93,7 +93,10 @@ interface KitConfig {
     structures?: Structure[];
   };
   custom?: {
-    projection?: (type: CustomProjectionType, defaultProjection: string) => string;
+    projection?: (
+      type: CustomProjectionType,
+      defaultProjection: string,
+    ) => string;
   };
   disableDefault?: {
     schema?: {
@@ -168,7 +171,7 @@ export async function getPage(slug: string): Promise<Page | null> {
     `*[_type == "page" && slug.current == $slug][0]`,
     { slug }
   );
-  
+
   return data;
 }
 
@@ -192,42 +195,42 @@ export default function PageComponent({ page }: PageProps) {
 ### Content Type with Types
 
 ```typescript
-import { defineContentType, defineField } from '@webicient/sanity-kit';
-import type { ContentType } from '@webicient/sanity-kit';
+import { defineContentType, defineField } from "@webicient/sanity-kit";
+import type { ContentType } from "@webicient/sanity-kit";
 
 // Define interface for the content type
 interface ProductContentType extends ContentType {
-  name: 'product';
+  name: "product";
 }
 
 export const product: ProductContentType = defineContentType({
-  name: 'product',
-  title: 'Product',
-  pluralTitle: 'Products',
-  supports: ['title', 'slug', 'seo', 'featuredImage'],
-  rewrite: '/products/:slug',
+  name: "product",
+  title: "Product",
+  pluralTitle: "Products",
+  supports: ["title", "slug", "seo", "featuredImage"],
+  rewrite: "/products/:slug",
   translate: true,
   fields: [
     defineField({
-      name: 'price',
-      title: 'Price',
-      type: 'number',
-      validation: Rule => Rule.required().positive()
+      name: "price",
+      title: "Price",
+      type: "number",
+      validation: (Rule) => Rule.required().positive(),
     }),
     defineField({
-      name: 'sku',
-      title: 'SKU', 
-      type: 'string',
-      validation: Rule => Rule.required()
+      name: "sku",
+      title: "SKU",
+      type: "string",
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'category',
-      title: 'Category',
-      type: 'reference',
-      to: [{ type: 'productCategory' }],
-      validation: Rule => Rule.required()
-    })
-  ]
+      name: "category",
+      title: "Category",
+      type: "reference",
+      to: [{ type: "productCategory" }],
+      validation: (Rule) => Rule.required(),
+    }),
+  ],
 });
 ```
 
@@ -310,7 +313,7 @@ export default function HeroComponent({
 
 ```typescript
 // Create typed query functions
-import type { Page, Post, Settings } from '../sanity.types';
+import type { Page, Post, Settings } from "../sanity.types";
 
 export async function getPageBySlug(slug: string): Promise<Page | null> {
   const { data } = await loadQuery<Page>(
@@ -326,9 +329,9 @@ export async function getPageBySlug(slug: string): Promise<Page | null> {
         ...
       }
     }`,
-    { slug }
+    { slug },
   );
-  
+
   return data;
 }
 
@@ -347,9 +350,9 @@ export async function getRecentPosts(limit: number = 10): Promise<Post[]> {
         title,
         "slug": slug.current
       }
-    }`
+    }`,
   );
-  
+
   return data || [];
 }
 
@@ -359,9 +362,9 @@ export async function getAllSettings(): Promise<Settings> {
       "general": *[_type == "generalSettings"][0],
       "social": *[_type == "socialMediaSettings"][0],
       "seo": *[_type == "seoSettings"][0]
-    }`
+    }`,
   );
-  
+
   return data;
 }
 ```
@@ -386,7 +389,9 @@ interface PostWithAuthor extends Post {
 }
 
 // Use in query functions
-export async function getPageWithBreadcrumbs(slug: string): Promise<PageWithBreadcrumbs | null> {
+export async function getPageWithBreadcrumbs(
+  slug: string,
+): Promise<PageWithBreadcrumbs | null> {
   const { data } = await loadQuery<PageWithBreadcrumbs>(
     `*[_type == "page" && slug.current == $slug][0] {
       ...,
@@ -395,9 +400,9 @@ export async function getPageWithBreadcrumbs(slug: string): Promise<PageWithBrea
         "slug": slug.current
       }
     }`,
-    { slug }
+    { slug },
   );
-  
+
   return data;
 }
 ```
@@ -432,7 +437,7 @@ import type { Settings } from '../types/settings';
 
 export function useTypedSettings() {
   const { settings } = useKit();
-  
+
   // Type assertion with runtime validation
   return settings as Settings;
 }
@@ -440,7 +445,7 @@ export function useTypedSettings() {
 // Usage with type safety
 function Header() {
   const settings = useTypedSettings();
-  
+
   return (
     <header>
       <h1>{settings.general?.siteTitle}</h1>
@@ -482,10 +487,10 @@ function GenericResolver<T>({ data, renderer }: ResolverProps<T>) {
 ```typescript
 // Sanity-specific utility types
 export type SanityImage = {
-  _type: 'image';
+  _type: "image";
   asset: {
     _ref: string;
-    _type: 'reference';
+    _type: "reference";
   };
   hotspot?: {
     x: number;
@@ -503,22 +508,22 @@ export type SanityImage = {
 };
 
 export type SanitySlug = {
-  _type: 'slug';
+  _type: "slug";
   current: string;
 };
 
 export type SanityReference<T = any> = {
   _ref: string;
-  _type: 'reference';
+  _type: "reference";
   _weak?: boolean;
 };
 
 export type SanityBlock = {
-  _type: 'block';
+  _type: "block";
   _key: string;
   style?: string;
   children: Array<{
-    _type: 'span';
+    _type: "span";
     text: string;
     marks?: string[];
   }>;
@@ -608,11 +613,11 @@ function DocumentRenderer({ document }: { document: any }) {
   if (isPage(document)) {
     return <PageComponent page={document} />;
   }
-  
+
   if (isPost(document)) {
     return <PostComponent post={document} />;
   }
-  
+
   return <div>Unknown document type</div>;
 }
 ```
@@ -621,33 +626,37 @@ function DocumentRenderer({ document }: { document: any }) {
 
 ```typescript
 // Zod schema for runtime validation
-import { z } from 'zod';
+import { z } from "zod";
 
 const PageSchema = z.object({
   _id: z.string(),
-  _type: z.literal('page'),
+  _type: z.literal("page"),
   title: z.string(),
   slug: z.object({
-    current: z.string()
+    current: z.string(),
   }),
-  seo: z.object({
-    title: z.string().optional(),
-    description: z.string().optional()
-  }).optional(),
-  modules: z.array(z.any()).optional()
+  seo: z
+    .object({
+      title: z.string().optional(),
+      description: z.string().optional(),
+    })
+    .optional(),
+  modules: z.array(z.any()).optional(),
 });
 
 type ValidatedPage = z.infer<typeof PageSchema>;
 
 // Validate data at runtime
-export async function getValidatedPage(slug: string): Promise<ValidatedPage | null> {
+export async function getValidatedPage(
+  slug: string,
+): Promise<ValidatedPage | null> {
   const rawData = await loadQuery(pageQuery(slug));
-  
+
   try {
     const page = PageSchema.parse(rawData.data);
     return page;
   } catch (error) {
-    console.error('Invalid page data:', error);
+    console.error("Invalid page data:", error);
     return null;
   }
 }
@@ -659,21 +668,21 @@ export async function getValidatedPage(slug: string): Promise<ValidatedPage | nu
 
 ```typescript
 // Conditional types based on configuration
-type ContentTypeFields<T extends ContentType> = 
-  T['supports'] extends Array<infer U> 
-    ? U extends 'title' 
+type ContentTypeFields<T extends ContentType> =
+  T["supports"] extends Array<infer U>
+    ? U extends "title"
       ? { title: string }
-      : U extends 'slug'
-      ? { slug: SanitySlug }
-      : U extends 'seo'
-      ? { seo?: SEO }
-      : {}
+      : U extends "slug"
+        ? { slug: SanitySlug }
+        : U extends "seo"
+          ? { seo?: SEO }
+          : {}
     : {};
 
 // Template literal types for module names
 type ModuleName<T extends string> = `module.${T}`;
 
-type ValidModuleName = ModuleName<'hero' | 'gallery' | 'contact'>;
+type ValidModuleName = ModuleName<"hero" | "gallery" | "contact">;
 // Results in: 'module.hero' | 'module.gallery' | 'module.contact'
 ```
 
@@ -682,11 +691,11 @@ type ValidModuleName = ModuleName<'hero' | 'gallery' | 'contact'>;
 ```typescript
 // Create settings type from configuration
 type SettingsMap<T extends readonly Setting[]> = {
-  [K in T[number]['name']]: Extract<T[number], { name: K }>
+  [K in T[number]["name"]]: Extract<T[number], { name: K }>;
 };
 
 // Usage
-const settings = ['general', 'seo', 'social'] as const;
+const settings = ["general", "seo", "social"] as const;
 type Settings = SettingsMap<typeof settings>;
 // Results in: { general: GeneralSettings, seo: SeoSettings, social: SocialSettings }
 ```
@@ -696,9 +705,7 @@ type Settings = SettingsMap<typeof settings>;
 ```typescript
 // Template types for type-safe queries
 type QueryProjection<T> = {
-  [K in keyof T]?: T[K] extends object 
-    ? QueryProjection<T[K]> | true
-    : true;
+  [K in keyof T]?: T[K] extends object ? QueryProjection<T[K]> | true : true;
 };
 
 // Usage
@@ -707,8 +714,8 @@ const pageProjection: QueryProjection<Page> = {
   slug: true,
   seo: {
     title: true,
-    description: true
-  }
+    description: true,
+  },
 };
 ```
 
@@ -808,7 +815,7 @@ import PageComponent from '@/components/PageComponent';
 
 test('page component renders correctly', () => {
   const { getByRole } = render(<PageComponent page={mockPage} />);
-  
+
   expect(getByRole('heading', { level: 1 })).toHaveTextContent('Test Page');
 });
 ```
@@ -819,7 +826,7 @@ test('page component renders correctly', () => {
 
 ```typescript
 // ✅ Good: Use generated types
-import type { Page, Post } from '../sanity.types';
+import type { Page, Post } from "../sanity.types";
 
 // ❌ Avoid: Manual type definitions
 interface ManualPage {
@@ -858,7 +865,7 @@ const page = document as Page; // Might throw at runtime
 type ModuleName = `module.${string}`;
 
 const heroModule = defineModule({
-  name: 'module.hero' as ModuleName, // Type-checked
+  name: "module.hero" as ModuleName, // Type-checked
   // ...
 });
 ```

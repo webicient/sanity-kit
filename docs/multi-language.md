@@ -12,33 +12,33 @@ Complete guide to setting up and managing multi-language content with @webicient
 
 ```typescript
 // kit.config.ts
-import { kitConfig } from '@webicient/sanity-kit';
+import { kitConfig } from "@webicient/sanity-kit";
 
 export default kitConfig({
   languages: [
-    { id: 'en', title: 'English', isDefault: true },
-    { id: 'es', title: 'Spanish' },
-    { id: 'fr', title: 'French' },
-    { id: 'de', title: 'German' }
+    { id: "en", title: "English", isDefault: true },
+    { id: "es", title: "Spanish" },
+    { id: "fr", title: "French" },
+    { id: "de", title: "German" },
   ],
-  
+
   schema: {
     contentTypes: [
       defineContentType({
-        name: 'page',
+        name: "page",
         translate: true, // Enable translation for this content type
         // ... other properties
-      })
+      }),
     ],
-    
+
     settings: [
       defineSetting({
-        name: 'seoSettings',
+        name: "seoSettings",
         translate: true, // Settings can also be translated
         // ... other properties
-      })
-    ]
-  }
+      }),
+    ],
+  },
 });
 ```
 
@@ -67,10 +67,14 @@ The plugin automatically integrates `@sanity/language-filter` when languages are
 // Automatically applied when languages are defined
 languageFilter({
   supportedLanguages: config.languages,
-  defaultLanguages: [config.languages.find(lang => lang.isDefault)?.id || 'en'],
+  defaultLanguages: [
+    config.languages.find((lang) => lang.isDefault)?.id || "en",
+  ],
   documentTypes: [
     // All content types with translate: true
-    'page', 'post', 'category'
+    "page",
+    "post",
+    "category",
   ],
   filterField: (enclosingType, field, selectedLanguageIds) => {
     // Hide language fields not selected
@@ -78,8 +82,8 @@ languageFilter({
       config.languages?.map(({ id }) => id).includes(field.name) &&
       !selectedLanguageIds.includes(field.name)
     );
-  }
-})
+  },
+});
 ```
 
 ### Studio Language Switching
@@ -87,7 +91,7 @@ languageFilter({
 The language filter adds a language selector to your Sanity Studio, allowing editors to:
 
 1. **Filter documents** by language
-2. **Switch between language versions** of documents  
+2. **Switch between language versions** of documents
 3. **Create translations** of existing documents
 4. **View language-specific fields** only
 
@@ -100,25 +104,25 @@ Enable translation for content types and settings:
 ```typescript
 // Content type with translation
 export const page = defineContentType({
-  name: 'page',
-  title: 'Page',
+  name: "page",
+  title: "Page",
   translate: true, // Enables translation fields
-  supports: ['title', 'slug', 'seo', 'modules'],
+  supports: ["title", "slug", "seo", "modules"],
   // ... other config
 });
 
 // Settings with translation
 export const seoSettings = defineSetting({
-  name: 'seoSettings',
-  title: 'SEO Settings',
+  name: "seoSettings",
+  title: "SEO Settings",
   translate: true, // Enables language-specific settings
   fields: [
     defineField({
-      name: 'title',
-      title: 'Default Title',
-      type: 'string'
-    })
-  ]
+      name: "title",
+      title: "Default Title",
+      type: "string",
+    }),
+  ],
 });
 ```
 
@@ -131,22 +135,22 @@ When translation is enabled, documents get language-specific fields:
 {
   "_type": "page",
   "_id": "home",
-  
+
   // Default language fields
   "title": "Welcome",
   "slug": { "current": "home" },
   "body": "Welcome to our site",
-  
+
   // Spanish translation
   "es": {
-    "title": "Bienvenidos", 
+    "title": "Bienvenidos",
     "body": "Bienvenidos a nuestro sitio"
   },
-  
+
   // French translation
   "fr": {
     "title": "Bienvenue",
-    "body": "Bienvenue sur notre site"  
+    "body": "Bienvenue sur notre site"
   }
 }
 ```
@@ -159,7 +163,7 @@ Use `coalesce()` to provide language fallbacks:
 
 ```typescript
 // Query with language fallback
-const pageQuery = (slug: string, language: string = 'en') => `
+const pageQuery = (slug: string, language: string = "en") => `
   *[_type == "page" && slug.current == "${slug}"][0] {
     "title": coalesce(${language}.title, title),
     "body": coalesce(${language}.body, body),
@@ -169,7 +173,7 @@ const pageQuery = (slug: string, language: string = 'en') => `
 `;
 
 // Usage
-const { data: page } = await loadQuery(pageQuery('about', 'es'));
+const { data: page } = await loadQuery(pageQuery("about", "es"));
 ```
 
 ### Complex Translation Queries
@@ -259,10 +263,10 @@ export default async function LocaleLayout({
   if (!locales.includes(params.locale)) {
     notFound();
   }
-  
+
   // Load localized settings
   const settings = await loadSettings(params.locale);
-  
+
   return (
     <html lang={params.locale}>
       <body>
@@ -310,14 +314,14 @@ const pageQuery = (slug: string, locale: string) => `
 
 export default async function Page({ params }: PageProps) {
   const slug = params.slug.join('/');
-  
+
   const { data: page } = await loadQuery(
     pageQuery(slug, params.locale),
     { slug, locale: params.locale }
   );
-  
+
   if (!page) notFound();
-  
+
   return (
     <main>
       <h1>{page.title}</h1>
@@ -331,7 +335,7 @@ export async function generateMetadata({ params }: PageProps) {
   const slug = params.slug.join('/');
   const { data: page } = await loadQuery(pageQuery(slug, params.locale));
   const settings = await loadSettings(params.locale);
-  
+
   return generateSEO(page, settings, params.locale);
 }
 ```
@@ -355,28 +359,28 @@ interface LanguageSwitcherProps {
   availableLocales?: string[];
 }
 
-export default function LanguageSwitcher({ 
+export default function LanguageSwitcher({
   currentLocale,
   availableLocales = languages.map(l => l.id)
 }: LanguageSwitcherProps) {
   const pathname = usePathname();
   const router = useRouter();
-  
+
   const switchLanguage = (newLocale: string) => {
     // Remove current locale from pathname
     const pathWithoutLocale = pathname.replace(`/${currentLocale}`, '') || '/';
-    
+
     // Add new locale
     const newPath = `/${newLocale}${pathWithoutLocale}`;
-    
+
     router.push(newPath);
   };
-  
+
   const currentLanguage = languages.find(lang => lang.id === currentLocale);
-  const availableLanguages = languages.filter(lang => 
+  const availableLanguages = languages.filter(lang =>
     availableLocales.includes(lang.id)
   );
-  
+
   return (
     <div className="relative group">
       <button className="flex items-center space-x-2 px-3 py-2 rounded border hover:bg-gray-50">
@@ -384,7 +388,7 @@ export default function LanguageSwitcher({
         <span>{currentLanguage?.title}</span>
         <ChevronDownIcon className="w-4 h-4" />
       </button>
-      
+
       <div className="absolute top-full right-0 mt-1 bg-white border rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
         {availableLanguages.map((language) => (
           <button
@@ -419,21 +423,21 @@ export function useTranslation() {
   const { translations, setTranslations } = useKit();
   const params = useParams();
   const locale = params.locale as string || 'en';
-  
+
   const t = (key: string, fallback?: string) => {
-    return translations?.[locale]?.[key] || 
-           translations?.en?.[key] || 
-           fallback || 
+    return translations?.[locale]?.[key] ||
+           translations?.en?.[key] ||
+           fallback ||
            key;
   };
-  
+
   return { t, locale, setTranslations };
 }
 
 // Usage in components
 function MyComponent() {
   const { t } = useTranslation();
-  
+
   return (
     <div>
       <h1>{t('welcome.title', 'Welcome')}</h1>
@@ -449,58 +453,56 @@ function MyComponent() {
 // utils/language.ts
 export function detectLanguage(
   acceptLanguage?: string,
-  supportedLanguages: string[] = ['en']
+  supportedLanguages: string[] = ["en"],
 ): string {
   if (!acceptLanguage) return supportedLanguages[0];
-  
+
   // Parse Accept-Language header
   const languages = acceptLanguage
-    .split(',')
-    .map(lang => {
-      const [code, quality = '1'] = lang.trim().split(';q=');
+    .split(",")
+    .map((lang) => {
+      const [code, quality = "1"] = lang.trim().split(";q=");
       return { code: code.toLowerCase(), quality: parseFloat(quality) };
     })
     .sort((a, b) => b.quality - a.quality);
-  
+
   // Find best match
   for (const { code } of languages) {
     // Exact match
     if (supportedLanguages.includes(code)) {
       return code;
     }
-    
+
     // Partial match (e.g., 'en-US' -> 'en')
-    const shortCode = code.split('-')[0];
+    const shortCode = code.split("-")[0];
     if (supportedLanguages.includes(shortCode)) {
       return shortCode;
     }
   }
-  
+
   return supportedLanguages[0];
 }
 
 // Middleware for language detection
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
 
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
-  const supportedLocales = ['en', 'es', 'fr', 'de'];
-  
+  const supportedLocales = ["en", "es", "fr", "de"];
+
   // Check if pathname already has locale
   const pathnameHasLocale = supportedLocales.some(
-    locale => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
+    (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`,
   );
-  
+
   if (!pathnameHasLocale) {
     // Detect language and redirect
     const locale = detectLanguage(
-      request.headers.get('Accept-Language') || undefined,
-      supportedLocales
+      request.headers.get("Accept-Language") || undefined,
+      supportedLocales,
     );
-    
-    return NextResponse.redirect(
-      new URL(`/${locale}${pathname}`, request.url)
-    );
+
+    return NextResponse.redirect(new URL(`/${locale}${pathname}`, request.url));
   }
 }
 ```
@@ -512,27 +514,27 @@ export function middleware(request: NextRequest) {
 ```typescript
 // Module with translation support
 export const heroModule = defineModule({
-  name: 'module.hero',
-  title: 'Hero Section',
+  name: "module.hero",
+  title: "Hero Section",
   fields: [
     defineField({
-      name: 'heading',
-      title: 'Heading',
-      type: 'string'
+      name: "heading",
+      title: "Heading",
+      type: "string",
     }),
     defineField({
-      name: 'subheading',
-      title: 'Subheading', 
-      type: 'text'
-    })
+      name: "subheading",
+      title: "Subheading",
+      type: "text",
+    }),
   ],
   renderer: HeroModule,
-  imageUrl: '/modules/hero.png',
+  imageUrl: "/modules/hero.png",
   query: (language) => `
     "heading": coalesce(${language}.heading, heading),
     "subheading": coalesce(${language}.subheading, subheading),
     backgroundImage
-  `
+  `,
 });
 ```
 
@@ -555,17 +557,17 @@ export default function HeroModule({
   backgroundImage
 }: HeroModuleProps) {
   const { t } = useTranslation();
-  
+
   return (
     <section className="hero">
       {backgroundImage && (
         <ImageResolver {...backgroundImage} alt={heading} />
       )}
-      
+
       <div className="hero-content">
         <h1>{heading}</h1>
         {subheading && <p>{subheading}</p>}
-        
+
         <button className="btn btn-primary">
           {t('cta.learnMore', 'Learn More')}
         </button>
@@ -581,7 +583,7 @@ export default function HeroModule({
 
 ```typescript
 // utils/seo.ts
-import { Metadata } from 'next';
+import { Metadata } from "next";
 
 interface SEOProps {
   title?: string;
@@ -594,27 +596,27 @@ export function generateLanguageMetadata({
   title,
   description,
   locale,
-  alternateUrls = {}
+  alternateUrls = {},
 }: SEOProps): Metadata {
   return {
     title,
     description,
-    
+
     openGraph: {
       title,
       description,
       locale: locale,
-      alternateLocale: Object.keys(alternateUrls)
+      alternateLocale: Object.keys(alternateUrls),
     },
-    
+
     alternates: {
       canonical: alternateUrls[locale],
-      languages: alternateUrls
+      languages: alternateUrls,
     },
-    
+
     other: {
-      'content-language': locale
-    }
+      "content-language": locale,
+    },
   };
 }
 ```
@@ -656,10 +658,10 @@ export function HreflangTags({ alternateUrls, currentLocale }: HreflangTagsProps
 ```typescript
 // Use standard ISO 639-1 codes
 const languages = [
-  { id: 'en', title: 'English' },      // ✅ Good
-  { id: 'es', title: 'Spanish' },     // ✅ Good
-  { id: 'es-ES', title: 'Spanish (Spain)' }, // ✅ Good for regional
-  { id: 'spanish', title: 'Spanish' } // ❌ Avoid non-standard codes
+  { id: "en", title: "English" }, // ✅ Good
+  { id: "es", title: "Spanish" }, // ✅ Good
+  { id: "es-ES", title: "Spanish (Spain)" }, // ✅ Good for regional
+  { id: "spanish", title: "Spanish" }, // ❌ Avoid non-standard codes
 ];
 ```
 
@@ -671,8 +673,8 @@ const languages = [
 
 // Handle missing translations gracefully
 function getLocalizedText(content: any, language: string, field: string) {
-  return content?.[language]?.[field] || 
-         content?.[field] || 
+  return content?.[language]?.[field] ||
+         content?.[field] ||
          `[${field} not translated]`;
 }
 ```
@@ -688,7 +690,7 @@ const alternateUrls = {
 };
 
 // Implement hreflang tags
-<HreflangTags 
+<HreflangTags
   alternateUrls={alternateUrls}
   currentLocale={locale}
 />
@@ -719,11 +721,13 @@ const optimizedQuery = `
 ### Common Issues
 
 1. **Missing language fields in Studio**
+
    - Check that `translate: true` is set on content type
    - Verify language filter configuration
    - Restart Studio after configuration changes
 
 2. **Fallback not working**
+
    - Ensure proper `coalesce()` syntax in queries
    - Check that default language has content
    - Verify language codes match exactly
